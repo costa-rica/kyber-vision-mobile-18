@@ -31,7 +31,7 @@ export default function SplashScreen({ navigation }) {
               title="Login"
               onPress={() => {
                 // console.log("Register");
-                navigation.navigate("Login");
+                navigation.navigate("LoginScreen");
               }}
               style={styles.btnEmailLogin}
             >

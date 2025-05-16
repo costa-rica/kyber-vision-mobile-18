@@ -6,7 +6,12 @@ export default function TemplateView({ children }) {
       <View style={styles.containerTop}>
         <Image
           source={require("../../assets/images/imgBackgroundBottomFade.png")}
-          style={styles.imgBackgroundBottomFade}
+          // style={styles.imgBackgroundBottomFade}
+        />
+        <Image
+          source={require("../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg")}
+          // source={require("../../assets/images/navigationAndSmall/btnTest.png")}
+          style={styles.imgBackArrow}
         />
         <Image
           source={require("../../assets/images/KyberV2Shiny.png")}
@@ -31,6 +36,16 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
     height: "35%",
     overflow: "hidden",
+  },
+  imgBackArrow: {
+    position: "absolute",
+    top: 50,
+    left: 50,
+    width: 50,
+    height: 50,
+    zIndex: 10,
+    backgroundColor: "green",
+    color: "green",
   },
   imgLogo: {
     position: "absolute",
