@@ -1,18 +1,35 @@
 import { StyleSheet, View, Image } from "react-native";
+import ButtonKvImage from "./buttons/ButtonKvImage";
+import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
+import { useNavigation } from "@react-navigation/native";
 
-export default function TemplateView({ children }) {
+export default function TemplateView({ children, navigation }) {
+  const handleBackPress = async () => {
+    // await ScreenOrientation.lockAsync(
+    //   ScreenOrientation.OrientationLock.PORTRAIT_UP
+    // ); // Force back to portrait
+    // setOrientation("portrait");
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <Image
           source={require("../../assets/images/imgBackgroundBottomFade.png")}
-          // style={styles.imgBackgroundBottomFade}
         />
-        <Image
-          source={require("../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg")}
-          // source={require("../../assets/images/navigationAndSmall/btnTest.png")}
-          style={styles.imgBackArrow}
-        />
+
+        {navigation && (
+          <View style={styles.btnBack}>
+            <ButtonKvImage
+              onPress={() => {
+                handleBackPress();
+              }}
+            >
+              <BackArrow style={styles.svgBackArrow} />
+            </ButtonKvImage>
+          </View>
+        )}
         <Image
           source={require("../../assets/images/KyberV2Shiny.png")}
           style={styles.imgLogo}
@@ -37,16 +54,17 @@ const styles = StyleSheet.create({
     height: "35%",
     overflow: "hidden",
   },
-  imgBackArrow: {
+  btnBack: {
     position: "absolute",
     top: 50,
     left: 50,
-    width: 50,
-    height: 50,
-    zIndex: 10,
-    backgroundColor: "green",
-    color: "green",
+    // zIndex: 10,
   },
+  // svgBackArrow: {
+  //   width: 50,
+  //   height: 50,
+  // },
+
   imgLogo: {
     position: "absolute",
     bottom: 0,

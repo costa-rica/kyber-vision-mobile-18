@@ -12,7 +12,7 @@ export default function SplashScreen({ navigation }) {
     console.log("Guest login");
   };
   return (
-    <TemplateView noBackButton={true}>
+    <TemplateView>
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
