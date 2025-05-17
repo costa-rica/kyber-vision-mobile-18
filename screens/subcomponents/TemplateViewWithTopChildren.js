@@ -1,9 +1,13 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, Text } from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
 import { useNavigation } from "@react-navigation/native";
 
-export default function TemplateView({ children, navigation }) {
+export default function TemplateViewWithTopChildren({
+  children,
+  navigation,
+  topChildren,
+}) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
     //   ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -30,10 +34,16 @@ export default function TemplateView({ children, navigation }) {
             </ButtonKvImage>
           </View>
         )}
-        <Image
-          source={require("../../assets/images/KyberV2Shiny.png")}
-          style={styles.imgLogo}
-        />
+        <View style={styles.vwLogoAndTopChildren}>
+          <Image
+            source={require("../../assets/images/KyberV2Shiny.png")}
+            style={styles.imgLogo}
+          />
+          {topChildren}
+          {/* <View style={styles.vwTopChildren}>
+            <Text style={styles.txtTopChildren}> Welcome Nick</Text>
+          </View> */}
+        </View>
       </View>
       <View style={styles.containerBottom}>{children}</View>
     </View>
@@ -60,15 +70,21 @@ const styles = StyleSheet.create({
     left: 20,
     // zIndex: 10,
   },
-  // svgBackArrow: {
-  //   width: 50,
-  //   height: 50,
-  // },
 
-  imgLogo: {
+  vwLogoAndTopChildren: {
     position: "absolute",
     bottom: 0,
   },
+  // vwTopChildren: {
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   padding: 20,
+  // },
+  // txtTopChildren: {
+  //   color: "white",
+  //   fontSize: 20,
+  //   fontWeight: "bold",
+  // },
   containerBottom: {
     flex: 1,
     backgroundColor: "#fff",

@@ -14,10 +14,6 @@ const ButtonKv = ({ onPress, style, children }) => {
     color: "white",
     fontWeight: "",
     padding: 5,
-    // borderColor: "#A3A3A3",
-    // borderWidth: 2,
-    // borderStyle: "solid",
-    // justifyContent: false,
   };
   // Merge provided style with default styles
   const mergedStyle = { ...defaultStyles, ...style };
@@ -58,6 +54,9 @@ const ButtonKv = ({ onPress, style, children }) => {
     borderColor: mergedStyle.borderColor,
     borderWidth: mergedStyle.borderWidth,
     borderStyle: mergedStyle.borderStyle,
+    borderBottomWidth: mergedStyle.borderBottomWidth,
+    borderBottomColor: mergedStyle.borderBottomColor,
+    borderBottomStyle: mergedStyle.borderBottomStyle,
   };
   const styleText = {
     fontSize: mergedStyle.fontSize,

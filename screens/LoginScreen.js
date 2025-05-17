@@ -11,11 +11,18 @@ import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../reducers/user";
 
 export default function LoginScreen({ navigation }) {
+  const dispatch = useDispatch();
   const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
+    email:
+      process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation"
+        ? "nrodrig1@gmail.com"
+        : "",
+    password:
+      process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation" ? "test" : "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,24 +55,21 @@ export default function LoginScreen({ navigation }) {
       resJson = await response.json();
     }
 
-    if (response.ok) {
+    if (response.ok && resJson) {
       console.log(`response ok`);
-      resJson.email = email;
-      // dispatch(loginUser(resJson));
-      //           dispatch(
+      console.log(resJson);
       dispatch(
         loginUser({
           email: resJson.email,
           token: resJson.token,
-          // myArray: [1, 2, 3, 4],
         })
       );
       console.log("after dispatch");
-      // router.push("/admin-db");
-      navigation.navigate("Home");
+      navigation.navigate("SelectTribeScreen");
     } else {
       const errorMessage =
-        resJson?.error || `There was a server error: ${response.status}`;
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
       alert(errorMessage);
     }
   };
@@ -75,7 +79,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.containerMiddle}>
           <View style={styles.vwInputGroup}>
-            <Text>E-mail</Text>
+            <Text style={styles.txtInputGroupLabel}>E-mail</Text>
             <View style={styles.vwInputWrapper}>
               <FontAwesome
                 name="envelope"
@@ -95,7 +99,7 @@ export default function LoginScreen({ navigation }) {
             </View>
           </View>
           <View style={styles.vwInputGroup}>
-            <Text>Password</Text>
+            <Text style={styles.txtInputGroupLabel}>Password</Text>
             <View style={styles.vwInputWrapper}>
               <ButtonKvImage
                 onPress={() => setShowPassword((prev) => !prev)}
@@ -121,20 +125,29 @@ export default function LoginScreen({ navigation }) {
             </View>
           </View>
 
-          <View style={styles.vwInputGroup}>
+          <View style={styles.vwInputGroupForgotPassword}>
             <ButtonKv
-              onPress={() => navigation.navigate("ResetPasswordRequest")}
-              style={styles.vwForgotPasswordBtn}
+              onPress={() => console.log("ResetPasswordRequest")}
+              style={styles.btnForgotPassword}
             >
               Forgot password ?
             </ButtonKv>
           </View>
-          <View style={styles.vwInputGroup}>
+          <View style={styles.vwInputGroupLogin}>
             <ButtonKv
               onPress={() => handleClickLogin()}
-              // style={styles.vwForgotPasswordBtn}
+              style={styles.btnLogin}
             >
               Login
+            </ButtonKv>
+          </View>
+
+          <View style={styles.vwInputGroupCreateAccount}>
+            <ButtonKv
+              onPress={() => console.log("Register")}
+              style={styles.btnCreateAccount}
+            >
+              Create an account
             </ButtonKv>
           </View>
         </View>
@@ -156,6 +169,25 @@ const styles = StyleSheet.create({
   },
   vwInputGroup: {
     width: "90%",
+    alignItems: "flex-start",
+    marginTop: 10,
+  },
+  vwInputGroupForgotPassword: {
+    width: "90%",
+    alignItems: "flex-start",
+    marginTop: 5,
+    paddingLeft: 15,
+  },
+  vwInputGroupCreateAccount: {
+    width: "90%",
+    alignItems: "center",
+    marginTop: 20,
+    backgroundColor: "transparent",
+  },
+  vwInputGroupLogin: {
+    width: "90%",
+    alignItems: "center",
+    paddingTop: 30,
   },
   vwInputWrapper: {
     flexDirection: "row",
@@ -164,7 +196,6 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 20,
     paddingHorizontal: 10,
-    marginTop: 10,
     backgroundColor: "#fff",
   },
   faIcon: {
@@ -175,11 +206,11 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     color: "black",
   },
-  txtInput: {
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 20,
-    padding: 10,
+
+  txtInputGroupLabel: {
+    fontSize: 14,
+    color: "#5B5B5B",
+    paddingLeft: 15,
   },
   vwIconButton: {
     padding: 5,
@@ -187,13 +218,30 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "transparent",
   },
-  vwForgotPasswordBtn: {
-    backgroundColor: "transparent",
+  btnForgotPassword: {
     width: "auto",
     height: "auto",
-    padding: 0,
-    borderRadius: 0,
     fontSize: 14,
-    color: "purple",
+    color: "#806181",
+    backgroundColor: "transparent",
+  },
+  btnLogin: {
+    width: Dimensions.get("window").width * 0.6,
+    height: 50,
+    justifyContent: "center",
+    fontSize: 24,
+    color: "#fff",
+    backgroundColor: "#806181",
+  },
+  btnCreateAccount: {
+    width: "auto",
+    height: "auto",
+    fontSize: 14,
+    color: "#806181",
+    backgroundColor: "transparent",
+    borderBottomWidth: 1,
+    borderBottomColor: "gray",
+    borderBottomStyle: "solid",
+    borderRadius: 5,
   },
 });
