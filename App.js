@@ -1,10 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SelectTribeScreen from "./screens/SelectTribeScreen";
+import CreateTribeScreen from "./screens/CreateTribeScreen";
+import HomeScreen from "./screens/HomeScreen";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -28,6 +29,11 @@ export default function App() {
             name="SelectTribeScreen"
             component={SelectTribeScreen}
           />
+          <Stack.Screen
+            name="CreateTribeScreen"
+            component={CreateTribeScreen}
+          />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

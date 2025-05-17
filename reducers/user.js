@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   // value: {
   token: null,
+  // tribeId: null,
+  tribeArray: [],
   portraitHeight: null,
   portraitWidth: null,
   profile: null,
@@ -100,15 +102,10 @@ export const userSlice = createSlice({
       console.log("switchPositionGuides");
       state.scriptPositionGuides = !state.scriptPositionGuides;
     },
-    // setVideosDownloadedStatusObj: (state, action) => {
-    //   const videoDownloadFileName = action.payload.videoDownloadFileName;
-    //   const videoIsDownloaded = action.payload.videoIsDownloaded;
-    //   let updatedObj = {
-    //     ...state.videosDownloadedStatusObj,
-    //     [videoDownloadFileName]: videoIsDownloaded,
-    //   };
-    //   state.videosDownloadedStatusObj = updatedObj;
-    // },
+    updateTribeArray: (state, action) => {
+      // console.log(" 🟢 updateTribeArray");
+      state.tribeArray = action.payload;
+    },
   },
 });
 
@@ -118,7 +115,7 @@ export const {
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
-  // setVideosDownloadedStatusObj,
+  updateTribeArray,
 } = userSlice.actions;
 export default userSlice.reducer;
 
