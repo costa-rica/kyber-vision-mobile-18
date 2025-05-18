@@ -62,6 +62,7 @@ export default function LoginScreen({ navigation }) {
         loginUser({
           email: resJson.email,
           token: resJson.token,
+          username: resJson.user.username,
         })
       );
       console.log("after dispatch");

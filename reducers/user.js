@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // value: {
   token: null,
-  // tribeId: null,
+  user: {
+    username: null,
+    email: null,
+  },
   tribeArray: [],
   portraitHeight: null,
   portraitWidth: null,
-  profile: null,
+  // profile: null,
   video: {}, //list received from API GET /videos
   // videosDownloadedStatusObj: {},
   circleRadiusOuter: 30,
@@ -82,7 +84,9 @@ export const userSlice = createSlice({
     loginUser: (state, action) => {
       // console.log(`- dans Redux: loginUser 🔔`);
       state.token = action.payload.token;
-      state.profile = action.payload.profile;
+      // state.profile = action.payload.profile;
+      state.user.username = action.payload.username;
+      state.user.email = action.payload.email;
     },
     storeVideoDetailsInRedux: (state, action) => {
       console.log(`- dans Redux: storeVideoDetailsInRedux 🔔`);

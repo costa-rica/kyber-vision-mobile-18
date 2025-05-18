@@ -65,7 +65,10 @@ export default function SelectTribeScreen({ navigation }) {
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
-      <Text style={styles.txtTopChildren}> Welcome Nick</Text>
+      <Text style={styles.txtTopChildren}>
+        {" "}
+        Welcome {userReducer.user.username}
+      </Text>
     </View>
   );
 
@@ -159,11 +162,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  // txtTopChildren: {
-  //   color: "white",
-  //   fontSize: 20,
-  //   fontWeight: "bold",
-  // },
+  txtTopChildren: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   containerTop: {
     alignItems: "center",
     justifyContent: "center",

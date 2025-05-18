@@ -2,8 +2,9 @@ import { StyleSheet, View, Image, Text } from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
 import { useNavigation } from "@react-navigation/native";
+import KyberVisionLogoCrystal from "../../assets/images/KyberVisionLogoCrystal.svg";
 
-export default function TemplateViewWithTopChildren({
+export default function TemplateViewWithTopChildrenSmall({
   children,
   navigation,
   topChildren,
@@ -35,10 +36,7 @@ export default function TemplateViewWithTopChildren({
           </View>
         )}
         <View style={styles.vwLogoAndTopChildren}>
-          <Image
-            source={require("../../assets/images/KyberV2Shiny.png")}
-            style={styles.imgLogo}
-          />
+          <KyberVisionLogoCrystal width={20} height={20} />
           {topChildren}
         </View>
       </View>
@@ -58,7 +56,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
-    height: "35%",
+    height: "15%",
   },
   btnBack: {
     position: "absolute",
@@ -69,8 +67,10 @@ const styles = StyleSheet.create({
   vwLogoAndTopChildren: {
     position: "absolute",
     bottom: 0,
-
     alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 20,
   },
   containerBottom: {
     flex: 1,

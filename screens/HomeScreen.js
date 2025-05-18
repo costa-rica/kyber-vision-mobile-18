@@ -30,96 +30,55 @@ export default function HomeScreen({ navigation }) {
     console.log(`userReducer.tribeArray`, userReducer.tribeArray);
   }, []);
 
-  // const topChildren = (
-  //   <View style={styles.vwTopChildren}>
-  //     <View style={styles.vwCapsule}>
-  //       <View style={styles.vwLeftCapsule}>
-  //         <Text style={{ color: "white", fontSize: 20 }}>
-  //           {
-  //             userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
-  //               .teamName
-  //           }
-  //         </Text>
-  //       </View>
-  //       <View style={styles.vwRightCapsule}>
-  //         <TouchableOpacity
-  //           title="select tribe"
-  //           onPress={() => setDisplayTribeList(!displayTribeList)}
-  //           style={styles.btnSelectTribe}
-  //         >
-  //           {displayTribeList ? (
-  //             <Image
-  //               source={require("../assets/images/navigationAndSmall/btnBackArrow.png")}
-  //               style={{ width: 40, height: 40 }}
-  //             />
-  //           ) : (
-  //             <Image
-  //               source={require("../assets/images/navigationAndSmall/btnDownArrow.png")}
-  //               style={{ width: 40, height: 40 }}
-  //             />
-  //           )}
-  //         </TouchableOpacity>
-  //       </View>
-  //     </View>
-  //   </View>
-  // );
-
   const topChildren = (
     <View style={styles.vwTopChildren}>
-      <View style={styles.vwCapsule}>
-        <View style={styles.vwLeftCapsule}>
-          {displayTribeList ? (
-            <View style={styles.vwDropdownList}>
-              {userReducer.tribeArray.map((tribe) => (
-                <TouchableOpacity
-                  key={tribe.id}
-                  onPress={() => handleTribeSelect(tribe.id)}
-                  style={[
-                    styles.vwTeamRow,
-                    tribe.selected && styles.vwTeamRowSelected,
-                  ]}
-                >
-                  <Text style={{ textAlign: "center" }}>{tribe.teamName}</Text>
-                </TouchableOpacity>
-              ))}
-              {/*
-                        // <View style={styles.flatListTeamNames}>
-            //   {userReducer.tribeArray.map((tribe) => (
-            //     <TouchableOpacity
-            //       key={tribe.id}
-            //       onPress={() => handleTribeSelect(tribe.id)}
-            //       style={[
-            //         styles.vwTeamRow,
-            //         tribe.selected && styles.vwTeamRowSelected,
-            //       ]}
-            //     >
-            //       <Text style={{ textAlign: "center" }}>{tribe.teamName}</Text>
-            //     </TouchableOpacity>
-            //   ))}
-            // </View>
-            */}
-            </View>
-          ) : (
-            <Text style={{ color: "white", fontSize: 20 }}>
-              {userReducer.tribeArray.find((tribe) => tribe.selected)
-                ?.teamName || "No tribe selected"}
-            </Text>
-          )}
-        </View>
-        <View style={styles.vwRightCapsule}>
-          <TouchableOpacity
-            onPress={() => setDisplayTribeList(!displayTribeList)}
-            style={styles.btnSelectTribe}
-          >
-            <Image
-              source={
-                displayTribeList
-                  ? require("../assets/images/navigationAndSmall/btnBackArrow.png")
-                  : require("../assets/images/navigationAndSmall/btnDownArrow.png")
-              }
-              style={{ width: 40, height: 40 }}
-            />
-          </TouchableOpacity>
+      <View style={styles.vwCapsuleSuper}>
+        <View
+          style={displayTribeList ? styles.vwCapsuleExpanded : styles.vwCapsule}
+        >
+          <View style={[styles.vwLeftCapsule]}>
+            {displayTribeList ? (
+              // <View style={styles.vwDropdownList}>
+              <View>
+                {userReducer.tribeArray.map((tribe) => (
+                  <TouchableOpacity
+                    key={tribe.id}
+                    onPress={() => handleTribeSelect(tribe.id)}
+                    style={[styles.vwTeamRow]}
+                  >
+                    <Text
+                      style={[
+                        styles.txtDropdownTopChildTeamName,
+                        tribe.selected && { fontWeight: "bold" },
+                      ]}
+                    >
+                      {tribe.teamName}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            ) : (
+              <Text style={styles.txtTopChildSelectedTribeName}>
+                {userReducer.tribeArray.find((tribe) => tribe.selected)
+                  ?.teamName || "No tribe selected"}
+              </Text>
+            )}
+          </View>
+          <View style={styles.vwRightCapsule}>
+            <TouchableOpacity
+              onPress={() => setDisplayTribeList(!displayTribeList)}
+              style={styles.btnSelectTribe}
+            >
+              <Image
+                source={
+                  displayTribeList
+                    ? require("../assets/images/navigationAndSmall/btnBackArrow.png")
+                    : require("../assets/images/navigationAndSmall/btnDownArrow.png")
+                }
+                style={{ width: 40, height: 40 }}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -133,9 +92,8 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
             <ButtonKv
-              // onPress={() => navigation.navigate("CreateTribeScreen")}
-              onPress={() => console.log("Scripting")}
-              style={styles.btnTribe}
+              onPress={() => navigation.navigate("ScriptingScreen")}
+              style={styles.btnHomeNavigation}
             >
               Scripting
             </ButtonKv>
@@ -159,34 +117,62 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
+  txtTopChildSelectedTribeName: {
+    color: "white",
+    fontSize: 20,
+  },
+  vwCapsuleSuper: {
+    position: "relative",
+    width: Dimensions.get("window").width * 0.8,
+    height: 50,
+  },
   vwCapsule: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
     backgroundColor: "white",
-    backgroundColor: "#C0A9C0",
+    backgroundColor: "#806181",
     borderRadius: 10,
     padding: 5,
+  },
+  vwCapsuleExpanded: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    backgroundColor: "#806181",
+    borderRadius: 10,
+    padding: 5,
+    width: Dimensions.get("window").width * 0.8,
+    position: "absolute",
+    top: 0,
+    zIndex: 1,
   },
   vwLeftCapsule: {
     width: "80%",
   },
-  vwDropdownList: {
+  vwLeftCapsuleExpanded: {
+    width: Dimensions.get("window").width * 0.8,
+    height: "100%",
     position: "absolute",
-    // top: 55, // adjust depending on how far below the capsule you want it
-    // left: 10,
-    // right: 10,
-    backgroundColor: "white",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 5,
-    zIndex: 999,
-    padding: 5,
-    width: "80%",
-    height: 100,
-    overflow: "hidden",
+    top: 0,
+    zIndex: 1,
+    backgroundColor: "#C0A9C0",
   },
+  txtDropdownTopChildTeamName: {
+    color: "white",
+    fontSize: 20,
+  },
+  vwDropdownList: {
+    padding: 5,
+    width: "100%",
+    height: "100%",
+  },
+  vwRightCapsule: {
+    height: "100%",
+  },
+
   // ----- TOP -----
   containerTop: {
     alignItems: "center",
@@ -211,13 +197,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 30,
   },
-  btnTribe: {
+  btnHomeNavigation: {
     width: Dimensions.get("window").width * 0.6,
     height: 50,
     justifyContent: "center",
     fontSize: 24,
     color: "white",
-    backgroundColor: "#C0A9C0",
+    backgroundColor: "#806181",
   },
 
   // ------------
@@ -233,19 +219,15 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  vwTeamRow: {
-    padding: 5,
-    marginVertical: 5,
-    backgroundColor: "#F0F0F0",
-    borderRadius: 2.5,
-    width: "100%",
-    textAlign: "center",
-    // height: 50,
-  },
-
-  vwTeamRowSelected: {
-    backgroundColor: "#D3D3D3", // light gray
-  },
+  // vwTeamRow: {
+  //   padding: 5,
+  //   marginVertical: 5,
+  //   backgroundColor: "#F0F0F0",
+  //   borderRadius: 2.5,
+  //   width: "100%",
+  //   textAlign: "center",
+  //   // height: 50,
+  // },
 
   // ------------
   // Bottom

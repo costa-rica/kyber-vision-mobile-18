@@ -6,6 +6,7 @@ import LoginScreen from "./screens/LoginScreen";
 import SelectTribeScreen from "./screens/SelectTribeScreen";
 import CreateTribeScreen from "./screens/CreateTribeScreen";
 import HomeScreen from "./screens/HomeScreen";
+import ScriptingLiveScreen from "./screens/ScriptingLiveScreen";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -34,6 +35,10 @@ export default function App() {
             component={CreateTribeScreen}
           />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen
+            name="ScriptingLiveScreen"
+            component={ScriptingLiveScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>
