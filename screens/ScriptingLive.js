@@ -9,7 +9,7 @@ import {
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
 
-export default function ScriptingLiveScreen({ navigation }) {
+export default function ScriptingLive({ navigation }) {
   const topChildren = (
     <View>
       <Text style={styles.txtTopChildren}>Scripting Screen Top Children</Text>

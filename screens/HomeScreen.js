@@ -26,9 +26,9 @@ export default function HomeScreen({ navigation }) {
     dispatch(updateTribeArray(updatedArray));
     setDisplayTribeList(false);
   };
-  useEffect(() => {
-    console.log(`userReducer.tribeArray`, userReducer.tribeArray);
-  }, []);
+  // useEffect(() => {
+  //   console.log(`userReducer.tribeArray`, userReducer.tribeArray);
+  // }, []);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -92,7 +92,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
             <ButtonKv
-              onPress={() => navigation.navigate("ScriptingScreen")}
+              onPress={() => navigation.navigate("ScriptingLiveSelectPlayers")}
               style={styles.btnHomeNavigation}
             >
               Scripting

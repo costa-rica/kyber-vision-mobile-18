@@ -122,7 +122,7 @@ export default function SelectTribeScreen({ navigation }) {
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
             <ButtonKv
-              onPress={() => navigation.navigate("CreateTribeScreen")}
+              onPress={() => navigation.navigate("CreateTribe")}
               style={styles.btnTribe}
             >
               Create Tribe

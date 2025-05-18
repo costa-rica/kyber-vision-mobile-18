@@ -8,6 +8,7 @@ export default function TemplateViewWithTopChildrenSmall({
   children,
   navigation,
   topChildren,
+  sizeOfLogo = 30,
 }) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
@@ -36,7 +37,7 @@ export default function TemplateViewWithTopChildrenSmall({
           </View>
         )}
         <View style={styles.vwLogoAndTopChildren}>
-          <KyberVisionLogoCrystal width={20} height={20} />
+          <KyberVisionLogoCrystal width={sizeOfLogo} height={sizeOfLogo} />
           {topChildren}
         </View>
       </View>
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
   btnBack: {
     position: "absolute",
     top: 50,
-    left: 20,
+    left: 10,
   },
 
   vwLogoAndTopChildren: {
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    gap: 20,
+    // gap: 20,
   },
   containerBottom: {
     flex: 1,
