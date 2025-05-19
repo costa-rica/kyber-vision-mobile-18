@@ -160,8 +160,8 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
                   userReducer.playersArray.filter((player) => player.selected)
                     .length > 0
                 ) {
-                  // navigation.navigate("HomeScreen");
-                  alert("Going to Scripting screen");
+                  navigation.navigate("ScriptingLive");
+                  // alert("Going to Scripting screen");
                 } else {
                   setDisplayWarning(true);
                 }

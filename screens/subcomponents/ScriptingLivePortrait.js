@@ -13,11 +13,36 @@ import ButtonKvImage from "./buttons/ButtonKvImage";
 import ButtonKv from "./buttons/ButtonKv";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/user";
-
-export default function ScriptingLivePortrait() {
+import {
+  GestureHandlerRootView,
+  GestureDetector,
+  // Gesture,
+} from "react-native-gesture-handler";
+export default function ScriptingLivePortrait(props) {
   return (
-    <View>
-      <Text>ScriptingLivePortrait</Text>
+    <View style={styles.container}>
+      <GestureHandlerRootView
+        // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
+        style={{}} //This is key to make sure the flex properties will trickle down to <Image>
+      >
+        <GestureDetector gesture={props.combinedGestures}>
+          <View style={styles.containerSub}>
+            <Text>ScriptingLivePortrait</Text>
+          </View>
+        </GestureDetector>
+      </GestureHandlerRootView>
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // backgroundColor: "green",
+    width: "100%",
+  },
+  containerSub: {
+    height: "100%",
+    // backgroundColor: "yellow",
+    width: "100%",
+  },
+});
