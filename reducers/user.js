@@ -7,6 +7,7 @@ const initialState = {
     email: null,
   },
   tribeArray: [],
+  playersArray: [],
   portraitHeight: null,
   portraitWidth: null,
   // profile: null,
@@ -110,6 +111,9 @@ export const userSlice = createSlice({
       // console.log(" 🟢 updateTribeArray");
       state.tribeArray = action.payload;
     },
+    updatePlayersArray: (state, action) => {
+      state.playersArray = action.payload;
+    },
   },
 });
 
@@ -120,6 +124,7 @@ export const {
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
   updateTribeArray,
+  updatePlayersArray,
 } = userSlice.actions;
 export default userSlice.reducer;
 

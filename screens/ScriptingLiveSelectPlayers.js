@@ -5,16 +5,24 @@ import {
   Image,
   Dimensions,
   TextInput,
+  FlatList,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ScriptingLivePortrait from "./subcomponents/ScriptingLivePortrait";
 import { useSelector } from "react-redux";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updatePlayersArray } from "../reducers/user";
+import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle.svg";
 
 export default function ScriptingLiveSelectPlayers({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const [playersArray, setPlayersArray] = useState([]);
+  const dispatch = useDispatch();
+  const [displayWarning, setDisplayWarning] = useState(false);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -56,8 +64,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
           selected: false,
         };
       });
-      setPlayersArray(tempArray);
-      // console.log(`playersArray`, playersArray);
+      dispatch(updatePlayersArray(tempArray));
     } else {
       const errorMessage =
         resJson?.error ||
@@ -68,6 +75,46 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
   useEffect(() => {
     fetchPlayers();
   }, []);
+
+  const playerTableButton = ({ player }) => {
+    const handleSelectPlayer = () => {
+      const tempArray = userReducer.playersArray.map((item) => {
+        if (item.id === player.id) {
+          setDisplayWarning(false);
+          return {
+            ...item,
+            selected: !item.selected,
+          };
+        }
+        return { ...item, selected: false };
+      });
+      dispatch(updatePlayersArray(tempArray));
+    };
+
+    return (
+      // <View
+      //   // key={player.id}
+      //   // style={player.selected ? styles.btnPlayerSelected : styles.btnPlayer}
+      // >
+      <TouchableOpacity
+        onPress={() => {
+          // console.log(player);
+          handleSelectPlayer();
+        }}
+        key={player.id}
+        style={[styles.btnPlayer, player.selected && styles.btnPlayerSelected]}
+      >
+        <View style={styles.btnPlayerLeft}>
+          <Text style={styles.txtShirtNumber}>{player.shirtNumber}</Text>
+        </View>
+        <View style={styles.btnPlayerRight}>
+          <Text style={styles.txtPlayerName}>{player.firstName}</Text>
+          <Text style={styles.txtPlayerName}>{player.lastName}</Text>
+        </View>
+      </TouchableOpacity>
+      // </View>
+    );
+  };
 
   return (
     <TemplateViewWithTopChildrenSmall
@@ -84,17 +131,46 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             <Text>Players</Text>
           </View>
           <View style={styles.vwPlayersTable}>
-            {playersArray.map((player) => (
-              <View key={player.id} style={styles.vwPlayer}>
-                <Text>
-                  {player.shirtNumber}: {player.firstName} {player.lastName}
-                </Text>
-              </View>
-            ))}
+            {userReducer.playersArray?.length > 0 ? (
+              <ScrollView style={styles.scrollViewPlayersTable}>
+                {userReducer.playersArray.map((player) =>
+                  playerTableButton({ player })
+                )}
+              </ScrollView>
+            ) : (
+              <Text>No players found</Text>
+            )}
           </View>
         </View>
         <View style={styles.containerBottom}>
-          <Text>Bottom</Text>
+          <View style={styles.vwSelectPlayerWarningSuper}>
+            {displayWarning && (
+              <View style={styles.vwSelectPlayerWarning}>
+                <WarningTriangle />
+                <Text style={{ color: "#E36C6C" }}>
+                  Warning: Please select a player
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.vwInputGroup}>
+            <ButtonKv
+              onPress={() => {
+                if (
+                  userReducer.playersArray.filter((player) => player.selected)
+                    .length > 0
+                ) {
+                  // navigation.navigate("HomeScreen");
+                  alert("Going to Scripting screen");
+                } else {
+                  setDisplayWarning(true);
+                }
+              }}
+              style={styles.btnTribe}
+            >
+              Select Tribe
+            </ButtonKv>
+          </View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -104,21 +180,12 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+    paddingVertical: 10,
   },
-  containerTop: {
-    // flex: 1,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: Dimensions.get("window").width,
-    // margin: 10,
-  },
-  containerBottom: {
-    // flex: 1,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: Dimensions.get("window").width,
-    // margin: 10,
-  },
+
   // ----- TOP Childeren -----
   vwTopChildren: {
     alignItems: "center",
@@ -138,18 +205,114 @@ const styles = StyleSheet.create({
   },
 
   // ----- TOP -----
+  containerTop: {
+    flex: 1,
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+    width: Dimensions.get("window").width * 0.9,
+    // margin: 10,
+  },
+
   vwPlayersTableHeading: {
     flexDirection: "row",
     alignItems: "flex-end",
-    // justifyContent: "center",
+    justifyContent: "flex-start",
     gap: 10,
     borderBottomWidth: 1,
     borderColor: "gray",
+    // height: "100",
+    // flex: 1,
   },
   vwTribeCrop: {
     height: 45,
   },
+  vwPlayersTable: {
+    flex: 1,
+  },
   // ------------
-  // FlatList
+  // ScrollView
   // ------------
+  scrollViewPlayersTable: {
+    // height: 100,
+    flex: 1,
+  },
+  vwPlayerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+
+  btnPlayer: {
+    flex: 1,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#6E4C84",
+    borderRadius: 30,
+    backgroundColor: "white",
+    marginVertical: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    padding: 3,
+  },
+  btnPlayerSelected: {
+    backgroundColor: "gray",
+  },
+
+  btnPlayerLeft: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#806181",
+    borderRadius: 30,
+    padding: 5,
+  },
+
+  txtShirtNumber: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 36,
+    padding: 10,
+    // borderRadius: 30,
+  },
+  btnPlayerRight: {
+    alignItems: "center",
+    justifyContent: "center",
+    // gap: 10,
+  },
+
+  txtPlayerName: {
+    textAlign: "center",
+    color: "#6E4C84",
+    fontSize: 22,
+  },
+  // ------------
+  // Bottom
+  // ------------
+  containerBottom: {
+    height: "15%",
+    width: Dimensions.get("window").width * 0.9,
+  },
+  vwSelectPlayerWarningSuper: {
+    flex: 1,
+    alignItems: "center",
+  },
+  vwSelectPlayerWarning: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  vwInputGroup: {
+    // width: "90%",
+    alignItems: "center",
+    paddingTop: 30,
+  },
+  btnTribe: {
+    width: Dimensions.get("window").width * 0.6,
+    height: 50,
+    justifyContent: "center",
+    fontSize: 24,
+    color: "#AB8EAB",
+    backgroundColor: "#C0A9C0",
+    // borderColor
+  },
 });
