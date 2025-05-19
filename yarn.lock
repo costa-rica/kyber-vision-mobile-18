@@ -2600,6 +2600,11 @@ expo-modules-core@2.3.13:
   dependencies:
     invariant "^2.2.4"
 
+expo-screen-orientation@~8.1.6:
+  version "8.1.6"
+  resolved "https://registry.yarnpkg.com/expo-screen-orientation/-/expo-screen-orientation-8.1.6.tgz#db9f21e53ec73a174020ae2dde11933a9a5c26a0"
+  integrity sha512-2ueYwTNCCP/8DhiChS5Mwq/N0nIc0gOVg8SgUa9VuTRMta9jHpCRmuZ6CJftRL+vW4NNGorwpGBus8YWVYeaPw==
+
 expo-status-bar@~2.2.3:
   version "2.2.3"
   resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-2.2.3.tgz"

@@ -28,6 +28,7 @@ export default function ScriptingLivePortrait(props) {
         <GestureDetector gesture={props.combinedGestures}>
           <View style={styles.containerSub}>
             <Text>ScriptingLivePortrait</Text>
+            <Text>{props.orientation}</Text>
           </View>
         </GestureDetector>
       </GestureHandlerRootView>

@@ -10,6 +10,8 @@ import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTo
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
 import { Gesture } from "react-native-gesture-handler";
 import { useState } from "react";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { useEffect } from "react";
 
 export default function ScriptingLive({ navigation }) {
   const [tapIsActive, setTapIsActive] = useState(true);
@@ -21,6 +23,58 @@ export default function ScriptingLive({ navigation }) {
     </View>
   );
 
+  // -------------
+  // Orientation Stuff
+  // -------------
+  // orientation
+  const [orientation, setOrientation] = useState("portrait");
+
+  useEffect(() => {
+    console.log("- Position useEffect");
+    ScreenOrientation.unlockAsync();
+    checkOrientation();
+    const subscriptionScreenOrientation =
+      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+
+    return () => {
+      subscriptionScreenOrientation.remove();
+      ScreenOrientation.lockAsync();
+    };
+  });
+
+  const checkOrientation = async () => {
+    // console.log("in checkOrientation");
+    const orientationObject = await ScreenOrientation.getOrientationAsync();
+    console.log(`orientation is ${orientationObject}`);
+    if (
+      orientationObject.orientationInfo.orientation == 4 ||
+      orientationObject.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+    } else {
+      setOrientation("portrait");
+    }
+  };
+  const handleOrientationChange = async (orientationObject) => {
+    if (
+      orientationObject.orientationInfo.orientation == 4 ||
+      orientationObject.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+      );
+    } else {
+      setOrientation("portrait");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    }
+  };
+
+  // -------------
+  // Gesture Stuff
+  // -------------
   const gestureTapBegin = Gesture.Tap().onBegin((event) => {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
@@ -52,7 +106,10 @@ export default function ScriptingLive({ navigation }) {
       navigation={navigation}
       topChildren={topChildren}
     >
-      <ScriptingPortrait combinedGestures={combinedGestures} />
+      <ScriptingPortrait
+        combinedGestures={combinedGestures}
+        orientation={orientation}
+      />
       <View style={stylesCircle} />
     </TemplateViewWithTopChildrenSmall>
   );
