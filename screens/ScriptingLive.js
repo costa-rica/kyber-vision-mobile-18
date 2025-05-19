@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
+import ScriptingLandscape from "./subcomponents/ScriptingLiveLandscape";
 import { Gesture } from "react-native-gesture-handler";
 import { useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -101,7 +102,7 @@ export default function ScriptingLive({ navigation }) {
     setCirclePosition({ x: centerX, y: centerY });
   };
 
-  return (
+  return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
@@ -112,6 +113,14 @@ export default function ScriptingLive({ navigation }) {
       />
       <View style={stylesCircle} />
     </TemplateViewWithTopChildrenSmall>
+  ) : (
+    <View>
+      <ScriptingLandscape
+        combinedGestures={combinedGestures}
+        orientation={orientation}
+      />
+      <View style={stylesCircle} />
+    </View>
   );
 }
 
