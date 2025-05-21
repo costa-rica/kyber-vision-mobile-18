@@ -16,13 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateTribeArray } from "../reducers/user";
 
 export default function SelectTribeScreen({ navigation }) {
-  // const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [selectedTribeId, setSelectedTribeId] = useState(null);
   const userReducer = useSelector((state) => state.user);
-  // const tribeArray = useSelector((state) => state.user.tribeArray);
   const dispatch = useDispatch();
-  // const [tribeArray, setTribeArray] = useState([]);
-  // const [tribesLoaded, setTribesLoaded] = useState(false);
 
   const fetchTribes = async () => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/groups`, {
@@ -50,6 +45,7 @@ export default function SelectTribeScreen({ navigation }) {
           selected: false,
         };
       });
+      // console.log(tempArray);
       dispatch(updateTribeArray(tempArray));
     } else {
       const errorMessage =
@@ -59,8 +55,17 @@ export default function SelectTribeScreen({ navigation }) {
     }
   };
 
+  const fetchTribesOffline = () => {
+    const tribesOffline = require("../offlineData/userReducer.json");
+    dispatch(updateTribeArray(tribesOffline.tribeArray));
+  };
+
   useEffect(() => {
-    fetchTribes();
+    if (userReducer.token === "offline") {
+      fetchTribesOffline();
+    } else {
+      fetchTribes();
+    }
   }, []);
 
   const topChildren = (
@@ -122,7 +127,7 @@ export default function SelectTribeScreen({ navigation }) {
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
             <ButtonKv
-              onPress={() => navigation.navigate("CreateTribe")}
+              onPress={() => navigation.navigate("CreateTribeScreen")}
               style={styles.btnTribe}
             >
               Create Tribe

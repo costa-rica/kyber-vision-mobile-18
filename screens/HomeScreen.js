@@ -178,9 +178,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
 
   // ----- Bottom -----

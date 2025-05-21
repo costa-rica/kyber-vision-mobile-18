@@ -43,7 +43,7 @@ export default function CreateTribeScreen({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      console.log(resJson);
+      // console.log(resJson);
       setTeamsArray(resJson);
     } else {
       const errorMessage =

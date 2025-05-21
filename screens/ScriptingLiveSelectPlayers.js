@@ -64,6 +64,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
           selected: false,
         };
       });
+      // console.log(tempArray);
       dispatch(updatePlayersArray(tempArray));
     } else {
       const errorMessage =
@@ -72,8 +73,16 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
       alert(errorMessage);
     }
   };
+  const fetchPlayersOffline = () => {
+    const userReducerOffline = require("../offlineData/userReducer.json");
+    dispatch(updatePlayersArray(userReducerOffline.playersArray));
+  };
   useEffect(() => {
-    fetchPlayers();
+    if (userReducer.token === "offline") {
+      fetchPlayersOffline();
+    } else {
+      fetchPlayers();
+    }
   }, []);
 
   const playerTableButton = ({ player }) => {
@@ -168,7 +177,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
               }}
               style={styles.btnTribe}
             >
-              Select Tribe
+              Select Player
             </ButtonKv>
           </View>
         </View>

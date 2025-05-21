@@ -4,12 +4,25 @@ import ButtonKv from "./subcomponents/buttons/ButtonKv";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 // import { useDispatch } from "react-redux";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../reducers/user";
+import guestUserData from "../offlineData/userReducer.json";
 
 export default function SplashScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //   const dispatch = useDispatch();
-  const handleGuestLogin = () => {
+  const dispatch = useDispatch();
+
+  const handleLoginGuestOffline = () => {
     console.log("Guest login");
+
+    dispatch(
+      loginUser({
+        email: guestUserData.user.email,
+        token: guestUserData.token,
+        username: guestUserData.user.username,
+      })
+    );
+    navigation.navigate("SelectTribeScreen");
   };
   return (
     <TemplateView>
@@ -64,7 +77,7 @@ export default function SplashScreen({ navigation }) {
             onPress={() => {
               console.log("Login");
               // navigation.navigate("Login")
-              handleGuestLogin();
+              handleLoginGuestOffline();
             }}
             style={styles.btnContinueWithoutLogin}
           >

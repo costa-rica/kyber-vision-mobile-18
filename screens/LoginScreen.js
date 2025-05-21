@@ -57,7 +57,7 @@ export default function LoginScreen({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      console.log(resJson);
+      // console.log(resJson);
       dispatch(
         loginUser({
           email: resJson.email,
@@ -65,7 +65,7 @@ export default function LoginScreen({ navigation }) {
           username: resJson.user.username,
         })
       );
-      console.log("after dispatch");
+      // console.log("after dispatch");
       navigation.navigate("SelectTribeScreen");
     } else {
       const errorMessage =
