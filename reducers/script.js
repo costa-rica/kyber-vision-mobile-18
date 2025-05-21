@@ -64,6 +64,7 @@ const initialState = {
 // scoreTeamOpponent: 0,
 // rotation: p1
 // opponentServed: false
+// favorite: false
 
 // *** (END) Important Type Inforamtion ***
 

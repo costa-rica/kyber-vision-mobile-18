@@ -115,14 +115,9 @@ export default function ScriptingLive({ navigation }) {
     const centerX = x - circleSize.width / 2;
     const centerY = y - circleSize.height / 2;
 
-    console.log(
-      `scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y: ${scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y}`
-    );
-
     setCirclePosition({
       x: centerX,
       y: centerY,
-      // y: centerY,
     });
   };
 
@@ -144,6 +139,7 @@ export default function ScriptingLive({ navigation }) {
       scoreTeamOpponent: 0,
       rotation: scriptReducer.rotationArray[0],
       opponentServed: false,
+      favorite: false,
     };
 
     // create new array with

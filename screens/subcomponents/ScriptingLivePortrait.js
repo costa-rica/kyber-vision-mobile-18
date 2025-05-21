@@ -21,6 +21,7 @@ import {
 import SvbVolleyballCourt from "../../assets/images/volleyballCourt.svg";
 import BtnReception from "../../assets/images/buttons/btnReception.svg";
 import BtnService from "../../assets/images/buttons/btnService.svg";
+import BtnFavorite from "../../assets/images/buttons/btnFavorite.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateScriptLivePortraitVwVolleyballCourtCoords,
@@ -79,14 +80,14 @@ export default function ScriptingLivePortrait(props) {
         </GestureHandlerRootView>
       </View>
       <View style={styles.containerBottom}>
-        <View style={styles.vwRallyButtons}>
+        <View style={styles.vwRallyButtonsGroup}>
           <View style={styles.vwGroupButtons}>
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed service");
                 dispatch(replaceScriptActionArray({ actionsArray: [] }));
               }}
-              style={styles.btnBottom}
+              style={styles.btnRallyGroupBottom}
             >
               <BtnService />
             </ButtonKvImage>
@@ -94,18 +95,20 @@ export default function ScriptingLivePortrait(props) {
               onPress={() => {
                 console.log("pressed reception");
               }}
-              style={styles.btnTop}
+              style={styles.btnRallyGroupTop}
             >
               <BtnReception />
             </ButtonKvImage>
           </View>
-          <View style={styles.vwButtonFavorite}></View>
+          <View style={styles.vwButtonFavorite}>
+            <BtnFavorite style={styles.btnFavorite} />
+          </View>
           <View style={styles.vwGroupButtons}>
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed win");
               }}
-              style={styles.btnBottom}
+              style={styles.btnRallyGroupBottom}
             >
               <BtnService />
             </ButtonKvImage>
@@ -113,10 +116,32 @@ export default function ScriptingLivePortrait(props) {
               onPress={() => {
                 console.log("pressed reception");
               }}
-              style={styles.btnTop}
+              style={styles.btnRallyGroupTop}
             >
               <BtnReception />
             </ButtonKvImage>
+          </View>
+        </View>
+        <View style={styles.vwSendScriptGroup}>
+          <View style={styles.vwScriptDetails}>
+            <Text> {scriptReducer.actionsArray.length} actions recorded</Text>
+            <Text>
+              {" "}
+              {
+                scriptReducer.actionsArray.filter((action) => action.favorite)
+                  .length
+              }{" "}
+              favorites
+            </Text>
+          </View>
+          <View style={styles.vwSendScriptButton}>
+            <ButtonKv
+              onPress={() => {
+                console.log("pressed send script");
+              }}
+            >
+              Send Script
+            </ButtonKv>
           </View>
         </View>
       </View>
@@ -179,7 +204,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "dashed",
   },
-  vwRallyButtons: {
+  vwRallyButtonsGroup: {
     flexDirection: "row",
     borderColor: "gray",
     borderWidth: 1,
@@ -192,25 +217,32 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
   },
 
-  btnBottom: {
-    // paddingTop: 50,
+  btnRallyGroupBottom: {
     paddingHorizontal: 0,
-    // marginHorizontal: -15,
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
   },
 
-  btnTop: {
+  btnRallyGroupTop: {
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
   },
 
   vwButtonFavorite: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: "orange",
+    borderRadius: 50,
+    backgroundColor: "white",
+    marginTop: -35,
+    paddingTop: 5,
+  },
+  btnFavorite: {
+    // marginTop: -50,
+  },
+  vwSendScriptGroup: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
   },
 });
