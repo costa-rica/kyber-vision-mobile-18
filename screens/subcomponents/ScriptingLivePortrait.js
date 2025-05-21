@@ -24,6 +24,7 @@ import BtnService from "../../assets/images/buttons/btnService.svg";
 import BtnFavorite from "../../assets/images/buttons/btnFavorite.svg";
 import BtnWin from "../../assets/images/buttons/btnWin.svg";
 import BtnLose from "../../assets/images/buttons/btnLose.svg";
+import Lightning from "../../assets/images/lightning.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateScriptLivePortraitVwVolleyballCourtCoords,
@@ -32,6 +33,7 @@ import {
 
 export default function ScriptingLivePortrait(props) {
   const scriptReducer = useSelector((state) => state.script);
+  const userReducer = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
@@ -94,6 +96,20 @@ export default function ScriptingLivePortrait(props) {
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
+        <View style={styles.vwTeamNames}>
+          <View style={styles.vwTeamNameSub}>
+            <Text style={styles.txtTeamName}>
+              {
+                userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+                  .teamName
+              }
+            </Text>
+          </View>
+          <Lightning />
+          <View style={styles.vwTeamNameSub}>
+            <Text style={styles.txtTeamName}>Team 2</Text>
+          </View>
+        </View>
         <Text>ScriptingLivePortrait</Text>
         <Text>{props.orientation}</Text>
         <View style={styles.testActionsContainer}>
@@ -241,6 +257,22 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
+  },
+
+  vwTeamNames: {
+    backgroundColor: "#806181",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    height: 50,
+    overflow: "hidden",
+  },
+  txtTeamName: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   // ------------
   // MIDDLE Container
