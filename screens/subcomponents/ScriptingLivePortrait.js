@@ -18,6 +18,8 @@ import {
   GestureDetector,
   // Gesture,
 } from "react-native-gesture-handler";
+import SvbVolleyballCourt from "../../assets/images/volleyballCourt.svg";
+
 export default function ScriptingLivePortrait(props) {
   return (
     <View style={styles.container}>
@@ -29,6 +31,7 @@ export default function ScriptingLivePortrait(props) {
           <View style={styles.containerSub}>
             <Text>ScriptingLivePortrait</Text>
             <Text>{props.orientation}</Text>
+            <SvbVolleyballCourt />
           </View>
         </GestureDetector>
       </GestureHandlerRootView>

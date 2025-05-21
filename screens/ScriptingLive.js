@@ -13,6 +13,8 @@ import { Gesture } from "react-native-gesture-handler";
 import { useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { replaceScriptActionArray } from "../reducers/script";
 
 export default function ScriptingLive({ navigation }) {
   const [tapIsActive, setTapIsActive] = useState(true);
@@ -23,6 +25,9 @@ export default function ScriptingLive({ navigation }) {
       <Text style={styles.txtTopChildren}>Live Scripting </Text>
     </View>
   );
+  const userReducer = useSelector((state) => state.user);
+  const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
 
   // -------------
   // Orientation Stuff
@@ -82,6 +87,8 @@ export default function ScriptingLive({ navigation }) {
       const { x, y, absoluteX, absoluteY } = event;
       calculateCenterCircle(x, y);
     }
+
+    addNewActionToScriptReducersActionsArrayNoWheel();
   });
 
   const stylesCircle = {
@@ -100,6 +107,56 @@ export default function ScriptingLive({ navigation }) {
     const centerX = x - circleSize.width / 2;
     const centerY = y - circleSize.height / 2;
     setCirclePosition({ x: centerX, y: centerY });
+  };
+
+  // -----------------
+  //  Add Action
+  // -----------------
+  const addNewActionToScriptReducersActionsArrayNoWheel = () => {
+    // console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
+    const newActionObj = {
+      dateScripted: new Date().toISOString(), // Convert to ISO string
+      timestamp: new Date().toISOString(),
+      type: scriptReducer.typesArray[scriptReducer.typesArray.length - 1],
+      subtype:
+        scriptReducer.subtypesArray[scriptReducer.subtypesArray.length - 1],
+      quality: scriptReducer.qualityArray[2],
+      playerId: scriptReducer.scriptingForPlayerObject.id,
+      setNumber: 0,
+      scoreTeamAnalyzed: 0,
+      scoreTeamOpponent: 0,
+      rotation: scriptReducer.rotationArray[0],
+      opponentServed: false,
+    };
+
+    // create new array with
+    let newScriptReducerActionArray = [
+      ...scriptReducer.actionsArray,
+      newActionObj,
+    ];
+
+    console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
+
+    // sort
+    newScriptReducerActionArray.sort((a, b) => a.timeStamp - b.timeStamp);
+    dispatch(
+      replaceScriptActionArray({ actionsArray: newScriptReducerActionArray })
+    );
+
+    // dispatch(appendAction({ newActionObj }));
+    if (scriptReducerActionArray.length > 0) {
+      setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
+    } else {
+      setScriptReducerActionArray([newActionObj]);
+    }
+
+    //setPadVisible(false);
+    //setTapIsActive(true);
+    // setSwipePadServeIsActive(false);
+    // setSwipePadReceptionIsActive(false);
+    console.log(
+      "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
+    );
   };
 
   return orientation == "portrait" ? (

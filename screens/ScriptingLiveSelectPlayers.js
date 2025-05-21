@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { updatePlayersArray } from "../reducers/user";
 import ButtonKv from "./subcomponents/buttons/ButtonKv";
 import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle.svg";
+import { setScriptingForPlayerObject } from "../reducers/script";
 
 export default function ScriptingLiveSelectPlayers({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -98,6 +99,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
         return { ...item, selected: false };
       });
       dispatch(updatePlayersArray(tempArray));
+      dispatch(setScriptingForPlayerObject(player));
     };
 
     return (
