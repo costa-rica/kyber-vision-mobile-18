@@ -36,7 +36,7 @@ export default function ScriptingLive({ navigation }) {
   const [orientation, setOrientation] = useState("portrait");
 
   useEffect(() => {
-    console.log("- Position useEffect");
+    // console.log("- Position useEffect");
     ScreenOrientation.unlockAsync();
     checkOrientation();
     const subscriptionScreenOrientation =
@@ -51,7 +51,7 @@ export default function ScriptingLive({ navigation }) {
   const checkOrientation = async () => {
     // console.log("in checkOrientation");
     const orientationObject = await ScreenOrientation.getOrientationAsync();
-    console.log(`orientation is ${orientationObject}`);
+    // console.log(`orientation is ${orientationObject}`);
     if (
       orientationObject.orientationInfo.orientation == 4 ||
       orientationObject.orientationInfo.orientation == 3
@@ -85,7 +85,11 @@ export default function ScriptingLive({ navigation }) {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
-      calculateCenterCircle(x, y);
+      calculateCenterCircle(
+        x,
+        y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
+      );
+      // calculateCenterCircle(absoluteX, absoluteY);
     }
 
     addNewActionToScriptReducersActionsArrayNoWheel();
@@ -106,7 +110,16 @@ export default function ScriptingLive({ navigation }) {
   const calculateCenterCircle = (x, y) => {
     const centerX = x - circleSize.width / 2;
     const centerY = y - circleSize.height / 2;
-    setCirclePosition({ x: centerX, y: centerY });
+
+    console.log(
+      `scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y: ${scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y}`
+    );
+
+    setCirclePosition({
+      x: centerX,
+      y: centerY,
+      // y: centerY,
+    });
   };
 
   // -----------------
@@ -135,7 +148,7 @@ export default function ScriptingLive({ navigation }) {
       newActionObj,
     ];
 
-    console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
+    // console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
 
     // sort
     newScriptReducerActionArray.sort((a, b) => a.timeStamp - b.timeStamp);
@@ -143,20 +156,19 @@ export default function ScriptingLive({ navigation }) {
       replaceScriptActionArray({ actionsArray: newScriptReducerActionArray })
     );
 
-    // dispatch(appendAction({ newActionObj }));
-    if (scriptReducerActionArray.length > 0) {
-      setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
-    } else {
-      setScriptReducerActionArray([newActionObj]);
-    }
+    // if (scriptReducerActionArray.length > 0) {
+    //   setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
+    // } else {
+    //   setScriptReducerActionArray([newActionObj]);
+    // }
 
     //setPadVisible(false);
     //setTapIsActive(true);
     // setSwipePadServeIsActive(false);
     // setSwipePadReceptionIsActive(false);
-    console.log(
-      "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
-    );
+    // console.log(
+    //   "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
+    // );
   };
 
   return orientation == "portrait" ? (

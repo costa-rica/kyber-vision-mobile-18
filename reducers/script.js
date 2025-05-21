@@ -37,6 +37,12 @@ const initialState = {
   playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
   pointsArray: Array.from({ length: 50 }, (_, i) => i),
   setOptionsArray: Array.from({ length: 4 }, (_, i) => i),
+  scriptLivePortraitVwVolleyballCourtCoords: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
 };
 // *** Important Type Inforamtion ***
 
@@ -65,12 +71,12 @@ export const scriptSlice = createSlice({
   name: "script",
   initialState,
   reducers: {
-    newScript: (state, action) => {
-      console.log("start newScript (in script reduer)");
-      state.scriptId = action.payload.scriptId;
-      state.tokenWithUserId = action.payload.userId;
-      console.log("END newScript (in script reduer)");
-    },
+    // newScript: (state, action) => {
+    //   console.log("start newScript (in script reduer)");
+    //   state.scriptId = action.payload.scriptId;
+    //   state.tokenWithUserId = action.payload.userId;
+    //   console.log("END newScript (in script reduer)");
+    // },
     // deleteScript: (state) => {
     emptyActionsArray: (state) => {
       // state.scriptId = null;
@@ -79,7 +85,7 @@ export const scriptSlice = createSlice({
     },
     replaceScriptActionArray: (state, action) => {
       state.actionsArray = action.payload.actionsArray;
-      state.scriptId = action.payload?.scriptId;
+      // state.scriptId = action.payload?.scriptId;
     },
     updateScriptingPlayerCount: (state, action) => {
       state.scriptingPlayerCount = action.payload;
@@ -184,11 +190,16 @@ export const scriptSlice = createSlice({
     setScriptingTeamObject: (state, action) => {
       state.scriptingTeamObject = action.payload;
     },
+
+    // NEW for Version 15
+    updateScriptLivePortraitVwVolleyballCourtCoords: (state, action) => {
+      state.scriptLivePortraitVwVolleyballCourtCoords = action.payload;
+    },
   },
 });
 
 export const {
-  newScript,
+  // newScript,
   // deleteScript,
   emptyActionsArray,
   replaceScriptActionArray,
@@ -201,5 +212,8 @@ export const {
   initializePlayerNamesArrayRotated,
   setScriptingForPlayerObject,
   setScriptingTeamObject,
+
+  // NEW for Version 15
+  updateScriptLivePortraitVwVolleyballCourtCoords,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;
