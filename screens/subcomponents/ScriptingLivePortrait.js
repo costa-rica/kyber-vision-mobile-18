@@ -22,6 +22,8 @@ import SvbVolleyballCourt from "../../assets/images/volleyballCourt.svg";
 import BtnReception from "../../assets/images/buttons/btnReception.svg";
 import BtnService from "../../assets/images/buttons/btnService.svg";
 import BtnFavorite from "../../assets/images/buttons/btnFavorite.svg";
+import BtnWin from "../../assets/images/buttons/btnWin.svg";
+import BtnLose from "../../assets/images/buttons/btnLose.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateScriptLivePortraitVwVolleyballCourtCoords,
@@ -40,6 +42,53 @@ export default function ScriptingLivePortrait(props) {
     dispatch(
       updateScriptLivePortraitVwVolleyballCourtCoords({ x, y, width, height })
     );
+  };
+
+  // -----------------
+  //  Styles
+  // -----------------
+
+  const stylesBtnTop = {
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
+    zIndex: 2,
+  };
+  const stylesBtnBottom = {
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
+    zIndex: 2,
+    // backgroundColor: "white",
+  };
+  const stylesBtnFavorite = {
+    width: Dimensions.get("window").width * 0.15,
+    height: Dimensions.get("window").width * 0.15,
+  };
+  const stylesVwGroupButtonsDiagonalLine = {
+    position: "absolute",
+    width: Dimensions.get("window").width * 0.21, // roughly 0.15 * √2 for diagonal spacing
+    height: 8,
+    backgroundColor: "#806181",
+    top: "50%",
+    left: "50%",
+    transform: [
+      { translateX: -0.5 * Dimensions.get("window").width * 0.21 },
+      { translateY: -5 },
+      { rotate: "-45deg" },
+    ],
+    zIndex: 0,
+  };
+  const stylesVwGroupButtonsCircle = {
+    borderRadius: (Dimensions.get("window").width * 0.2) / 2,
+    backgroundColor: "gray",
+    width: Dimensions.get("window").width * 0.2,
+    height: Dimensions.get("window").width * 0.2,
+    top: Dimensions.get("window").width * 0.05,
+    left:
+      (Dimensions.get("window").width * 0.4) / 2 -
+      (Dimensions.get("window").width * 0.2) / 2,
+    position: "absolute",
+    backgroundColor: "#806181",
+    opacity: 0.5,
   };
 
   return (
@@ -82,6 +131,8 @@ export default function ScriptingLivePortrait(props) {
       <View style={styles.containerBottom}>
         <View style={styles.vwRallyButtonsGroup}>
           <View style={styles.vwGroupButtons}>
+            <View style={stylesVwGroupButtonsCircle} />
+            <View style={stylesVwGroupButtonsDiagonalLine} />
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed service");
@@ -89,7 +140,7 @@ export default function ScriptingLivePortrait(props) {
               }}
               style={styles.btnRallyGroupBottom}
             >
-              <BtnService />
+              <BtnService style={stylesBtnBottom} />
             </ButtonKvImage>
             <ButtonKvImage
               onPress={() => {
@@ -97,35 +148,48 @@ export default function ScriptingLivePortrait(props) {
               }}
               style={styles.btnRallyGroupTop}
             >
-              <BtnReception />
+              <BtnReception style={stylesBtnTop} />
             </ButtonKvImage>
           </View>
           <View style={styles.vwButtonFavorite}>
-            <BtnFavorite style={styles.btnFavorite} />
+            <ButtonKvImage
+              onPress={() => {
+                console.log("pressed favorite");
+              }}
+              style={{ margin: 0, padding: 0 }}
+            >
+              <BtnFavorite style={stylesBtnFavorite} />
+            </ButtonKvImage>
           </View>
           <View style={styles.vwGroupButtons}>
+            <View style={stylesVwGroupButtonsCircle} />
+            <View style={stylesVwGroupButtonsDiagonalLine} />
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed win");
               }}
               style={styles.btnRallyGroupBottom}
             >
-              <BtnService />
+              <BtnWin style={stylesBtnBottom} />
             </ButtonKvImage>
+
             <ButtonKvImage
               onPress={() => {
-                console.log("pressed reception");
+                console.log("pressed lose");
               }}
               style={styles.btnRallyGroupTop}
             >
-              <BtnReception />
+              <BtnLose style={stylesBtnTop} />
             </ButtonKvImage>
           </View>
         </View>
         <View style={styles.vwSendScriptGroup}>
           <View style={styles.vwScriptDetails}>
-            <Text> {scriptReducer.actionsArray.length} actions recorded</Text>
-            <Text>
+            <Text style={{ color: "#806181" }}>
+              {" "}
+              {scriptReducer.actionsArray.length} actions recorded
+            </Text>
+            <Text style={{ fontStyle: "italic", color: "#806181" }}>
               {" "}
               {
                 scriptReducer.actionsArray.filter((action) => action.favorite)
@@ -139,8 +203,13 @@ export default function ScriptingLivePortrait(props) {
               onPress={() => {
                 console.log("pressed send script");
               }}
+              style={{
+                backgroundColor: "#806181",
+                width: "100%",
+                // padding: 15,
+              }}
             >
-              Send Script
+              Send script to PAVVB
             </ButtonKv>
           </View>
         </View>
@@ -177,13 +246,7 @@ const styles = StyleSheet.create({
   // MIDDLE Container
   // ------------
 
-  containerMiddle: {
-    // height: "30%",
-    // width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
-  },
+  containerMiddle: {},
   containerMiddleSub: {
     // height: "100%",
     // width: "100%",
@@ -196,45 +259,57 @@ const styles = StyleSheet.create({
   // ------------
 
   containerBottom: {
-    // flex: 1,
-    // height: "10%",
-    // backgroundColor: "yellow",
     width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
   },
   vwRallyButtonsGroup: {
     flexDirection: "row",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
   },
   vwGroupButtons: {
+    position: "relative",
     flexDirection: "row",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    width: Dimensions.get("window").width * 0.4,
+    justifyContent: "center",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
 
   btnRallyGroupBottom: {
     paddingHorizontal: 0,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+    paddingTop: 50,
   },
-
+  vwGroupButtonsLine: {
+    width: Dimensions.get("window").width * 0.4,
+    height: 5,
+    backgroundColor: "#806181",
+    position: "absolute",
+    top: Dimensions.get("window").width * 0.2 - 20,
+    left: 0,
+    // rotate
+    transform: [{ rotate: "-45deg" }],
+    zIndex: 0,
+  },
   btnRallyGroupTop: {
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
-
+  btnReception: {
+    width: 50,
+    height: 50,
+  },
   vwButtonFavorite: {
-    borderRadius: 50,
+    borderRadius: (Dimensions.get("window").width * 0.2) / 2,
     backgroundColor: "white",
     marginTop: -35,
     paddingTop: 5,
+    width: Dimensions.get("window").width * 0.2,
+    alignItems: "center",
+
+    // height: Dimensions.get("window").width * 0.15,
   },
   btnFavorite: {
     // marginTop: -50,
