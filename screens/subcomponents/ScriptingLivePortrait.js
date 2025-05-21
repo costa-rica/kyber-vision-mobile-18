@@ -70,7 +70,7 @@ export default function ScriptingLivePortrait(props) {
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
           <GestureDetector gesture={props.combinedGestures}>
-            <View style={styles.containerSub}>
+            <View style={styles.containerMiddleSub}>
               <Text>ScriptingLivePortrait</Text>
               <Text>{props.orientation}</Text>
               <SvbVolleyballCourt />
@@ -153,17 +153,18 @@ const styles = StyleSheet.create({
   // ------------
 
   containerMiddle: {
-    height: "30%",
-    width: "100%",
+    // height: "30%",
+    // width: "100%",
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
   },
-  // containerSub: {
-  //   // height: "100%",
-  //   // backgroundColor: "yellow",
-  //   width: "100%",
-  // },
+  containerMiddleSub: {
+    // height: "100%",
+    // width: "100%",
+    backgroundColor: "#F0EAF9",
+    alignItems: "center",
+  },
 
   // ------------
   // BOTTOM Container

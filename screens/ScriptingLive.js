@@ -85,10 +85,14 @@ export default function ScriptingLive({ navigation }) {
     if (tapIsActive) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
-      calculateCenterCircle(
-        x,
-        y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
-      );
+      if (orientation == "portrait") {
+        calculateCenterCircle(
+          x,
+          y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
+        );
+      } else {
+        calculateCenterCircle(x, y);
+      }
       // calculateCenterCircle(absoluteX, absoluteY);
     }
 
