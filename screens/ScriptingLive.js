@@ -14,7 +14,7 @@ import { useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { replaceScriptActionArray } from "../reducers/script";
+import { replaceScriptMatchActionsArray } from "../reducers/script";
 
 export default function ScriptingLive({ navigation }) {
   const [tapIsActive, setTapIsActive] = useState(true);
@@ -28,7 +28,19 @@ export default function ScriptingLive({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
-
+  const [setScores, setSetScores] = useState({
+    teamAnalyzed: 0,
+    teamOpponent: 0,
+  });
+  const [matchSetsWon, setMatchSetsWon] = useState({
+    teamAnalyzed: 0,
+    teamOpponent: 0,
+  });
+  const [lastActionQuality, setLastActionQuality] = useState("?");
+  const [lastActionPosition, setLastActionPosition] = useState("?");
+  const [lastActionPlayer, setLastActionPlayer] = useState(
+    scriptReducer.playersArray.find((p) => p.selected)
+  );
   // -------------
   // Orientation Stuff
   // -------------
@@ -143,17 +155,20 @@ export default function ScriptingLive({ navigation }) {
     };
 
     // create new array with
-    let newScriptReducerActionArray = [
-      ...scriptReducer.actionsArray,
+    // let newScriptReducerActionArray = [
+    let newScriptReducerMatchActionsArray = [
+      ...scriptReducer.matchActionsArray,
       newActionObj,
     ];
 
     // console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
 
     // sort
-    newScriptReducerActionArray.sort((a, b) => a.timeStamp - b.timeStamp);
+    newScriptReducerMatchActionsArray.sort((a, b) => a.timeStamp - b.timeStamp);
     dispatch(
-      replaceScriptActionArray({ actionsArray: newScriptReducerActionArray })
+      replaceScriptMatchActionsArray({
+        matchActionsArray: newScriptReducerMatchActionsArray,
+      })
     );
 
     // if (scriptReducerActionArray.length > 0) {
@@ -171,6 +186,59 @@ export default function ScriptingLive({ navigation }) {
     // );
   };
 
+  // -----------------
+  //  Set Circle
+  // -----------------
+  // Expects team: "analyzed" | "opponent"
+  const handleSetCirclePress = (team, setIndex) => {
+    if (team === "analyzed") {
+      if (matchSetsWon.teamAnalyzed === setIndex) {
+        setMatchSetsWon({
+          teamAnalyzed: setIndex - 1,
+          teamOpponent: matchSetsWon.teamOpponent,
+        });
+      } else if (matchSetsWon.teamAnalyzed + 1 === setIndex) {
+        setMatchSetsWon({
+          teamAnalyzed: setIndex,
+          teamOpponent: matchSetsWon.teamOpponent,
+        });
+      }
+    } else {
+      if (matchSetsWon.teamOpponent === setIndex) {
+        setMatchSetsWon({
+          teamAnalyzed: matchSetsWon.teamAnalyzed,
+          teamOpponent: setIndex - 1,
+        });
+      } else if (matchSetsWon.teamOpponent + 1 === setIndex) {
+        setMatchSetsWon({
+          teamAnalyzed: matchSetsWon.teamAnalyzed,
+          teamOpponent: setIndex,
+        });
+      }
+    }
+  };
+
+  const handleSetScorePress = (team, scoreAdjust) => {
+    // scores can never go below 0
+    if (team === "analyzed") {
+      if (setScores.teamAnalyzed + scoreAdjust < 0) {
+        return;
+      }
+      setSetScores({
+        teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
+        teamOpponent: setScores.teamOpponent,
+      });
+    } else {
+      if (setScores.teamOpponent + scoreAdjust < 0) {
+        return;
+      }
+      setSetScores({
+        teamAnalyzed: setScores.teamAnalyzed,
+        teamOpponent: setScores.teamOpponent + scoreAdjust,
+      });
+    }
+  };
+
   return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -179,6 +247,16 @@ export default function ScriptingLive({ navigation }) {
       <ScriptingPortrait
         combinedGestures={combinedGestures}
         orientation={orientation}
+        setScores={setScores}
+        matchSetsWon={matchSetsWon}
+        handleSetCirclePress={handleSetCirclePress}
+        handleSetScorePress={handleSetScorePress}
+        lastActionQuality={lastActionQuality}
+        setLastActionQuality={setLastActionQuality}
+        lastActionPosition={lastActionPosition}
+        setLastActionPosition={setLastActionPosition}
+        lastActionPlayer={lastActionPlayer}
+        setLastActionPlayer={setLastActionPlayer}
       />
       <View style={stylesCircle} />
     </TemplateViewWithTopChildrenSmall>
@@ -187,6 +265,10 @@ export default function ScriptingLive({ navigation }) {
       <ScriptingLandscape
         combinedGestures={combinedGestures}
         orientation={orientation}
+        setScores={setScores}
+        matchSetsWon={matchSetsWon}
+        handleSetCirclePress={handleSetCirclePress}
+        handleSetScorePress={handleSetScorePress}
       />
       <View style={stylesCircle} />
     </View>

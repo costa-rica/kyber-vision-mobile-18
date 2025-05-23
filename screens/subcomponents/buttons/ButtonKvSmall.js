@@ -1,20 +1,20 @@
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, Text } from "react-native";
 
-const ButtonKv = ({ onPress, style, children }) => {
+export default function ButtonKvSmall({ onPress, style, children }) {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
   // Define default styles
   const defaultStyles = {
-    width: 140,
-    height: 40,
-    borderRadius: 35,
-    backgroundColor: "#A3A3A3",
-    fontSize: 20,
-    color: "white",
-    fontWeight: "",
-    padding: 5,
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "gray",
+    color: "white",
+    width: 35,
+    borderRadius: 10,
   };
   // Merge provided style with default styles
   const mergedStyle = { ...defaultStyles, ...style };
@@ -45,16 +45,19 @@ const ButtonKv = ({ onPress, style, children }) => {
   };
 
   const styleView = {
-    backgroundColor: currentBackgroundColor,
     padding: mergedStyle.padding,
-    borderRadius: mergedStyle.borderRadius,
+    margin: mergedStyle.margin,
+    borderWidth: mergedStyle.borderWidth,
+    alignItems: mergedStyle.alignItems,
+    justifyContent: mergedStyle.justifyContent,
+    backgroundColor: currentBackgroundColor,
+    color: mergedStyle.color,
+    opacity: mergedStyle.opacity,
     width: mergedStyle.width,
     height: mergedStyle.height,
-    justifyContent: mergedStyle.justifyContent,
-    alignItems: mergedStyle.alignItems,
-    opacity: mergedStyle.opacity,
+    fontSize: mergedStyle.fontSize,
+    borderRadius: mergedStyle.borderRadius,
     borderColor: mergedStyle.borderColor,
-    borderWidth: mergedStyle.borderWidth,
     borderStyle: mergedStyle.borderStyle,
     borderBottomWidth: mergedStyle.borderBottomWidth,
     borderBottomColor: mergedStyle.borderBottomColor,
@@ -80,6 +83,6 @@ const ButtonKv = ({ onPress, style, children }) => {
       </Pressable>
     </Animated.View>
   );
-};
+}
 
-export default ButtonKv;
+// export default ButtonKv;

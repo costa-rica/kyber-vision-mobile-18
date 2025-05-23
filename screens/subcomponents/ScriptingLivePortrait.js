@@ -6,12 +6,14 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import TemplateView from "./TemplateView";
 import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import ButtonKv from "./buttons/ButtonKv";
+import ButtonKvSmall from "./buttons/ButtonKvSmall";
 import { loginUser } from "../../reducers/user";
 import {
   GestureHandlerRootView,
@@ -28,7 +30,7 @@ import Lightning from "../../assets/images/lightning.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateScriptLivePortraitVwVolleyballCourtCoords,
-  replaceScriptActionArray,
+  replaceScriptMatchActionsArray,
 } from "../../reducers/script";
 
 export default function ScriptingLivePortrait(props) {
@@ -93,6 +95,8 @@ export default function ScriptingLivePortrait(props) {
     opacity: 0.5,
   };
 
+  console.log(props.lastActionPlayer);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -110,9 +114,8 @@ export default function ScriptingLivePortrait(props) {
             <Text style={styles.txtTeamName}>Team 2</Text>
           </View>
         </View>
-        <Text>ScriptingLivePortrait</Text>
-        <Text>{props.orientation}</Text>
-        <View style={styles.testActionsContainer}>
+        {/* <Text>{props.orientation}</Text> */}
+        {/* <View style={styles.testActionsContainer}>
           <ScrollView>
             {scriptReducer.actionsArray.map((action, index) => (
               <View key={index}>
@@ -124,26 +127,170 @@ export default function ScriptingLivePortrait(props) {
               </View>
             ))}
           </ScrollView>
+        </View> */}
+        <View style={styles.vwGroupScoreAndSets}>
+          <View style={styles.vwGroupSetSuper}>
+            <View style={styles.vwGroupSet}>
+              {Array.from({ length: 3 }).map((_, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    props.handleSetCirclePress("analyzed", index + 1)
+                  }
+                  style={[
+                    styles.touchOpSetsCircle,
+                    props.matchSetsWon.teamAnalyzed > index &&
+                      styles.touchOpSetsCircleFilled,
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
+          <View style={styles.vwGroupScore}>
+            <View style={styles.vwRowButtonsAdjustScore}>
+              <ButtonKv
+                onPress={() => {
+                  props.handleSetScorePress("analyzed", 1);
+                }}
+                style={styles.btnPlus}
+              >
+                +
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => {
+                  props.handleSetScorePress("opponent", 1);
+                }}
+                style={styles.btnPlus}
+              >
+                +
+              </ButtonKv>
+            </View>
+            <View style={styles.vwRowScore}>
+              <Text style={styles.txtRowScore}>
+                {props.setScores.teamAnalyzed}
+              </Text>
+              <Text style={styles.txtRowScore}>-</Text>
+              <Text style={styles.txtRowScore}>
+                {props.setScores.teamOpponent}
+              </Text>
+            </View>
+            <View style={styles.vwRowButtonsAdjustScore}>
+              <ButtonKv
+                onPress={() => {
+                  props.handleSetScorePress("analyzed", -1);
+                }}
+                style={styles.btnPlus}
+              >
+                -
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => {
+                  props.handleSetScorePress("opponent", -1);
+                }}
+                style={styles.btnPlus}
+              >
+                -
+              </ButtonKv>
+            </View>
+          </View>
+          <View style={styles.vwGroupSetSuper}>
+            <View style={styles.vwGroupSet}>
+              {/* <Text>vwGroupSet</Text> */}
+              {/* <View style={styles.vwSetCircles}> */}
+              {Array.from({ length: 3 }).map((_, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() =>
+                    props.handleSetCirclePress("opponent", index + 1)
+                  }
+                  style={[
+                    styles.touchOpSetsCircle,
+                    props.matchSetsWon.teamOpponent > index &&
+                      styles.touchOpSetsCircleFilled,
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
+        </View>
+        <View style={styles.vwGroupLastActionButtonsInstructionsAndLabels}>
+          <View style={styles.vwGroupInstructionsAndLabels}>
+            <Text style={styles.txtInstructions}>
+              Last scripted point - long press to edit
+            </Text>
+            <View style={styles.vwGroupLabels}>
+              <Text style={styles.txtLabel}>Quality</Text>
+              <Text style={styles.txtLabel}>Position</Text>
+              <Text style={styles.txtLabel}>Player</Text>
+              <Text style={styles.txtLabel}>Type</Text>
+              <Text style={styles.txtLabel}>Subtype</Text>
+            </View>
+          </View>
+          <View style={styles.vwGroupLastActionButtonsSuper}>
+            <View style={styles.vwGroupLastActionButtons}>
+              <ButtonKv
+                onPress={() => {
+                  console.log("pressed Quality");
+                }}
+                style={styles.btnLastAction}
+              >
+                {props.lastActionQuality}
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => {
+                  console.log("pressed Position");
+                }}
+                style={styles.btnLastAction}
+              >
+                {props.lastActionPosition}
+              </ButtonKv>
+              <ButtonKv
+                onPress={() => {
+                  console.log("pressed Player");
+                }}
+                style={styles.btnLastActionPlayer}
+              >
+                <Text style={styles.txtLastAction}>
+                  {props.lastActionPlayer.firstName}
+                </Text>
+              </ButtonKv>
+            </View>
+          </View>
         </View>
       </View>
 
+      {/* ------------ MIDDLE Container ------------ */}
       <View
         style={styles.containerMiddle}
         onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
       >
         <GestureHandlerRootView
-          // onLayout={(event) => handleGestureHandlerRootViewLayout(event)}
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
           <GestureDetector gesture={props.combinedGestures}>
             <View style={styles.containerMiddleSub}>
-              <Text>ScriptingLivePortrait</Text>
-              <Text>{props.orientation}</Text>
+              <View style={styles.vwPlayer}>
+                <View style={styles.vwPlayerLeft}>
+                  <Text style={styles.txtShirtNumber}>
+                    {props.lastActionPlayer.shirtNumber}
+                  </Text>
+                </View>
+                <View style={styles.vwPlayerRight}>
+                  <Text style={styles.txtPlayerName}>
+                    {props.lastActionPlayer.firstName}
+                  </Text>
+                  <Text style={styles.txtPlayerName}>
+                    {props.lastActionPlayer.lastName}
+                  </Text>
+                </View>
+              </View>
+
               <SvbVolleyballCourt />
             </View>
           </GestureDetector>
         </GestureHandlerRootView>
       </View>
+      {/* ------------ BOTTOM Container ------------ */}
       <View style={styles.containerBottom}>
         <View style={styles.vwRallyButtonsGroup}>
           <View style={styles.vwGroupButtons}>
@@ -152,7 +299,9 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed service");
-                dispatch(replaceScriptActionArray({ actionsArray: [] }));
+                dispatch(
+                  replaceScriptMatchActionsArray({ matchActionsArray: [] })
+                );
               }}
               style={styles.btnRallyGroupBottom}
             >
@@ -203,13 +352,14 @@ export default function ScriptingLivePortrait(props) {
           <View style={styles.vwScriptDetails}>
             <Text style={{ color: "#806181" }}>
               {" "}
-              {scriptReducer.actionsArray.length} actions recorded
+              {scriptReducer.matchActionsArray.length} actions recorded
             </Text>
             <Text style={{ fontStyle: "italic", color: "#806181" }}>
               {" "}
               {
-                scriptReducer.actionsArray.filter((action) => action.favorite)
-                  .length
+                scriptReducer.matchActionsArray.filter(
+                  (action) => action.favorite
+                ).length
               }{" "}
               favorites
             </Text>
@@ -245,7 +395,7 @@ const styles = StyleSheet.create({
   // ------------
 
   containerTop: {
-    height: "20%",
+    // height: "20%",
     width: "100%",
     borderColor: "gray",
     borderWidth: 1,
@@ -274,6 +424,139 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+
+  vwGroupScoreAndSets: {
+    flexDirection: "row",
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+    paddingVertical: 10,
+  },
+  vwGroupSet: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#806181",
+    padding: 5,
+    borderRadius: 15,
+    gap: 5,
+  },
+
+  touchOpSetsCircle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white",
+    marginHorizontal: 1,
+    backgroundColor: "white",
+  },
+  touchOpSetsCircleFilled: {
+    backgroundColor: "#806181",
+  },
+
+  vwGroupScore: {
+    width: Dimensions.get("window").width * 0.4,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 3,
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+  },
+  vwRowButtonsAdjustScore: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "20%",
+  },
+  btnPlus: {
+    padding: 0,
+    margin: 0,
+    borderWidth: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#806181",
+    color: "white",
+    width: 35,
+    borderRadius: 10,
+    height: null,
+    fontSize: null,
+    opacity: 0.5,
+  },
+  vwRowScore: {
+    backgroundColor: "#806181",
+    borderRadius: 20,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "15%",
+  },
+  txtRowScore: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  vwGroupLastActionButtonsInstructionsAndLabels: {
+    // flexDirection: "row",
+    // justifyContent: "center",
+    // alignItems: "center",
+    // gap: 5,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+  },
+  vwGroupLastActionButtonsSuper: {
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+  },
+
+  vwGroupLastActionButtons: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 5,
+    backgroundColor: "#806181",
+    borderRadius: 20,
+    padding: 5,
+  },
+
+  vwGroupLabels: {
+    flexDirection: "row",
+  },
+
+  btnLastAction: {
+    backgroundColor: "#BD9AC1",
+    borderWidth: 0,
+    width: 30,
+    height: null,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+  },
+  btnLastActionPlayer: {
+    backgroundColor: "#BD9AC1",
+    borderWidth: 0,
+    width: 60,
+    height: null,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+  },
+  txtLastAction: {
+    color: "white",
+    fontSize: 15,
+  },
+
   // ------------
   // MIDDLE Container
   // ------------
@@ -284,6 +567,54 @@ const styles = StyleSheet.create({
     // width: "100%",
     backgroundColor: "#F0EAF9",
     alignItems: "center",
+    padding: 30,
+  },
+
+  vwPlayer: {
+    // flex: 1,
+    // alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#6E4C84",
+    borderRadius: 30,
+    backgroundColor: "white",
+    // marginVertical: 5,
+    flexDirection: "row",
+    // alignItems: "center",
+    // gap: 10,
+    padding: 5,
+  },
+  // btnPlayerSelected: {
+  //   backgroundColor: "gray",
+  // },
+
+  vwPlayerLeft: {
+    // alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#806181",
+    borderRadius: 30,
+    // padding: 5,
+  },
+
+  txtShirtNumber: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 15,
+    // padding: 2,
+    borderRadius: 7,
+    height: 15,
+    width: 20,
+    textAlign: "center",
+  },
+  vwPlayerRight: {
+    alignItems: "center",
+    justifyContent: "center",
+    // gap: 10,
+  },
+
+  txtPlayerName: {
+    textAlign: "center",
+    color: "#6E4C84",
+    fontSize: 12,
   },
 
   // ------------

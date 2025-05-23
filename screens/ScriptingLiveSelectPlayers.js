@@ -15,13 +15,16 @@ import { useSelector } from "react-redux";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updatePlayersArray } from "../reducers/user";
 import ButtonKv from "./subcomponents/buttons/ButtonKv";
 import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle.svg";
-import { setScriptingForPlayerObject } from "../reducers/script";
+import {
+  setScriptingForPlayerObject,
+  updatePlayersArray,
+} from "../reducers/script";
 
 export default function ScriptingLiveSelectPlayers({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
   const [displayWarning, setDisplayWarning] = useState(false);
 
@@ -75,8 +78,9 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     }
   };
   const fetchPlayersOffline = () => {
-    const userReducerOffline = require("../offlineData/userReducer.json");
-    dispatch(updatePlayersArray(userReducerOffline.playersArray));
+    console.log("Fetched players offline");
+    const scriptReducerOffline = require("../offlineData/scriptReducer.json");
+    dispatch(updatePlayersArray(scriptReducerOffline.playersArray));
   };
   useEffect(() => {
     if (userReducer.token === "offline") {
@@ -88,7 +92,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
 
   const playerTableButton = ({ player }) => {
     const handleSelectPlayer = () => {
-      const tempArray = userReducer.playersArray.map((item) => {
+      const tempArray = scriptReducer.playersArray.map((item) => {
         if (item.id === player.id) {
           setDisplayWarning(false);
           return {
@@ -127,6 +131,8 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     );
   };
 
+  console.log(`userReducer.playersArray`, userReducer.playersArray);
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -142,9 +148,9 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             <Text>Players</Text>
           </View>
           <View style={styles.vwPlayersTable}>
-            {userReducer.playersArray?.length > 0 ? (
+            {scriptReducer.playersArray?.length > 0 ? (
               <ScrollView style={styles.scrollViewPlayersTable}>
-                {userReducer.playersArray.map((player) =>
+                {scriptReducer.playersArray.map((player) =>
                   playerTableButton({ player })
                 )}
               </ScrollView>
@@ -168,7 +174,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             <ButtonKv
               onPress={() => {
                 if (
-                  userReducer.playersArray.filter((player) => player.selected)
+                  scriptReducer.playersArray.filter((player) => player.selected)
                     .length > 0
                 ) {
                   navigation.navigate("ScriptingLive");

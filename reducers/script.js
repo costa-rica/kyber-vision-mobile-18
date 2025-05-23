@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   // scriptId: null,
   // tokenWithUserId: null,
-  actionsArray: [],
-  pointsTableArray: [],
+  matchActionsArray: [], // former actionsArray
+  matchPointsTableArray: [], // former pointsTableArray
+  playersArray: [],
   scriptingPlayerCount: null,
   scriptingForPlayerObject: null, // <-- player object (id, firstName, lastName, shirtNumber)
   scriptingTeamObject: null, // <-- team object (id, name)
@@ -79,93 +80,93 @@ export const scriptSlice = createSlice({
     //   console.log("END newScript (in script reduer)");
     // },
     // deleteScript: (state) => {
-    emptyActionsArray: (state) => {
+    emptyMatchActionsArray: (state) => {
       // state.scriptId = null;
       // state.tokenWithUserId = null;
-      state.actionsArray = [];
+      state.matchActionsArray = [];
     },
-    replaceScriptActionArray: (state, action) => {
-      state.actionsArray = action.payload.actionsArray;
+    replaceScriptMatchActionsArray: (state, action) => {
+      state.matchActionsArray = action.payload.matchActionsArray;
       // state.scriptId = action.payload?.scriptId;
     },
     updateScriptingPlayerCount: (state, action) => {
       state.scriptingPlayerCount = action.payload;
     },
 
-    updateQualityPropertyInObjectOfActionsArray: (state, action) => {
+    updateQualityPropertyInObjectOfMatchActionsArray: (state, action) => {
       const { timestamp, quality } = action.payload;
 
       // Find the index of the object to update
-      const index = state.actionsArray.findIndex(
+      const index = state.matchActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.actionsArray[index], quality };
+        const updatedObject = { ...state.matchActionsArray[index], quality };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.actionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.actionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.actionsArray = updatedArray.sort(
+        state.matchActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
     },
-    updateTypePropertyInObjectOfActionsArray: (state, action) => {
+    updateTypePropertyInObjectOfMatchActionsArray: (state, action) => {
       const { timestamp, type } = action.payload;
 
       // Find the index of the object to update
-      const index = state.actionsArray.findIndex(
+      const index = state.matchActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.actionsArray[index], type };
+        const updatedObject = { ...state.matchActionsArray[index], type };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.actionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.actionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.actionsArray = updatedArray.sort(
+        state.matchActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
     },
-    updateSubtypePropertyInObjectOfActionsArray: (state, action) => {
+    updateSubtypePropertyInObjectOfMatchActionsArray: (state, action) => {
       const { timestamp, subtype } = action.payload;
 
       // Find the index of the object to update
-      const index = state.actionsArray.findIndex(
+      const index = state.matchActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.actionsArray[index], subtype };
+        const updatedObject = { ...state.matchActionsArray[index], subtype };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.actionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.actionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.actionsArray = updatedArray.sort(
+        state.matchActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
     },
-    updatePointsTableArray: (state, action) => {
-      state.pointsTableArray = action.payload.pointsTableArray;
+    updateMatchPointsTableArray: (state, action) => {
+      state.matchPointsTableArray = action.payload.matchPointsTableArray;
     },
     rotatePlayerNamesArray: (state) => {
       if (state.playerNamesArrayRotated.length === 0) {
@@ -196,19 +197,22 @@ export const scriptSlice = createSlice({
     updateScriptLivePortraitVwVolleyballCourtCoords: (state, action) => {
       state.scriptLivePortraitVwVolleyballCourtCoords = action.payload;
     },
+    updatePlayersArray: (state, action) => {
+      state.playersArray = action.payload;
+    },
   },
 });
 
 export const {
   // newScript,
   // deleteScript,
-  emptyActionsArray,
-  replaceScriptActionArray,
+  emptyMatchActionsArray,
+  replaceScriptMatchActionsArray,
   updateScriptingPlayerCount,
-  updateQualityPropertyInObjectOfActionsArray,
-  updateTypePropertyInObjectOfActionsArray,
-  updateSubtypePropertyInObjectOfActionsArray,
-  updatePointsTableArray,
+  updateQualityPropertyInObjectOfMatchActionsArray,
+  updateTypePropertyInObjectOfMatchActionsArray,
+  updateSubtypePropertyInObjectOfMatchActionsArray,
+  updateMatchPointsTableArray,
   rotatePlayerNamesArray,
   initializePlayerNamesArrayRotated,
   setScriptingForPlayerObject,
@@ -216,5 +220,6 @@ export const {
 
   // NEW for Version 15
   updateScriptLivePortraitVwVolleyballCourtCoords,
+  updatePlayersArray,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;
