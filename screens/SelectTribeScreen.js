@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
@@ -126,15 +126,15 @@ export default function SelectTribeScreen({ navigation }) {
         </View>
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => navigation.navigate("CreateTribeScreen")}
               style={styles.btnTribe}
             >
               Create Tribe
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
           <View style={styles.vwInputGroup}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => {
                 if (
                   userReducer.tribeArray.filter((tribe) => tribe.selected)
@@ -148,7 +148,7 @@ export default function SelectTribeScreen({ navigation }) {
               style={styles.btnTribe}
             >
               Select Tribe
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>

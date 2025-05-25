@@ -12,8 +12,8 @@ import TemplateView from "./TemplateView";
 import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./buttons/ButtonKvImage";
-import ButtonKv from "./buttons/ButtonKv";
-import ButtonKvSmall from "./buttons/ButtonKvSmall";
+import ButtonKvStd from "./buttons/ButtonKvStd";
+import ButtonKvNoDefault from "./buttons/ButtonKvNoDefault";
 import { loginUser } from "../../reducers/user";
 import {
   GestureHandlerRootView,
@@ -95,7 +95,26 @@ export default function ScriptingLivePortrait(props) {
     opacity: 0.5,
   };
 
-  console.log(props.lastActionPlayer);
+  const stylesDropDownPositionQuality = {
+    left: 5,
+    width: Dimensions.get("window").width * 0.1 - 5,
+  };
+  const stylesDropDownPositionPosition = {
+    left: Dimensions.get("window").width * 0.1 + 5,
+    width: Dimensions.get("window").width * 0.1 - 5,
+  };
+  const stylesDropDownPositionPlayer = {
+    left: Dimensions.get("window").width * 0.2 + 5,
+    width: Dimensions.get("window").width * 0.2 - 5,
+  };
+  const stylesDropDownPositionType = {
+    left: Dimensions.get("window").width * 0.4 + 5,
+    width: Dimensions.get("window").width * 0.2 - 5,
+  };
+  const stylesDropDownPositionSubtype = {
+    left: Dimensions.get("window").width * 0.6 + 5,
+    width: Dimensions.get("window").width * 0.2 - 5,
+  };
 
   return (
     <View style={styles.container}>
@@ -148,22 +167,22 @@ export default function ScriptingLivePortrait(props) {
           </View>
           <View style={styles.vwGroupScore}>
             <View style={styles.vwRowButtonsAdjustScore}>
-              <ButtonKv
+              <ButtonKvStd
                 onPress={() => {
                   props.handleSetScorePress("analyzed", 1);
                 }}
                 style={styles.btnPlus}
               >
                 +
-              </ButtonKv>
-              <ButtonKv
+              </ButtonKvStd>
+              <ButtonKvStd
                 onPress={() => {
                   props.handleSetScorePress("opponent", 1);
                 }}
                 style={styles.btnPlus}
               >
                 +
-              </ButtonKv>
+              </ButtonKvStd>
             </View>
             <View style={styles.vwRowScore}>
               <Text style={styles.txtRowScore}>
@@ -175,22 +194,22 @@ export default function ScriptingLivePortrait(props) {
               </Text>
             </View>
             <View style={styles.vwRowButtonsAdjustScore}>
-              <ButtonKv
+              <ButtonKvStd
                 onPress={() => {
                   props.handleSetScorePress("analyzed", -1);
                 }}
                 style={styles.btnPlus}
               >
                 -
-              </ButtonKv>
-              <ButtonKv
+              </ButtonKvStd>
+              <ButtonKvStd
                 onPress={() => {
                   props.handleSetScorePress("opponent", -1);
                 }}
                 style={styles.btnPlus}
               >
                 -
-              </ButtonKv>
+              </ButtonKvStd>
             </View>
           </View>
           <View style={styles.vwGroupSetSuper}>
@@ -215,45 +234,200 @@ export default function ScriptingLivePortrait(props) {
         </View>
         <View style={styles.vwGroupLastActionButtonsInstructionsAndLabels}>
           <View style={styles.vwGroupInstructionsAndLabels}>
-            <Text style={styles.txtInstructions}>
-              Last scripted point - long press to edit
-            </Text>
+            <Text style={styles.txtInstructions}>Last scripted point</Text>
             <View style={styles.vwGroupLabels}>
-              <Text style={styles.txtLabel}>Quality</Text>
-              <Text style={styles.txtLabel}>Position</Text>
-              <Text style={styles.txtLabel}>Player</Text>
-              <Text style={styles.txtLabel}>Type</Text>
-              <Text style={styles.txtLabel}>Subtype</Text>
+              <Text
+                style={[stylesDropDownPositionQuality, styles.txtGroupLabel]}
+              >
+                Quality
+              </Text>
+              <Text
+                style={[stylesDropDownPositionPosition, styles.txtGroupLabel]}
+              >
+                Pos.
+              </Text>
+              <Text
+                style={[stylesDropDownPositionPlayer, styles.txtGroupLabel]}
+              >
+                Player
+              </Text>
+              <Text style={[stylesDropDownPositionType, styles.txtGroupLabel]}>
+                Type
+              </Text>
+              <Text
+                style={[stylesDropDownPositionSubtype, styles.txtGroupLabel]}
+              >
+                Subtype
+              </Text>
             </View>
           </View>
+
+          {/* --------- Last Action Buttons --------- */}
           <View style={styles.vwGroupLastActionButtonsSuper}>
             <View style={styles.vwGroupLastActionButtons}>
-              <ButtonKv
+              <ButtonKvNoDefault
                 onPress={() => {
                   console.log("pressed Quality");
+                  props.setLastActionDropDownIsVisibleQuality((prev) => !prev);
                 }}
-                style={styles.btnLastAction}
+                styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
+                styleText={styles.txtLastAction}
               >
                 {props.lastActionQuality}
-              </ButtonKv>
-              <ButtonKv
+              </ButtonKvNoDefault>
+              <ButtonKvNoDefault
                 onPress={() => {
                   console.log("pressed Position");
+                  props.setLastActionDropDownIsVisiblePosition((prev) => !prev);
                 }}
-                style={styles.btnLastAction}
+                styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
+                styleText={styles.txtLastAction}
               >
                 {props.lastActionPosition}
-              </ButtonKv>
-              <ButtonKv
+              </ButtonKvNoDefault>
+              <ButtonKvNoDefault
                 onPress={() => {
                   console.log("pressed Player");
+                  props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
                 }}
-                style={styles.btnLastActionPlayer}
+                styleView={[styles.btnLastAction, styles.btnLastActionBig]}
+                styleText={styles.txtLastAction}
               >
-                <Text style={styles.txtLastAction}>
-                  {props.lastActionPlayer.firstName}
-                </Text>
-              </ButtonKv>
+                {props.lastActionPlayer.firstName.slice(0, 4)}
+              </ButtonKvNoDefault>
+              <ButtonKvNoDefault
+                onPress={() => {
+                  console.log("pressed Type");
+                  props.setLastActionDropDownIsVisibleType((prev) => !prev);
+                }}
+                styleView={[styles.btnLastAction, styles.btnLastActionBig]}
+                styleText={styles.txtLastAction}
+              >
+                {props.lastActionType}
+              </ButtonKvNoDefault>
+              <ButtonKvNoDefault
+                onPress={() => {
+                  console.log("pressed Subtype");
+                  props.setLastActionDropDownIsVisibleSubtype((prev) => !prev);
+                }}
+                styleView={[styles.btnLastAction, styles.btnLastActionBig]}
+                styleText={styles.txtLastAction}
+              >
+                {props.lastActionSubtype}
+              </ButtonKvNoDefault>
+              {props.lastActionDropDownIsVisibleQuality && (
+                <View
+                  style={[
+                    stylesDropDownPositionQuality,
+                    styles.vwDropDownContainer,
+                  ]}
+                >
+                  {scriptReducer.qualityArray.map((quality, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        props.setLastActionQuality(quality);
+                        props.setLastActionDropDownIsVisibleQuality(false);
+                      }}
+                      style={styles.btnDropDown}
+                    >
+                      <Text style={styles.txtDropDownBtn}>{quality}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+
+              {props.lastActionDropDownIsVisiblePosition && (
+                <View
+                  style={[
+                    stylesDropDownPositionPosition,
+                    styles.vwDropDownContainer,
+                  ]}
+                >
+                  {scriptReducer.positionalAreasArray.map(
+                    (positionalArea, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          props.setLastActionPosition(positionalArea);
+                          props.setLastActionDropDownIsVisiblePosition(false);
+                        }}
+                        style={styles.btnDropDown}
+                      >
+                        <Text style={styles.txtDropDownBtn}>
+                          {positionalArea}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  )}
+                </View>
+              )}
+              {props.lastActionDropDownIsVisiblePlayer && (
+                <View
+                  style={[
+                    stylesDropDownPositionPlayer,
+                    styles.vwDropDownContainer,
+                  ]}
+                >
+                  {scriptReducer.playersArray.map((player, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        // console.log(`player pressed: ${player.firstName}`);
+                        props.handleLastActionPlayerPress(player);
+                        props.setLastActionDropDownIsVisiblePlayer(false);
+                      }}
+                      style={styles.btnDropDown}
+                    >
+                      <Text style={styles.txtDropDownBtn}>
+                        {player.firstName.slice(0, 4)}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+              {props.lastActionDropDownIsVisibleType && (
+                <View
+                  style={[
+                    stylesDropDownPositionType,
+                    styles.vwDropDownContainer,
+                  ]}
+                >
+                  {scriptReducer.typesArray.map((type, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        props.setLastActionType(type);
+                        props.setLastActionDropDownIsVisibleType(false);
+                      }}
+                      style={styles.btnDropDown}
+                    >
+                      <Text style={styles.txtDropDownBtn}>{type}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+              {props.lastActionDropDownIsVisibleSubtype && (
+                <View
+                  style={[
+                    stylesDropDownPositionSubtype,
+                    styles.vwDropDownContainer,
+                  ]}
+                >
+                  {scriptReducer.subtypesArray.map((subtype, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        props.setLastActionSubtype(subtype);
+                        props.setLastActionDropDownIsVisibleSubtype(false);
+                      }}
+                      style={styles.btnDropDown}
+                    >
+                      <Text style={styles.txtDropDownBtn}>{subtype}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
             </View>
           </View>
         </View>
@@ -365,7 +539,7 @@ export default function ScriptingLivePortrait(props) {
             </Text>
           </View>
           <View style={styles.vwSendScriptButton}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => {
                 console.log("pressed send script");
               }}
@@ -376,7 +550,7 @@ export default function ScriptingLivePortrait(props) {
               }}
             >
               Send script to PAVVB
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>
@@ -386,20 +560,13 @@ export default function ScriptingLivePortrait(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "green",
     width: "100%",
   },
-
   // ------------
   // TOP Container
   // ------------
-
   containerTop: {
-    // height: "20%",
     width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
   },
   testActionsContainer: {
     height: 80,
@@ -408,7 +575,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "dashed",
   },
-
   vwTeamNames: {
     backgroundColor: "#806181",
     width: "100%",
@@ -424,7 +590,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
-
   vwGroupScoreAndSets: {
     flexDirection: "row",
     width: Dimensions.get("window").width,
@@ -445,7 +610,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     gap: 5,
   },
-
   touchOpSetsCircle: {
     width: 20,
     height: 20,
@@ -458,7 +622,6 @@ const styles = StyleSheet.create({
   touchOpSetsCircleFilled: {
     backgroundColor: "#806181",
   },
-
   vwGroupScore: {
     width: Dimensions.get("window").width * 0.4,
     justifyContent: "center",
@@ -503,103 +666,125 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   vwGroupLastActionButtonsInstructionsAndLabels: {
-    // flexDirection: "row",
-    // justifyContent: "center",
-    // alignItems: "center",
-    // gap: 5,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
+  },
+  vwGroupInstructionsAndLabels: {
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  txtInstructions: {
+    color: "#806181",
+    fontSize: 12,
+    fontWeight: "bold",
+    width: Dimensions.get("window").width * 0.8 + 5,
+  },
+  vwGroupLabels: {
+    flexDirection: "row",
+    position: "relative",
+    height: 15,
+    width: Dimensions.get("window").width * 0.8 + 5, // +5 for padding linked to btnLastActionSmall and btnLastActionBig
+  },
+  txtGroupLabel: {
+    color: "gray",
+    fontSize: 10,
+    position: "absolute",
+    top: 0,
+    zIndex: 1,
+    textAlign: "center",
   },
   vwGroupLastActionButtonsSuper: {
     width: Dimensions.get("window").width,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
-
   vwGroupLastActionButtons: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     gap: 5,
     backgroundColor: "#806181",
     borderRadius: 20,
     padding: 5,
+    width: Dimensions.get("window").width * 0.8 + 5, // +5 for padding linked to btnLastActionSmall and btnLastActionBig
   },
-
-  vwGroupLabels: {
-    flexDirection: "row",
-  },
-
   btnLastAction: {
     backgroundColor: "#BD9AC1",
     borderWidth: 0,
-    width: 30,
     height: null,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
+    width: null,
   },
-  btnLastActionPlayer: {
-    backgroundColor: "#BD9AC1",
-    borderWidth: 0,
-    width: 60,
-    height: null,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
+  btnLastActionSmall: {
+    width: Dimensions.get("window").width * 0.1 - 5, // +5 for padding linked to vwGroupLastActionButtons
+  },
+  btnLastActionBig: {
+    width: Dimensions.get("window").width * 0.2 - 5, // +5 for padding linked to vwGroupLastActionButtons
   },
   txtLastAction: {
-    color: "white",
+    color: "#806181",
     fontSize: 15,
   },
-
+  vwDropDownContainer: {
+    position: "absolute",
+    top: 30,
+    // left: Dimensions.get("window").width * 0.4 + 5,
+    // width: Dimensions.get("window").width * 0.2 - 5,
+    backgroundColor: "#806181",
+    borderRadius: 10,
+    padding: 5,
+    zIndex: 1,
+    gap: 5,
+  },
+  btnDropDown: {
+    backgroundColor: "white",
+    width: "100%",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  txtDropDownBtn: {
+    color: "#806181",
+    // fontSize: 15,
+  },
   // ------------
   // MIDDLE Container
   // ------------
-
   containerMiddle: {},
   containerMiddleSub: {
-    // height: "100%",
-    // width: "100%",
     backgroundColor: "#F0EAF9",
     alignItems: "center",
-    padding: 30,
+    padding: 15,
+    gap: 20,
   },
-
   vwPlayer: {
-    // flex: 1,
-    // alignItems: "center",
     borderWidth: 1,
     borderColor: "#6E4C84",
     borderRadius: 30,
     backgroundColor: "white",
-    // marginVertical: 5,
     flexDirection: "row",
-    // alignItems: "center",
-    // gap: 10,
+    gap: 10,
     padding: 5,
+    width: Dimensions.get("window").width * 0.3,
   },
-  // btnPlayerSelected: {
-  //   backgroundColor: "gray",
-  // },
-
   vwPlayerLeft: {
-    // alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#806181",
     borderRadius: 30,
-    // padding: 5,
   },
-
   txtShirtNumber: {
     fontWeight: "bold",
     color: "white",
     fontSize: 15,
-    // padding: 2,
     borderRadius: 7,
     height: 15,
     width: 20,
@@ -608,13 +793,11 @@ const styles = StyleSheet.create({
   vwPlayerRight: {
     alignItems: "center",
     justifyContent: "center",
-    // gap: 10,
   },
-
   txtPlayerName: {
     textAlign: "center",
     color: "#6E4C84",
-    fontSize: 12,
+    fontSize: 11,
   },
 
   // ------------

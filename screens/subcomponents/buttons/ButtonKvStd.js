@@ -1,20 +1,20 @@
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, Text } from "react-native";
 
-export default function ButtonKvSmall({ onPress, style, children }) {
+export default function ButtonKvStd({ onPress, style, children }) {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
   // Define default styles
   const defaultStyles = {
-    padding: 0,
-    margin: 0,
-    borderWidth: 0,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "gray",
+    width: 140,
+    height: 40,
+    borderRadius: 35,
+    backgroundColor: "#A3A3A3",
+    fontSize: 20,
     color: "white",
-    width: 35,
-    borderRadius: 10,
+    fontWeight: "",
+    padding: 5,
+    alignItems: "center",
   };
   // Merge provided style with default styles
   const mergedStyle = { ...defaultStyles, ...style };
@@ -45,19 +45,16 @@ export default function ButtonKvSmall({ onPress, style, children }) {
   };
 
   const styleView = {
-    padding: mergedStyle.padding,
-    margin: mergedStyle.margin,
-    borderWidth: mergedStyle.borderWidth,
-    alignItems: mergedStyle.alignItems,
-    justifyContent: mergedStyle.justifyContent,
     backgroundColor: currentBackgroundColor,
-    color: mergedStyle.color,
-    opacity: mergedStyle.opacity,
+    padding: mergedStyle.padding,
+    borderRadius: mergedStyle.borderRadius,
     width: mergedStyle.width,
     height: mergedStyle.height,
-    fontSize: mergedStyle.fontSize,
-    borderRadius: mergedStyle.borderRadius,
+    justifyContent: mergedStyle.justifyContent,
+    alignItems: mergedStyle.alignItems,
+    opacity: mergedStyle.opacity,
     borderColor: mergedStyle.borderColor,
+    borderWidth: mergedStyle.borderWidth,
     borderStyle: mergedStyle.borderStyle,
     borderBottomWidth: mergedStyle.borderBottomWidth,
     borderBottomColor: mergedStyle.borderBottomColor,
@@ -84,5 +81,3 @@ export default function ButtonKvSmall({ onPress, style, children }) {
     </Animated.View>
   );
 }
-
-// export default ButtonKv;

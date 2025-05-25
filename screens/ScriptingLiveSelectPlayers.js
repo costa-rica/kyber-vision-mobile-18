@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle.svg";
 import {
   setScriptingForPlayerObject,
@@ -131,7 +131,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     );
   };
 
-  console.log(`userReducer.playersArray`, userReducer.playersArray);
+  // console.log(`scriptReducer.playersArray`, scriptReducer.playersArray);
 
   return (
     <TemplateViewWithTopChildrenSmall
@@ -171,7 +171,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             )}
           </View>
           <View style={styles.vwInputGroup}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => {
                 if (
                   scriptReducer.playersArray.filter((player) => player.selected)
@@ -186,7 +186,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
               style={styles.btnTribe}
             >
               Select Player
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>

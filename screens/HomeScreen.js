@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -91,12 +91,12 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => navigation.navigate("ScriptingLiveSelectPlayers")}
               style={styles.btnHomeNavigation}
             >
               Scripting
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>

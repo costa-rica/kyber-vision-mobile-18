@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
@@ -162,12 +162,12 @@ export default function CreateTribeScreen({ navigation }) {
           </View>
 
           <View style={styles.vwInputGroup}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => createTribeRequest()}
               style={styles.btnTribe}
             >
               Create Tribe
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>

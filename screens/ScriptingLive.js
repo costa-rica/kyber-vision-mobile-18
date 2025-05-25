@@ -14,7 +14,11 @@ import { useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { replaceScriptMatchActionsArray } from "../reducers/script";
+import {
+  replaceScriptMatchActionsArray,
+  updatePlayersArray,
+  setScriptingForPlayerObject,
+} from "../reducers/script";
 
 export default function ScriptingLive({ navigation }) {
   const [tapIsActive, setTapIsActive] = useState(true);
@@ -36,11 +40,33 @@ export default function ScriptingLive({ navigation }) {
     teamAnalyzed: 0,
     teamOpponent: 0,
   });
+  // Last Action
   const [lastActionQuality, setLastActionQuality] = useState("?");
   const [lastActionPosition, setLastActionPosition] = useState("?");
   const [lastActionPlayer, setLastActionPlayer] = useState(
     scriptReducer.playersArray.find((p) => p.selected)
   );
+  const [lastActionType, setLastActionType] = useState("?");
+  const [lastActionSubtype, setLastActionSubtype] = useState("?");
+  // Dropdowns Visibility
+  const [
+    lastActionDropDownIsVisibleQuality,
+    setLastActionDropDownIsVisibleQuality,
+  ] = useState(false);
+  const [
+    lastActionDropDownIsVisiblePosition,
+    setLastActionDropDownIsVisiblePosition,
+  ] = useState(false);
+  const [
+    lastActionDropDownIsVisiblePlayer,
+    setLastActionDropDownIsVisiblePlayer,
+  ] = useState(false);
+  const [lastActionDropDownIsVisibleType, setLastActionDropDownIsVisibleType] =
+    useState(false);
+  const [
+    lastActionDropDownIsVisibleSubtype,
+    setLastActionDropDownIsVisibleSubtype,
+  ] = useState(false);
   // -------------
   // Orientation Stuff
   // -------------
@@ -187,6 +213,28 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // -----------------
+  //  Last Action - Modify
+  // -----------------
+  const handleLastActionPlayerPress = (player) => {
+    console.log(`- selected player: ${player.firstName}`);
+    // const handleSelectPlayer = () => {
+    const tempArray = scriptReducer.playersArray.map((player) => {
+      if (player.id === player.id) {
+        // setDisplayWarning(false);
+        return {
+          ...player,
+          selected: !player.selected,
+        };
+      }
+      return { ...player, selected: false };
+    });
+    dispatch(updatePlayersArray(tempArray));
+    dispatch(setScriptingForPlayerObject(player));
+    console.log(`- selected player [2]: ${player.firstName}`);
+    setLastActionPlayer(player);
+  };
+
+  // -----------------
   //  Set Circle
   // -----------------
   // Expects team: "analyzed" | "opponent"
@@ -251,14 +299,47 @@ export default function ScriptingLive({ navigation }) {
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
+        // ----------- Dropdowns Value -----------
         lastActionQuality={lastActionQuality}
         setLastActionQuality={setLastActionQuality}
         lastActionPosition={lastActionPosition}
         setLastActionPosition={setLastActionPosition}
         lastActionPlayer={lastActionPlayer}
-        setLastActionPlayer={setLastActionPlayer}
+        // setLastActionPlayer={setLastActionPlayer}
+        handleLastActionPlayerPress={handleLastActionPlayerPress}
+        lastActionType={lastActionType}
+        setLastActionType={setLastActionType}
+        lastActionSubtype={lastActionSubtype}
+        setLastActionSubtype={setLastActionSubtype}
+        // --------- Dropdowns Toggles -----------
+
+        // Quality
+        lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
+        setLastActionDropDownIsVisibleQuality={
+          setLastActionDropDownIsVisibleQuality
+        }
+        // Position
+        lastActionDropDownIsVisiblePosition={
+          lastActionDropDownIsVisiblePosition
+        }
+        setLastActionDropDownIsVisiblePosition={
+          setLastActionDropDownIsVisiblePosition
+        }
+        // Player
+        lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
+        setLastActionDropDownIsVisiblePlayer={
+          setLastActionDropDownIsVisiblePlayer
+        }
+        // Type
+        lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
+        setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
+        // Subtype
+        lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
+        setLastActionDropDownIsVisibleSubtype={
+          setLastActionDropDownIsVisibleSubtype
+        }
       />
-      <View style={stylesCircle} />
+      {circlePosition.y > 0 && <View style={stylesCircle} />}
     </TemplateViewWithTopChildrenSmall>
   ) : (
     <View>
@@ -269,6 +350,18 @@ export default function ScriptingLive({ navigation }) {
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
+        lastActionQuality={lastActionQuality}
+        setLastActionQuality={setLastActionQuality}
+        lastActionPosition={lastActionPosition}
+        setLastActionPosition={setLastActionPosition}
+        lastActionPlayer={lastActionPlayer}
+        setLastActionPlayer={setLastActionPlayer}
+        lastActionType={lastActionType}
+        setLastActionType={setLastActionType}
+        lastActionSubtype={lastActionSubtype}
+        setLastActionSubtype={setLastActionSubtype}
+        lastActionDropDownIsVisible={lastActionDropDownIsVisible}
+        setLastActionDropDownIsVisible={setLastActionDropDownIsVisible}
       />
       <View style={stylesCircle} />
     </View>

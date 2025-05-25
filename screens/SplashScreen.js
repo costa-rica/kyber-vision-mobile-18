@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import TemplateView from "./subcomponents/TemplateView";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 // import { useDispatch } from "react-redux";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function SplashScreen({ navigation }) {
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
           <View style={styles.vwEmailButtons}>
-            <ButtonKv
+            <ButtonKvStd
               title="Register"
               onPress={() => {
                 // console.log("Register");
@@ -39,8 +39,8 @@ export default function SplashScreen({ navigation }) {
               style={styles.btnEmailRegister}
             >
               Email Register
-            </ButtonKv>
-            <ButtonKv
+            </ButtonKvStd>
+            <ButtonKvStd
               title="Login"
               onPress={() => {
                 // console.log("Register");
@@ -49,7 +49,7 @@ export default function SplashScreen({ navigation }) {
               style={styles.btnEmailLogin}
             >
               Email Login
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
           <View style={styles.vwLineContainer}>
             <View style={styles.vwLine} />
@@ -72,7 +72,7 @@ export default function SplashScreen({ navigation }) {
           </View>
         </View>
         <View style={styles.containerBottom}>
-          <ButtonKv
+          <ButtonKvStd
             title="Guest signin"
             onPress={() => {
               console.log("Login");
@@ -82,7 +82,7 @@ export default function SplashScreen({ navigation }) {
             style={styles.btnContinueWithoutLogin}
           >
             continue without login
-          </ButtonKv>
+          </ButtonKvStd>
           <Text style={{ position: "absolute", bottom: 0, right: 10 }}>
             Version 0.15.0
           </Text>

@@ -10,7 +10,7 @@ import TemplateView from "./subcomponents/TemplateView";
 import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
-import ButtonKv from "./subcomponents/buttons/ButtonKv";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../reducers/user";
 
@@ -127,29 +127,29 @@ export default function LoginScreen({ navigation }) {
           </View>
 
           <View style={styles.vwInputGroupForgotPassword}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => console.log("ResetPasswordRequest")}
               style={styles.btnForgotPassword}
             >
               Forgot password ?
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
           <View style={styles.vwInputGroupLogin}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => handleClickLogin()}
               style={styles.btnLogin}
             >
               Login
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
 
           <View style={styles.vwInputGroupCreateAccount}>
-            <ButtonKv
+            <ButtonKvStd
               onPress={() => console.log("Register")}
               style={styles.btnCreateAccount}
             >
               Create an account
-            </ButtonKv>
+            </ButtonKvStd>
           </View>
         </View>
       </View>
