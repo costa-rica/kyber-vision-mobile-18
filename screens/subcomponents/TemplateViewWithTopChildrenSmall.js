@@ -9,6 +9,7 @@ export default function TemplateViewWithTopChildrenSmall({
   navigation,
   topChildren,
   sizeOfLogo = 30,
+  topHeight = "15%",
 }) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
@@ -20,7 +21,7 @@ export default function TemplateViewWithTopChildrenSmall({
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerTop}>
+      <View style={[styles.containerTop, { height: topHeight }]}>
         <Image
           source={require("../../assets/images/imgBackgroundBottomFade.png")}
         />
@@ -57,7 +58,6 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderStyle: "dashed",
-    height: "15%",
   },
   btnBack: {
     position: "absolute",

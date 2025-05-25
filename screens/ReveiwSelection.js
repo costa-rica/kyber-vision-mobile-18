@@ -5,8 +5,9 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
-import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
+import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -87,7 +88,7 @@ export default function ReviewSelectionScreen({ navigation }) {
     </View>
   );
 
-  const fetchVideoList = async () => {
+  const fetchVideoArray = async () => {
     const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`, {
       method: "GET",
       headers: {
@@ -114,7 +115,7 @@ export default function ReviewSelectionScreen({ navigation }) {
         };
       });
       console.log(`Count of videos: ${tempArray.length}`);
-      //   console.log(`tempArray: ${JSON.stringify(tempArray)}`);
+      // console.log(`tempArray: ${JSON.stringify(tempArray[0], null, 2)}`);
       setVideoArray(tempArray);
     } else {
       const errorMessage =
@@ -131,7 +132,7 @@ export default function ReviewSelectionScreen({ navigation }) {
   };
 
   useEffect(() => {
-    fetchVideoList();
+    fetchVideoArray();
   }, []);
 
   // fetch Actions for Match
@@ -213,33 +214,77 @@ export default function ReviewSelectionScreen({ navigation }) {
     }
   };
 
+  const renderVideoItem = ({ item: video }) => (
+    <TouchableOpacity
+      key={video.id}
+      onPress={() => handleVideoSelect(video)}
+      style={styles.btnVideo}
+    >
+      <View style={styles.vwVideoName}>
+        <Text style={styles.txtVideoName}>{video.match.teamOneName} vs</Text>
+        <Text style={styles.txtVideoName}>{video.match.teamTwoName}</Text>
+      </View>
+      <View style={styles.vwVideoDate}>
+        <Text style={styles.txtVideoDate}>
+          {new Date(video.match.matchDate).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+          })}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <TemplateViewWithTopChildren
+    <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
+      topHeight="20%"
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
-          <Text style={styles.txtSelectedTribeName}>
-            Review Selection Screen
-          </Text>
+          <Text style={styles.txtTitle}>Videos available for review</Text>
+          <View style={styles.vwUnderLine} />
         </View>
         <View style={styles.containerMiddle}>
-          <View style={styles.vwVideos}>
+          <FlatList
+            data={videoArray}
+            renderItem={renderVideoItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.scrollViewVideos}
+          />
+          {/* <ScrollView style={styles.scrollViewVideos}>
             {videoArray.map((video) => (
-              <ButtonKvStd
+              <TouchableOpacity
                 key={video.id}
                 onPress={() => handleVideoSelect(video)}
-                styleView={styles.btnVideo}
-                styleText={styles.txtVideoName}
+                style={styles.btnVideo}
               >
-                {video.id}: {video.youTubeVideoId}
-              </ButtonKvStd>
+                <View style={styles.vwVideoName}>
+                  <Text style={styles.txtVideoName}>
+                    {video.match.teamOneName} vs
+                  </Text>
+                  <Text style={styles.txtVideoName}>
+                    {video.match.teamTwoName}
+                  </Text>
+                </View>
+                <View style={styles.vwVideoDate}>
+                  <Text style={styles.txtVideoDate}>
+                    {new Date(video.match.matchDate).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                      }
+                    )}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             ))}
-          </View>
+          </ScrollView> */}
         </View>
       </View>
-    </TemplateViewWithTopChildren>
+    </TemplateViewWithTopChildrenSmall>
   );
 }
 
@@ -319,9 +364,16 @@ const styles = StyleSheet.create({
   containerTop: {
     alignItems: "center",
     justifyContent: "center",
+    // backgroundColor: "green",
   },
-  txtSelectedTribeName: {
+  txtTitle: {
     fontSize: 20,
+    color: "#A3A3A3",
+  },
+  vwUnderLine: {
+    width: "80%",
+    height: 1,
+    backgroundColor: "#A3A3A3",
   },
 
   // ------- MIDDLE ---------
@@ -330,13 +382,41 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
   },
-  vwVideos: {
+  scrollViewVideos: {
     gap: 10,
+    paddingVertical: 10,
   },
   btnVideo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // alignItems: "flex-end",
     width: Dimensions.get("window").width * 0.8,
+    paddingHorizontal: 25,
+    height: 50,
+    borderRadius: 25,
+    borderColor: "#585858",
+    borderWidth: 1,
+    // justifyContent: "center",
   },
+  vwVideoName: {
+    justifyContent: "center",
+    gap: 2,
+    // borderWidth: 1,
+    // borderColor: "#585858",
+    // borderStyle: "dashed",
+  },
+
   txtVideoName: {
-    fontSize: 20,
+    fontSize: 15,
+  },
+  vwVideoDate: {
+    alignItems: "center",
+    justifyContent: "center",
+    // borderWidth: 1,
+    // borderColor: "#585858",
+    // borderStyle: "dashed",
+  },
+  txtVideoDate: {
+    fontSize: 15,
   },
 });
