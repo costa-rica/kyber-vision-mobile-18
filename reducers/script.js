@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // scriptId: null,
+  scriptId: null,
   // tokenWithUserId: null,
   matchActionsArray: [], // former actionsArray
   matchPointsTableArray: [], // former pointsTableArray
@@ -200,6 +200,9 @@ export const scriptSlice = createSlice({
     updatePlayersArray: (state, action) => {
       state.playersArray = action.payload;
     },
+    updateScriptId: (state, action) => {
+      state.scriptId = action.payload;
+    },
   },
 });
 
@@ -221,5 +224,6 @@ export const {
   // NEW for Version 15
   updateScriptLivePortraitVwVolleyballCourtCoords,
   updatePlayersArray,
+  updateScriptId,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

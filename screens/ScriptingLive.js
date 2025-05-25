@@ -18,10 +18,11 @@ import {
   replaceScriptMatchActionsArray,
   updatePlayersArray,
   setScriptingForPlayerObject,
+  updateScriptId,
 } from "../reducers/script";
 
 export default function ScriptingLive({ navigation }) {
-  const [tapIsActive, setTapIsActive] = useState(true);
+  // const [tapIsActive, setTapIsActive] = useState(true);
   const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
   const [circleSize, setCircleSize] = useState({ width: 50, height: 50 });
   const topChildren = (
@@ -120,21 +121,27 @@ export default function ScriptingLive({ navigation }) {
   // Gesture Stuff
   // -------------
   const gestureTapBegin = Gesture.Tap().onBegin((event) => {
-    if (tapIsActive) {
-      const timestamp = new Date().toISOString();
-      const { x, y, absoluteX, absoluteY } = event;
-      if (orientation == "portrait") {
-        calculateCenterCircle(
-          x,
-          y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
-        );
-      } else {
-        calculateCenterCircle(x, y);
-      }
-      // calculateCenterCircle(absoluteX, absoluteY);
+    console.log("gestureTapBegin");
+    // if (tapIsActive) {
+    const timestamp = new Date().toISOString();
+    const { x, y, absoluteX, absoluteY } = event;
+    if (orientation == "portrait") {
+      calculateCenterCircle(
+        x,
+        y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
+      );
+    } else {
+      calculateCenterCircle(x, y);
     }
+    // calculateCenterCircle(absoluteX, absoluteY);
+    // }
+  });
 
+  const gestureTapEnd = Gesture.Tap().onEnd(() => {
+    console.log("gestureTapEnd");
+    // setTapIsActive(true);
     addNewActionToScriptReducersActionsArrayNoWheel();
+    setCirclePosition({ x: 0, y: 0 });
   });
 
   const stylesCircle = {
@@ -147,7 +154,7 @@ export default function ScriptingLive({ navigation }) {
     position: "absolute",
   };
 
-  const combinedGestures = Gesture.Simultaneous(gestureTapBegin);
+  const combinedGestures = Gesture.Simultaneous(gestureTapBegin, gestureTapEnd);
 
   const calculateCenterCircle = (x, y) => {
     const centerX = x - circleSize.width / 2;
@@ -187,8 +194,6 @@ export default function ScriptingLive({ navigation }) {
       newActionObj,
     ];
 
-    // console.log(`newActionObj: ${JSON.stringify(newActionObj)}`);
-
     // sort
     newScriptReducerMatchActionsArray.sort((a, b) => a.timeStamp - b.timeStamp);
     dispatch(
@@ -196,7 +201,12 @@ export default function ScriptingLive({ navigation }) {
         matchActionsArray: newScriptReducerMatchActionsArray,
       })
     );
-
+    // Reset Last Action
+    setLastActionQuality("?");
+    setLastActionPosition("?");
+    setLastActionPlayer(scriptReducer.playersArray.find((p) => p.selected));
+    setLastActionType("?");
+    setLastActionSubtype("?");
     // if (scriptReducerActionArray.length > 0) {
     //   setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
     // } else {
@@ -210,6 +220,56 @@ export default function ScriptingLive({ navigation }) {
     // console.log(
     //   "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
     // );
+  };
+  const sendScriptReducerMatchActionsArrayToServer = async () => {
+    console.log("----> sendScriptReducerMatchActionsArrayToServer");
+
+    const bodyObj = {
+      actionsArray: scriptReducer.matchActionsArray,
+      matchId: userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+        .practiceMatch.id,
+      scriptId: scriptReducer.scriptId,
+    };
+
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+
+    console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok`);
+      console.log(resJson);
+      dispatch(updateScriptId(resJson.scriptId));
+      // const tempArray = resJson.teams.map((item) => {
+      //   return {
+      //     ...item,
+      //     selected: false,
+      //   };
+      // });
+      // console.log(tempArray);
+      // dispatch(updateTribeArray(tempArray));
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
   };
 
   // -----------------
@@ -312,7 +372,6 @@ export default function ScriptingLive({ navigation }) {
         lastActionSubtype={lastActionSubtype}
         setLastActionSubtype={setLastActionSubtype}
         // --------- Dropdowns Toggles -----------
-
         // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
         setLastActionDropDownIsVisibleQuality={
@@ -337,6 +396,9 @@ export default function ScriptingLive({ navigation }) {
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
         setLastActionDropDownIsVisibleSubtype={
           setLastActionDropDownIsVisibleSubtype
+        }
+        sendScriptReducerMatchActionsArrayToServer={
+          sendScriptReducerMatchActionsArrayToServer
         }
       />
       {circlePosition.y > 0 && <View style={stylesCircle} />}

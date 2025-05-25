@@ -542,6 +542,8 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvStd
               onPress={() => {
                 console.log("pressed send script");
+                console.log(scriptReducer.matchActionsArray);
+                props.sendScriptReducerMatchActionsArrayToServer();
               }}
               style={{
                 backgroundColor: "#806181",
@@ -549,7 +551,11 @@ export default function ScriptingLivePortrait(props) {
                 // padding: 15,
               }}
             >
-              Send script to PAVVB
+              Send script to{" "}
+              {
+                userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+                  .teamName
+              }
             </ButtonKvStd>
           </View>
         </View>

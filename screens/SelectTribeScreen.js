@@ -39,13 +39,13 @@ export default function SelectTribeScreen({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      const tempArray = resJson.teams.map((item) => {
+      const tempArray = resJson.teamsArray.map((item) => {
         return {
           ...item,
           selected: false,
         };
       });
-      // console.log(tempArray);
+      console.log(tempArray);
       dispatch(updateTribeArray(tempArray));
     } else {
       const errorMessage =
