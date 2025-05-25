@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  reviewReducerVideoObject: null,
   reviewReducerActionsArray: [],
   reviewReducerListOfPlayerDbObjects: [],
   isFavoriteToggle: false,
-  reviewReducerVideoObject: null,
   // manuallySelectedActionId: null, // New property to track user-selected action
   selectedActionObject: null, // New property to track user-selected action
   // selectedActionTimestamp: null, // New property to track user-selected action

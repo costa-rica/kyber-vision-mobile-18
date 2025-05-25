@@ -11,7 +11,7 @@ const initialState = {
   portraitHeight: null,
   portraitWidth: null,
   // profile: null,
-  video: {}, //list received from API GET /videos
+  //video: {}, //list received from API GET /videos
   // videosDownloadedStatusObj: {},
   circleRadiusOuter: 30,
   circleRadiusMiddle: 30,
@@ -89,10 +89,10 @@ export const userSlice = createSlice({
       state.user.username = action.payload.username;
       state.user.email = action.payload.email;
     },
-    storeVideoDetailsInRedux: (state, action) => {
-      console.log(`- dans Redux: storeVideoDetailsInRedux 🔔`);
-      state.video = action.payload.video;
-    },
+    // storeVideoDetailsInRedux: (state, action) => {
+    //   console.log(`- dans Redux: storeVideoDetailsInRedux 🔔`);
+    //   state.video = action.payload.video;
+    // },
     reducerSetScreenDimensions: (state, action) => {
       console.log(`- dans Redux: reducerSetScreenDimensions 🔔`);
       state.portraitHeight = action.payload.portraitHeight;
@@ -119,7 +119,7 @@ export const userSlice = createSlice({
 
 export const {
   loginUser,
-  storeVideoDetailsInRedux,
+  // storeVideoDetailsInRedux,
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
   switchPositionGuides,

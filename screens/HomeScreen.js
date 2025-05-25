@@ -97,6 +97,12 @@ export default function HomeScreen({ navigation }) {
             >
               Scripting
             </ButtonKvStd>
+            <ButtonKvStd
+              onPress={() => navigation.navigate("ReviewSelectionScreen")}
+              style={styles.btnHomeNavigation}
+            >
+              Review
+            </ButtonKvStd>
           </View>
         </View>
       </View>
@@ -196,6 +202,7 @@ const styles = StyleSheet.create({
     width: "90%",
     alignItems: "center",
     paddingTop: 30,
+    gap: 10,
   },
   btnHomeNavigation: {
     width: Dimensions.get("window").width * 0.6,
