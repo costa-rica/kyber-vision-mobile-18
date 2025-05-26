@@ -19,6 +19,7 @@ import {
   createReviewActionsArrayUniquePlayersNamesAndObjects,
 } from "../reducers/review";
 let reviewReducerOffline;
+import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 
 export default function ReviewSelectionScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);

@@ -8,7 +8,7 @@ import CreateTribeScreen from "./screens/CreateTribeScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ScriptingLive from "./screens/ScriptingLive";
 import ScriptingLiveSelectPlayers from "./screens/ScriptingLiveSelectPlayers";
-import ReviewSelectionScreen from "./screens/ReveiwSelection";
+import ReviewSelectionScreen from "./screens/ReviewSelection";
 import ReviewVideo from "./screens/ReviewVideo";
 
 import { Provider } from "react-redux";

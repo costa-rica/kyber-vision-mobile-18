@@ -13,20 +13,80 @@ import {
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 
 import { useDispatch, useSelector } from "react-redux";
-import YoutubePlayer from "react-native-youtube-iframe";
 import { useState, useEffect, useRef } from "react";
+import * as ScreenOrientation from "expo-screen-orientation";
+import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
+import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
+import { filterReviewReducerActionsArrayOnPlayer } from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
   const dispatch = useDispatch();
   const reviewReducer = useSelector((state) => state.review);
   const userReducer = useSelector((state) => state.user);
 
+  // -------------
+  // Orientation Stuff
+  // -------------
+  // orientation
+  const [orientation, setOrientation] = useState("portrait");
+
+  useEffect(() => {
+    // console.log("- Position useEffect");
+    ScreenOrientation.unlockAsync();
+    checkOrientation();
+    const subscriptionScreenOrientation =
+      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+
+    return () => {
+      subscriptionScreenOrientation.remove();
+      ScreenOrientation.lockAsync();
+    };
+  });
+
+  const checkOrientation = async () => {
+    // console.log("in checkOrientation");
+    const orientationObject = await ScreenOrientation.getOrientationAsync();
+    // console.log(`orientation is ${orientationObject}`);
+    if (
+      orientationObject.orientationInfo.orientation == 4 ||
+      orientationObject.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+    } else {
+      setOrientation("portrait");
+    }
+  };
+  const handleOrientationChange = async (orientationObject) => {
+    if (
+      orientationObject.orientationInfo.orientation == 4 ||
+      orientationObject.orientationInfo.orientation == 3
+    ) {
+      setOrientation("landscape");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+      );
+    } else {
+      setOrientation("portrait");
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      );
+    }
+  };
+  const handleBackPress = async () => {
+    await ScreenOrientation.lockAsync(
+      ScreenOrientation.OrientationLock.PORTRAIT_UP
+    ); // Force back to portrait
+    setOrientation("portrait");
+    navigation.goBack();
+  };
+
   /// --- YouTube Stuff ---
-  const [isGreen, setIsGreen] = useState(false);
+  // const [isGreen, setIsGreen] = useState(false);
   const playerRef = useRef();
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(async () => {
       if (playerRef.current && playing) {
@@ -67,79 +127,47 @@ export default function ReviewVideo({ navigation, route }) {
     playerRef.current.seekTo(action.timestamp, true);
   };
 
-  return (
+  // Filtering actions
+  const filterActions = (parameterName, object) => {
+    if (parameterName === "player") {
+      dispatch(filterReviewReducerActionsArrayOnPlayer(object));
+    }
+  };
+
+  return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall navigation={navigation}>
-      <View style={styles.container}>
-        <View style={styles.containerTop}>
-          <Text>{reviewReducer.reviewReducerVideoObject.id}</Text>
-          <Text>{reviewReducer.reviewReducerVideoObject.youTubeVideoId}</Text>
-        </View>
-        <View style={styles.containerMiddle}>
-          <View style={styles.videoWrapper}>
-            <YoutubePlayer
-              ref={playerRef}
-              height={220}
-              width={Dimensions.get("window").width}
-              play={playing}
-              videoId={reviewReducer.reviewReducerVideoObject.youTubeVideoId}
-              onChangeState={handleStateChange}
-              webViewProps={{
-                allowsInlineMediaPlayback: true,
-              }}
-              initialPlayerParams={{
-                controls: 0,
-                modestbranding: true,
-                rel: 0,
-                showinfo: false,
-              }}
-            />
-            <View
-              style={[
-                styles.coverView,
-                { backgroundColor: isGreen ? "green" : "transparent" },
-              ]}
-            />
-          </View>
-          <View style={styles.vwButtonContainer}>
-            <View style={styles.vwButtonRow}>
-              <TouchableOpacity onPress={rewind} style={styles.skipButton}>
-                <Text style={styles.playPauseButtonText}>-2s</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={togglePlaying}
-                style={styles.playPauseButton}
-              >
-                <Text style={styles.playPauseButtonText}>
-                  {playing ? "Pause" : "Play"}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={forward} style={styles.skipButton}>
-                <Text style={styles.playPauseButtonText}>+5s</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <View style={styles.containerBottom}>
-          <ScrollView>
-            {reviewReducer.reviewReducerActionsArray.map((action, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleSelectedAction(action)}
-                style={{
-                  backgroundColor: "gray",
-                  padding: 10,
-                  marginVertical: 5,
-                }}
-              >
-                <Text style={{ color: "white" }}>
-                  id: {action.actionsDbTableId} - timestamp:{action.timestamp}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      </View>
+      <ReviewVideoPortrait
+        // combinedGestures={combinedGestures}
+        orientation={orientation}
+        playerRef={playerRef}
+        playing={playing}
+        currentTime={currentTime}
+        duration={duration}
+        handleStateChange={handleStateChange}
+        togglePlaying={togglePlaying}
+        rewind={rewind}
+        forward={forward}
+        handleSelectedAction={handleSelectedAction}
+        handleBackPress={handleBackPress}
+      />
     </TemplateViewWithTopChildrenSmall>
+  ) : (
+    <ReviewVideoLandscape
+      navigation={navigation}
+      // combinedGestures={combinedGestures}
+      orientation={orientation}
+      playerRef={playerRef}
+      playing={playing}
+      currentTime={currentTime}
+      duration={duration}
+      handleStateChange={handleStateChange}
+      togglePlaying={togglePlaying}
+      rewind={rewind}
+      forward={forward}
+      handleSelectedAction={handleSelectedAction}
+      handleBackPress={handleBackPress}
+      filterActions={filterActions}
+    />
   );
 }
 const styles = StyleSheet.create({
