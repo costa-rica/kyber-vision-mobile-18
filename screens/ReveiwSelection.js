@@ -18,6 +18,7 @@ import {
   createReviewActionsArray,
   createReviewActionsArrayUniquePlayersNamesAndObjects,
 } from "../reducers/review";
+let reviewReducerOffline;
 
 export default function ReviewSelectionScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -115,7 +116,7 @@ export default function ReviewSelectionScreen({ navigation }) {
         };
       });
       console.log(`Count of videos: ${tempArray.length}`);
-      // console.log(`tempArray: ${JSON.stringify(tempArray[0], null, 2)}`);
+      // console.log(`tempArray: ${JSON.stringify(tempArray, null, 2)}`);
       setVideoArray(tempArray);
     } else {
       const errorMessage =
@@ -132,86 +133,90 @@ export default function ReviewSelectionScreen({ navigation }) {
   };
 
   useEffect(() => {
-    fetchVideoArray();
+    if (userReducer.token === "offline") {
+      reviewReducerOffline = require("../offlineData/reviewReducer.json");
+      fetchVideoArrayOffline();
+    } else {
+      fetchVideoArray();
+    }
   }, []);
+
+  const fetchVideoArrayOffline = () => {
+    console.log("Fetched videos offline");
+
+    setVideoArray(reviewReducerOffline.videoArray);
+  };
 
   // fetch Actions for Match
   const fetchActionsForMatch = async (matchId) => {
     console.log("in fetchActionsForMatch for matchId: ", matchId);
-    try {
-      console.log(`Fetching actions for match: ${matchId}`);
-      console.log(
-        `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`
-      );
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userReducer.token}`,
-          },
+    let resJson;
+    if (userReducer.token === "offline") {
+      console.log(" ** [offline] Fetching actions for match");
+      resJson = reviewReducerOffline;
+    } else {
+      console.log(` ** [online] Fetching actions for match: ${matchId}`);
+      try {
+        console.log(
+          `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`
+        );
+        const response = await fetch(
+          `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${userReducer.token}`,
+            },
+          }
+        );
+        if (response.status !== 200) {
+          alert(`There was a server error: ${response.status}`);
+          return;
         }
-      );
-      if (response.status !== 200) {
-        console.log(`There was a server error: ${response.status}`);
+        const contentType = response.headers.get("Content-Type");
+
+        if (contentType?.includes("application/json")) {
+          resJson = await response.json();
+        }
+
+        console.log(" --- finished getting ACtions and other stuff ---");
+      } catch (error) {
+        Alert.alert("Error fetching actions for match", error.message);
         return;
       }
-      let resJson = null;
-      const contentType = response.headers.get("Content-Type");
-
-      if (contentType?.includes("application/json")) {
-        resJson = await response.json();
-      }
-      console.log(`actionsArray.length: ${resJson.actionsArray.length}`);
-      console.log(
-        `playerNamesArray.length: ${resJson.playerNamesArray.length}`
-      );
-      console.log(
-        `playerDbObjectsArray.length: ${resJson.playerDbObjectsArray.length}`
-      );
-      //   console.log(
-      //     `actionsArray[0]: ${JSON.stringify(resJson.actionsArray[0])}`
-      //   );
-      let tempCleanActionsArray = [];
-      for (const elem of resJson.actionsArray) {
-        // console.log(elem.id);
-        tempCleanActionsArray.push({
-          actionsDbTableId: elem.id,
-          reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
-          playerId: elem.playerId,
-          timestamp: elem.timestampFromStartOfVideo,
-          type: elem.type,
-          subtype: elem.subtype,
-          quality: elem.quality,
-          isDisplayed: true,
-          isFavorite: false,
-          isPlaying: false,
-        });
-      }
-
-      dispatch(createReviewActionsArray(tempCleanActionsArray));
-
-      let tempPlayerDbObjectsArray = [];
-      //   console.log(
-      //     `playerDbObjectsArray: ${JSON.stringify(resJson.playerDbObjectsArray)}`
-      //   );
-      for (const elem of resJson.playerDbObjectsArray) {
-        tempPlayerDbObjectsArray.push({
-          ...elem,
-          isDisplayed: true,
-        });
-      }
-      dispatch(
-        createReviewActionsArrayUniquePlayersNamesAndObjects({
-          // playerNamesArray: resJson.playerNamesArray,
-          playerDbObjectsArray: tempPlayerDbObjectsArray,
-        })
-      );
-      console.log(" --- finished getting ACtions and other stuff ---");
-    } catch (error) {
-      console.error("Error fetching actions for match:", error);
     }
+
+    let tempCleanActionsArray = [];
+    for (const elem of resJson.actionsArray) {
+      tempCleanActionsArray.push({
+        actionsDbTableId: elem.id,
+        reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
+        playerId: elem.playerId,
+        timestamp: elem.timestampFromStartOfVideo,
+        type: elem.type,
+        subtype: elem.subtype,
+        quality: elem.quality,
+        isDisplayed: true,
+        isFavorite: false,
+        isPlaying: false,
+      });
+    }
+
+    dispatch(createReviewActionsArray(tempCleanActionsArray));
+
+    let tempPlayerDbObjectsArray = [];
+    for (const elem of resJson.playerDbObjectsArray) {
+      tempPlayerDbObjectsArray.push({
+        ...elem,
+        isDisplayed: true,
+      });
+    }
+    dispatch(
+      createReviewActionsArrayUniquePlayersNamesAndObjects({
+        playerDbObjectsArray: tempPlayerDbObjectsArray,
+      })
+    );
   };
 
   const renderVideoItem = ({ item: video }) => (

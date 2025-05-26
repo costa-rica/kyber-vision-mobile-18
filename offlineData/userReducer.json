@@ -11,20 +11,6 @@
       "id": 1,
       "selected": false,
       "teamName": "PAVVB (offline)"
-    },
-    {
-      "city": "Martigues",
-      "coachName": "Christophe Charroux",
-      "id": 2,
-      "selected": false,
-      "teamName": "Martigues VB (offline)"
-    },
-    {
-      "city": "Aix en Provence",
-      "coachName": "Guilhem Deulofeu",
-      "id": 3,
-      "selected": false,
-      "teamName": "AUC13VB (offline)"
     }
   ],
   "portraitHeight": 800,
