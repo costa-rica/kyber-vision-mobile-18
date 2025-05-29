@@ -17,7 +17,10 @@ import { useState, useEffect, useRef } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
-import { filterReviewReducerActionsArrayOnPlayer } from "../reducers/review";
+import {
+  filterReviewReducerActionsArrayOnPlayer,
+  updateReviewReducerIsPlayingforActionsArrayV5,
+} from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
   const dispatch = useDispatch();
@@ -92,10 +95,23 @@ export default function ReviewVideo({ navigation, route }) {
       if (playerRef.current && playing) {
         const time = await playerRef.current.getCurrentTime();
         setCurrentTime(time);
+
+        dispatch(updateReviewReducerIsPlayingforActionsArrayV5(time));
       }
     }, 1000);
+
     return () => clearInterval(interval);
   }, [playing]);
+
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     if (playerRef.current && playing) {
+  //       const time = await playerRef.current.getCurrentTime();
+  //       setCurrentTime(time);
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [playing]);
 
   const handleStateChange = (state) => {
     if (state === "playing" && playerRef.current) {
@@ -122,6 +138,8 @@ export default function ReviewVideo({ navigation, route }) {
       playerRef.current.seekTo(currentTime + 5, true);
     }
   };
+
+  // --------- YouTube / Video Related ---------
 
   const handleSelectedAction = (action) => {
     playerRef.current.seekTo(action.timestamp, true);
