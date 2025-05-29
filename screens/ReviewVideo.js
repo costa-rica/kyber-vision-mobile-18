@@ -33,48 +33,48 @@ export default function ReviewVideo({ navigation, route }) {
   // orientation
   const [orientation, setOrientation] = useState("portrait");
 
-  useEffect(() => {
-    // console.log("- Position useEffect");
-    ScreenOrientation.unlockAsync();
-    checkOrientation();
-    const subscriptionScreenOrientation =
-      ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
+  // useEffect(() => {
+  //   // console.log("- Position useEffect");
+  //   ScreenOrientation.unlockAsync();
+  //   checkOrientation();
+  //   const subscriptionScreenOrientation =
+  //     ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
 
-    return () => {
-      subscriptionScreenOrientation.remove();
-      ScreenOrientation.lockAsync();
-    };
-  });
+  //   return () => {
+  //     subscriptionScreenOrientation.remove();
+  //     ScreenOrientation.lockAsync();
+  //   };
+  // });
 
-  const checkOrientation = async () => {
-    // console.log("in checkOrientation");
-    const orientationObject = await ScreenOrientation.getOrientationAsync();
-    // console.log(`orientation is ${orientationObject}`);
-    if (
-      orientationObject.orientationInfo.orientation == 4 ||
-      orientationObject.orientationInfo.orientation == 3
-    ) {
-      setOrientation("landscape");
-    } else {
-      setOrientation("portrait");
-    }
-  };
-  const handleOrientationChange = async (orientationObject) => {
-    if (
-      orientationObject.orientationInfo.orientation == 4 ||
-      orientationObject.orientationInfo.orientation == 3
-    ) {
-      setOrientation("landscape");
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-      );
-    } else {
-      setOrientation("portrait");
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT_UP
-      );
-    }
-  };
+  // const checkOrientation = async () => {
+  //   // console.log("in checkOrientation");
+  //   const orientationObject = await ScreenOrientation.getOrientationAsync();
+  //   // console.log(`orientation is ${orientationObject}`);
+  //   if (
+  //     orientationObject.orientationInfo.orientation == 4 ||
+  //     orientationObject.orientationInfo.orientation == 3
+  //   ) {
+  //     setOrientation("landscape");
+  //   } else {
+  //     setOrientation("portrait");
+  //   }
+  // };
+  // const handleOrientationChange = async (orientationObject) => {
+  //   if (
+  //     orientationObject.orientationInfo.orientation == 4 ||
+  //     orientationObject.orientationInfo.orientation == 3
+  //   ) {
+  //     setOrientation("landscape");
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
+  //     );
+  //   } else {
+  //     setOrientation("portrait");
+  //     await ScreenOrientation.lockAsync(
+  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
+  //     );
+  //   }
+  // };
   const handleBackPress = async () => {
     await ScreenOrientation.lockAsync(
       ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -82,6 +82,24 @@ export default function ReviewVideo({ navigation, route }) {
     setOrientation("portrait");
     navigation.goBack();
   };
+
+  // for PRODUCTION -> forces to landscape
+  useEffect(() => {
+    const lockToLandscape = async () => {
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
+      );
+      setOrientation("landscape");
+    };
+
+    lockToLandscape(); // Force landscape mode when component mounts
+
+    return () => {
+      ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT_UP
+      ); // Reset to portrait when leaving
+    };
+  }, []);
 
   /// --- YouTube Stuff ---
   // const [isGreen, setIsGreen] = useState(false);
@@ -102,16 +120,6 @@ export default function ReviewVideo({ navigation, route }) {
 
     return () => clearInterval(interval);
   }, [playing]);
-
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     if (playerRef.current && playing) {
-  //       const time = await playerRef.current.getCurrentTime();
-  //       setCurrentTime(time);
-  //     }
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, [playing]);
 
   const handleStateChange = (state) => {
     if (state === "playing" && playerRef.current) {

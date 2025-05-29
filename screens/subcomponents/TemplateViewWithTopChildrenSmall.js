@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
   btnBack: {
     position: "absolute",

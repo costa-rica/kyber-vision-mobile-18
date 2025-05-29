@@ -47,7 +47,7 @@ export const reviewSlice = createSlice({
 
     updateReviewReducerIsPlayingforActionsArrayV5: (state, action) => {
       const currentTime = action.payload;
-      const threshold = 0.25; // Define a tolerance range in seconds
+      // const threshold = 0.25; // Define a tolerance range in seconds
 
       // Filter only actions where isDisplayed is true
       const displayedActions = state.reviewReducerActionsArray.filter(

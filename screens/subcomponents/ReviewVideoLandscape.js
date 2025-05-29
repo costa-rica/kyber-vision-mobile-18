@@ -36,6 +36,10 @@ export default function ReviewVideoLandscape(props) {
   const [isFavoritesOnly, setIsFavoritesOnly] = useState(
     reviewReducer.isFavoriteToggle
   );
+  const [videoWidth, setVideoWidth] = useState(Dimensions.get("window").width);
+  const [videoHeight, setVideoHeight] = useState(
+    Dimensions.get("window").height
+  );
 
   const flatListRef = useRef(null); // 🔹 Store FlatList ref
   // 🔹 Function to manually scroll to the currently playing action
@@ -122,7 +126,23 @@ export default function ReviewVideoLandscape(props) {
   };
 
   // ---- Dynamic Styles ---
-  const videoHeight = Dimensions.get("window").height;
+  useEffect(() => {
+    const handleDimensionChange = ({ window }) => {
+      setVideoWidth(window.width);
+      setVideoHeight(window.height);
+    };
+
+    const subscription = Dimensions.addEventListener(
+      "change",
+      handleDimensionChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+  // const videoHeight = Dimensions.get("window").height;
+  // const videoWidth = Dimensions.get("window").width;
   const stylesVideoWrapper = {
     // position: "relative",
     width: Dimensions.get("window").width,
@@ -310,7 +330,7 @@ export default function ReviewVideoLandscape(props) {
         <YoutubePlayer
           ref={props.playerRef}
           height={videoHeight}
-          //   width={Dimensions.get("window").width}
+          width={videoWidth}
           play={props.playing}
           videoId={reviewReducer.reviewReducerVideoObject.youTubeVideoId}
           onChangeState={props.handleStateChange}
