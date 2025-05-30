@@ -20,6 +20,7 @@ export default function SelectTribeScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const fetchTribes = async () => {
+    // The id in the Tribe Array is the TEAM ID
     const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/groups`, {
       method: "GET",
       headers: {

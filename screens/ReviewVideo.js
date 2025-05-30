@@ -101,8 +101,9 @@ export default function ReviewVideo({ navigation, route }) {
     };
   }, []);
 
-  /// --- YouTube Stuff ---
-  // const [isGreen, setIsGreen] = useState(false);
+  // -------------
+  // YouTube Stuff
+  // -------------
   const playerRef = useRef();
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -160,6 +161,87 @@ export default function ReviewVideo({ navigation, route }) {
     }
   };
 
+  // -------------
+  // Request Montage Video
+  // -------------
+  const handlePressRequestMontageVideo = async () => {
+    const seledtionsCount = reviewReducer.reviewReducerActionsArray.filter(
+      (action) => action.isDisplayed
+    ).length;
+    if (seledtionsCount > 5) {
+      Alert.alert(
+        `You are about to request a montage of ${seledtionsCount} actions`, // Title
+        "Are you sure you want to proceed?", // Description
+        [
+          {
+            text: "No",
+            onPress: () => console.log("❌ No Pressed"),
+            style: "cancel", // iOS cancel style
+          },
+          {
+            text: "Yes",
+            onPress: () => requestMontageVideo(),
+          },
+        ],
+        { cancelable: false } // Prevents dismissing by tapping outside on Android
+      );
+      // Alert.alert(
+      //   "Video request sent", // Title
+      //   "Check your email for the video.", // Description
+      //   [
+      //     { text: "OK", onPress: () => console.log("OK Pressed") }, // Button
+      //   ]
+      // );
+    } else {
+      requestMontageVideo();
+    }
+  };
+
+  const requestMontageVideo = async () => {
+    console.log(`in requestMontage video`);
+    console.log(reviewReducer.reviewReducerVideoObject.id);
+
+    const response = await fetch(
+      // `${process.env.EXPO_PUBLIC_API_URL}/videos//montage-service/queue-a-job/${reviewReducer.reviewReducerVideoObject.id}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/videos/montage-service/queue-a-job`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify({
+          matchId: 1,
+          videoId: reviewReducer.reviewReducerVideoObject.id,
+          actionsArray: reviewReducer.reviewReducerActionsArray.filter(
+            (action) => action.isDisplayed
+          ),
+          token: userReducer.token,
+        }),
+      }
+    );
+
+    if (response.status !== 200) {
+      // console.log(`There was a server error: ${response.status}`);
+      alert(`There was a server error: ${response.status}`);
+      return;
+    } else {
+      const contentType = response.headers.get("Content-Type");
+      if (contentType?.includes("application/json")) {
+        const resJson = await response.json();
+        // alert("Video request sent:check your email for video download");
+        // alert(resJson.message);
+        Alert.alert(
+          "Video request sent", // Title
+          "Check your email for the video.", // Description
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }, // Button
+          ]
+        );
+      }
+    }
+  };
+
   return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall navigation={navigation}>
       <ReviewVideoPortrait
@@ -193,6 +275,7 @@ export default function ReviewVideo({ navigation, route }) {
       handleSelectedAction={handleSelectedAction}
       handleBackPress={handleBackPress}
       filterActions={filterActions}
+      handlePressRequestMontageVideo={handlePressRequestMontageVideo}
     />
   );
 }

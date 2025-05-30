@@ -34,6 +34,7 @@ export default function ReviewSelectionScreen({ navigation }) {
     }));
     dispatch(updateTribeArray(updatedArray));
     setDisplayTribeList(false);
+    fetchVideoArray(selectedId);
   };
 
   const topChildren = (
@@ -90,14 +91,17 @@ export default function ReviewSelectionScreen({ navigation }) {
     </View>
   );
 
-  const fetchVideoArray = async () => {
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/videos`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userReducer.token}`,
-      },
-    });
+  const fetchVideoArray = async (teamId) => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/videos/team/${teamId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
 
     console.log("Received response:", response.status);
 
@@ -138,7 +142,9 @@ export default function ReviewSelectionScreen({ navigation }) {
       reviewReducerOffline = require("../offlineData/reviewReducer.json");
       fetchVideoArrayOffline();
     } else {
-      fetchVideoArray();
+      fetchVideoArray(
+        userReducer.tribeArray.find((tribe) => tribe.selected)?.id
+      );
     }
   }, []);
 
