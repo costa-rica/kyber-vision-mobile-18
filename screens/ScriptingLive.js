@@ -256,14 +256,6 @@ export default function ScriptingLive({ navigation }) {
       console.log(`response ok`);
       console.log(resJson);
       dispatch(updateScriptId(resJson.scriptId));
-      // const tempArray = resJson.teams.map((item) => {
-      //   return {
-      //     ...item,
-      //     selected: false,
-      //   };
-      // });
-      // console.log(tempArray);
-      // dispatch(updateTribeArray(tempArray));
     } else {
       const errorMessage =
         resJson?.error ||

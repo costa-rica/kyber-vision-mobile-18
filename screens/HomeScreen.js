@@ -83,6 +83,44 @@ export default function HomeScreen({ navigation }) {
       </View>
     </View>
   );
+
+  // const handleScriptingPress = async () => {
+
+  //     const response = await fetch(
+  //       `${process.env.EXPO_PUBLIC_API_URL}/matches/to-script/${userReducer.tribeArray.find((tribe) => tribe.selected)?.practiceMatch.id}`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${userReducer.token}`,
+  //         },
+  //         body: JSON.stringify(bodyObj),
+  //       }
+  //     );
+
+  //     console.log("Received response:", response.status);
+
+  //     let resJson = null;
+  //     const contentType = response.headers.get("Content-Type");
+
+  //     if (contentType?.includes("application/json")) {
+  //       resJson = await response.json();
+  //     }
+
+  //     if (response.ok && resJson) {
+  //       console.log(`response ok`);
+  //       console.log(resJson);
+  //       dispatch(updateScriptId(resJson.scriptId));
+  //     } else {
+  //       const errorMessage =
+  //         resJson?.error ||
+  //         `There was a server error (and no resJson): ${response.status}`;
+  //       alert(errorMessage);
+  //     }
+
+  //   navigation.navigate("ScriptingLiveSelectPlayers");
+  // };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
