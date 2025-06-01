@@ -133,7 +133,8 @@ export default function ReviewSelectionScreen({ navigation }) {
 
   const handleVideoSelect = (videoObject) => {
     dispatch(updateReviewReducerVideoObject(videoObject));
-    fetchActionsForMatch(videoObject.matchId);
+    // fetchActionsForMatch(videoObject.matchId);
+    fetchActionsForSession(videoObject.sessionId);
     navigation.navigate("ReviewVideo");
   };
 
@@ -155,20 +156,19 @@ export default function ReviewSelectionScreen({ navigation }) {
   };
 
   // fetch Actions for Match
-  const fetchActionsForMatch = async (matchId) => {
-    console.log("in fetchActionsForMatch for matchId: ", matchId);
+  // const fetchActionsForMatch = async (matchId) => {
+  const fetchActionsForSession = async (sessionId) => {
+    console.log("in fetchActionsForSession for sessionId: ", sessionId);
     let resJson;
     if (userReducer.token === "offline") {
-      console.log(" ** [offline] Fetching actions for match");
+      console.log(" ** [offline] Fetching actions for session");
       resJson = reviewReducerOffline;
     } else {
-      console.log(` ** [online] Fetching actions for match: ${matchId}`);
+      console.log(` ** [online] Fetching actions for session: ${sessionId}`);
       try {
-        console.log(
-          `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`
-        );
         const response = await fetch(
-          `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
+          // `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
+          `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
           {
             method: "GET",
             headers: {
@@ -193,6 +193,8 @@ export default function ReviewSelectionScreen({ navigation }) {
         return;
       }
     }
+
+    console.log("resJson: ", resJson);
 
     let tempCleanActionsArray = [];
     for (const elem of resJson.actionsArray) {
@@ -233,15 +235,18 @@ export default function ReviewSelectionScreen({ navigation }) {
       style={styles.btnVideo}
     >
       <View style={styles.vwVideoName}>
-        <Text style={styles.txtVideoName}>{video.match.teamOneName} vs</Text>
-        <Text style={styles.txtVideoName}>{video.match.teamTwoName}</Text>
+        <Text style={styles.txtVideoName}>{video.session.teamName}</Text>
       </View>
       <View style={styles.vwVideoDate}>
         <Text style={styles.txtVideoDate}>
-          {new Date(video.match.matchDate).toLocaleDateString("en-GB", {
+          {new Date(video.session.sessionDate).toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "short",
+          })}{" "}
+          {new Date(video.session.sessionDate).toLocaleTimeString("en-GB", {
+            hour: "2-digit",
           })}
+          h
         </Text>
       </View>
     </TouchableOpacity>
@@ -265,35 +270,6 @@ export default function ReviewSelectionScreen({ navigation }) {
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.scrollViewVideos}
           />
-          {/* <ScrollView style={styles.scrollViewVideos}>
-            {videoArray.map((video) => (
-              <TouchableOpacity
-                key={video.id}
-                onPress={() => handleVideoSelect(video)}
-                style={styles.btnVideo}
-              >
-                <View style={styles.vwVideoName}>
-                  <Text style={styles.txtVideoName}>
-                    {video.match.teamOneName} vs
-                  </Text>
-                  <Text style={styles.txtVideoName}>
-                    {video.match.teamTwoName}
-                  </Text>
-                </View>
-                <View style={styles.vwVideoDate}>
-                  <Text style={styles.txtVideoDate}>
-                    {new Date(video.match.matchDate).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "2-digit",
-                        month: "short",
-                      }
-                    )}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
-          </ScrollView> */}
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
