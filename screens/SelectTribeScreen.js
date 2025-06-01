@@ -21,13 +21,16 @@ export default function SelectTribeScreen({ navigation }) {
 
   const fetchTribes = async () => {
     // The id in the Tribe Array is the TEAM ID
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/groups`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userReducer.token}`,
-      },
-    });
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
 
     console.log("Received response:", response.status);
 
