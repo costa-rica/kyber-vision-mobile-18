@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }) {
       email: credentials.email,
       password: credentials.password,
     };
-    // console.log(`email: ${email}, ${password}`);
+    console.log(`email: ${credentials.email}, ${credentials.password}`);
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
       {

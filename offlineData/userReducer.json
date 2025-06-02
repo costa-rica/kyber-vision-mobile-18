@@ -6,11 +6,12 @@
   },
   "tribeArray": [
     {
-      "city": "Venelles ",
+      "city": "Venelles",
       "coachName": "FILIPPO SCHIAVO",
-      "id": 1,
+      "id": 2,
+      "practiceMatch": null,
       "selected": false,
-      "teamName": "PAVVB (offline)"
+      "teamName": "PAVVB"
     }
   ],
   "portraitHeight": 800,
