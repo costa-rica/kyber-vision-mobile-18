@@ -5,42 +5,43 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateTribeArray } from "../reducers/user";
+import { updateContractTeamUserArray } from "../reducers/user";
+import ModalSelectSession from "./subcomponents/modals/ModalSelectSession";
 
 export default function HomeScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const [displayTribeList, setDisplayTribeList] = useState(false);
+  const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
+  const [isVisibleModalSelectSession, setIsVisibleModalSelectSession] =
+    useState(false);
 
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.tribeArray.map((tribe) => ({
+    const updatedArray = userReducer.contractTeamUserArray.map((tribe) => ({
       ...tribe,
       selected: tribe.id === selectedId,
     }));
-    dispatch(updateTribeArray(updatedArray));
-    setDisplayTribeList(false);
+    dispatch(updateContractTeamUserArray(updatedArray));
+    setDisplayTeamList(false);
   };
-  // useEffect(() => {
-  //   console.log(`userReducer.tribeArray`, userReducer.tribeArray);
-  // }, []);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
       <View style={styles.vwCapsuleSuper}>
         <View
-          style={displayTribeList ? styles.vwCapsuleExpanded : styles.vwCapsule}
+          style={displayTeamList ? styles.vwCapsuleExpanded : styles.vwCapsule}
         >
           <View style={[styles.vwLeftCapsule]}>
-            {displayTribeList ? (
+            {displayTeamList ? (
               // <View style={styles.vwDropdownList}>
               <View>
-                {userReducer.tribeArray.map((tribe) => (
+                {userReducer.teamsArray.map((tribe) => (
                   <TouchableOpacity
                     key={tribe.id}
                     onPress={() => handleTribeSelect(tribe.id)}
@@ -59,19 +60,19 @@ export default function HomeScreen({ navigation }) {
               </View>
             ) : (
               <Text style={styles.txtTopChildSelectedTribeName}>
-                {userReducer.tribeArray.find((tribe) => tribe.selected)
+                {userReducer.teamsArray.find((tribe) => tribe.selected)
                   ?.teamName || "No tribe selected"}
               </Text>
             )}
           </View>
           <View style={styles.vwRightCapsule}>
             <TouchableOpacity
-              onPress={() => setDisplayTribeList(!displayTribeList)}
+              onPress={() => setDisplayTeamList(!displayTeamList)}
               style={styles.btnSelectTribe}
             >
               <Image
                 source={
-                  displayTribeList
+                  displayTeamList
                     ? require("../assets/images/navigationAndSmall/btnBackArrow.png")
                     : require("../assets/images/navigationAndSmall/btnDownArrow.png")
                 }
@@ -84,53 +85,54 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 
-  // const handleScriptingPress = async () => {
+  const fetchSessionsArray = async () => {
+    console.log(" -- fetchSessionsArray ---");
 
-  //     const response = await fetch(
-  //       `${process.env.EXPO_PUBLIC_API_URL}/matches/to-script/${userReducer.tribeArray.find((tribe) => tribe.selected)?.practiceMatch.id}`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${userReducer.token}`,
-  //         },
-  //         body: JSON.stringify(bodyObj),
-  //       }
-  //     );
+    console.log(userReducer.teamsArray.filter((team) => team.selected)[0].id);
+    const response = await fetch(
+      // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
+        userReducer.teamsArray.filter((team) => team.selected)[0].id
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        // body: JSON.stringify(bodyObj),
+      }
+    );
 
-  //     console.log("Received response:", response.status);
+    console.log("Received response:", response.status);
 
-  //     let resJson = null;
-  //     const contentType = response.headers.get("Content-Type");
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
 
-  //     if (contentType?.includes("application/json")) {
-  //       resJson = await response.json();
-  //     }
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+    console.log("--- here are the matches ---");
+    console.log(resJson);
+  };
 
-  //     if (response.ok && resJson) {
-  //       console.log(`response ok`);
-  //       console.log(resJson);
-  //       dispatch(updateScriptId(resJson.scriptId));
-  //     } else {
-  //       const errorMessage =
-  //         resJson?.error ||
-  //         `There was a server error (and no resJson): ${response.status}`;
-  //       alert(errorMessage);
-  //     }
-
-  //   navigation.navigate("ScriptingLiveSelectPlayers");
-  // };
-
+  const handleSelectScriptingButton = async () => {
+    setIsVisibleModalSelectSession(true);
+    fetchSessionsArray();
+  };
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
       topChildren={topChildren}
+      screenName={"HomeScreen"}
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
             <ButtonKvStd
-              onPress={() => navigation.navigate("ScriptingLiveSelectPlayers")}
+              // onPress={() => navigation.navigate("ScriptingLiveSelectPlayers")}
+              // onPress={() => setIsVisibleModalSelectSession(true)}
+              onPress={() => handleSelectScriptingButton()}
               style={styles.btnHomeNavigation}
             >
               Scripting
@@ -144,6 +146,21 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
       </View>
+      {isVisibleModalSelectSession && (
+        <Modal
+          visible={isVisibleModalSelectSession}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsVisibleModalSelectSession(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <ModalSelectSession
+              isVisibleModalSelectSession={isVisibleModalSelectSession}
+              setIsVisibleModalSelectSession={setIsVisibleModalSelectSession}
+            />
+          </View>
+        </Modal>
+      )}
     </TemplateViewWithTopChildren>
   );
 }
@@ -277,4 +294,15 @@ const styles = StyleSheet.create({
   // ------------
   // Bottom
   // ------------
+
+  // ------------
+  // Modal
+  // ------------
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

@@ -28,7 +28,7 @@ export default function ReviewSelectionScreen({ navigation }) {
   const [videoArray, setVideoArray] = useState([]);
 
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.tribeArray.map((tribe) => ({
+    const updatedArray = userReducer.teamsArray.map((tribe) => ({
       ...tribe,
       selected: tribe.id === selectedId,
     }));
@@ -47,7 +47,7 @@ export default function ReviewSelectionScreen({ navigation }) {
             {displayTribeList ? (
               // <View style={styles.vwDropdownList}>
               <View>
-                {userReducer.tribeArray.map((tribe) => (
+                {userReducer.teamsArray.map((tribe) => (
                   <TouchableOpacity
                     key={tribe.id}
                     onPress={() => handleTribeSelect(tribe.id)}
@@ -66,7 +66,7 @@ export default function ReviewSelectionScreen({ navigation }) {
               </View>
             ) : (
               <Text style={styles.txtTopChildSelectedTribeName}>
-                {userReducer.tribeArray.find((tribe) => tribe.selected)
+                {userReducer.teamsArray.find((tribe) => tribe.selected)
                   ?.teamName || "No tribe selected"}
               </Text>
             )}
@@ -144,7 +144,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       fetchVideoArrayOffline();
     } else {
       fetchVideoArray(
-        userReducer.tribeArray.find((tribe) => tribe.selected)?.id
+        userReducer.teamsArray.find((tribe) => tribe.selected)?.id
       );
     }
   }, []);

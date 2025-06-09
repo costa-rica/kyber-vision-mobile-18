@@ -7,6 +7,7 @@ export default function TemplateViewWithTopChildren({
   children,
   navigation,
   topChildren,
+  screenName,
 }) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
@@ -39,6 +40,7 @@ export default function TemplateViewWithTopChildren({
             source={require("../../assets/images/KyberV2Shiny.png")}
             style={styles.imgLogo}
           />
+          {screenName && <Text style={{ color: "white" }}>{screenName}</Text>}
           {topChildren}
         </View>
       </View>

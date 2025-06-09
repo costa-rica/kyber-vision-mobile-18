@@ -22,7 +22,7 @@ export default function SplashScreen({ navigation }) {
         username: guestUserData.user.username,
       })
     );
-    navigation.navigate("SelectTribeScreen");
+    navigation.navigate("SelectTeamScreen");
   };
   return (
     <TemplateView>

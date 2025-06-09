@@ -123,7 +123,7 @@ export default function ScriptingLivePortrait(props) {
           <View style={styles.vwTeamNameSub}>
             <Text style={styles.txtTeamName}>
               {
-                userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+                userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
                   .teamName
               }
             </Text>
@@ -553,7 +553,7 @@ export default function ScriptingLivePortrait(props) {
             >
               Send script to{" "}
               {
-                userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+                userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
                   .teamName
               }
             </ButtonKvStd>

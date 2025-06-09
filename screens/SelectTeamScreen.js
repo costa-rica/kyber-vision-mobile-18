@@ -13,13 +13,13 @@ import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTribeArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/user";
 
-export default function SelectTribeScreen({ navigation }) {
+export default function SelectTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const fetchTribes = async () => {
+  const fetchTeams = async () => {
     // The id in the Tribe Array is the TEAM ID
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user`,
@@ -49,8 +49,9 @@ export default function SelectTribeScreen({ navigation }) {
           selected: false,
         };
       });
+      console.log(" --- here is tempArray (teamsArray) --");
       console.log(tempArray);
-      dispatch(updateTribeArray(tempArray));
+      dispatch(updateTeamsArray(tempArray));
     } else {
       const errorMessage =
         resJson?.error ||
@@ -59,16 +60,16 @@ export default function SelectTribeScreen({ navigation }) {
     }
   };
 
-  const fetchTribesOffline = () => {
+  const fetchTeamsOffline = () => {
     const tribesOffline = require("../offlineData/userReducer.json");
-    dispatch(updateTribeArray(tribesOffline.tribeArray));
+    dispatch(updateTeamsArray(tribesOffline.teamsArray));
   };
 
   useEffect(() => {
     if (userReducer.token === "offline") {
-      fetchTribesOffline();
+      fetchTeamsOffline();
     } else {
-      fetchTribes();
+      fetchTeams();
     }
   }, []);
 
@@ -87,20 +88,20 @@ export default function SelectTribeScreen({ navigation }) {
     return (
       <Pressable
         onPress={() => {
-          const tempArray = userReducer.tribeArray.map((tribe) => {
-            if (tribe.id === item.id) {
+          const tempArray = userReducer.teamsArray.map((team) => {
+            if (team.id === item.id) {
               return {
-                ...tribe,
-                selected: !tribe.selected,
+                ...team,
+                selected: !team.selected,
               };
             } else {
               return {
-                ...tribe,
+                ...team,
                 selected: false,
               };
             }
           });
-          dispatch(updateTribeArray(tempArray));
+          dispatch(updateTeamsArray(tempArray));
         }}
         style={[styles.vwTeamRow, isSelected && styles.vwTeamRowSelected]}
       >
@@ -113,13 +114,14 @@ export default function SelectTribeScreen({ navigation }) {
     <TemplateViewWithTopChildren
       navigation={navigation}
       topChildren={topChildren}
+      screenName={"SelectTeamScreen"}
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <Tribe />
-          {userReducer.tribeArray?.length > 0 ? (
+          {userReducer.teamsArray?.length > 0 ? (
             <FlatList
-              data={userReducer.tribeArray}
+              data={userReducer.teamsArray}
               renderItem={createTribeRow}
               keyExtractor={(item) => item.id.toString()}
               style={styles.flatListTeamNames}
@@ -141,7 +143,7 @@ export default function SelectTribeScreen({ navigation }) {
             <ButtonKvStd
               onPress={() => {
                 if (
-                  userReducer.tribeArray.filter((tribe) => tribe.selected)
+                  userReducer.teamsArray.filter((tribe) => tribe.selected)
                     .length > 0
                 ) {
                   navigation.navigate("HomeScreen");

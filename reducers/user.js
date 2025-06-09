@@ -6,7 +6,8 @@ const initialState = {
     username: null,
     email: null,
   },
-  tribeArray: [],
+  // tribeArray: [],
+  teamsArray: [],
   // playersArray: [],
   portraitHeight: null,
   portraitWidth: null,
@@ -107,9 +108,10 @@ export const userSlice = createSlice({
       console.log("switchPositionGuides");
       state.scriptPositionGuides = !state.scriptPositionGuides;
     },
-    updateTribeArray: (state, action) => {
+    // updateTribeArray: (state, action) => {
+    updateTeamsArray: (state, action) => {
       // console.log(" 🟢 updateTribeArray");
-      state.tribeArray = action.payload;
+      state.teamsArray = action.payload;
     },
     // updatePlayersArray: (state, action) => {
     //   state.playersArray = action.payload;
@@ -123,7 +125,8 @@ export const {
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
-  updateTribeArray,
+  // updateTribeArray,
+  updateTeamsArray,
   // updatePlayersArray,
 } = userSlice.actions;
 export default userSlice.reducer;

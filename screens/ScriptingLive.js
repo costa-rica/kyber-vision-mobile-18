@@ -226,7 +226,7 @@ export default function ScriptingLive({ navigation }) {
 
     const bodyObj = {
       actionsArray: scriptReducer.matchActionsArray,
-      matchId: userReducer.tribeArray.filter((tribe) => tribe.selected)[0]
+      matchId: userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
         .practiceMatch.id,
       scriptId: scriptReducer.scriptId,
     };

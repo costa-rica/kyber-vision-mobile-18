@@ -32,7 +32,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     <View style={styles.vwTopChildren}>
       <Text style={styles.txtTopChildren}>Scripting Live Select Players</Text>
       <Text style={styles.txtSelectedTribeName}>
-        {userReducer.tribeArray.find((tribe) => tribe.selected)?.teamName}
+        {userReducer.teamsArray.find((tribe) => tribe.selected)?.teamName}
       </Text>
     </View>
   );
@@ -40,7 +40,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
   const fetchPlayers = async () => {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
-        userReducer.tribeArray.find((tribe) => tribe.selected)?.id
+        userReducer.teamsArray.find((tribe) => tribe.selected)?.id
       }`,
       {
         method: "GET",

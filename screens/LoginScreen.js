@@ -66,7 +66,7 @@ export default function LoginScreen({ navigation }) {
         })
       );
       // console.log("after dispatch");
-      navigation.navigate("SelectTribeScreen");
+      navigation.navigate("SelectTeamScreen");
     } else {
       const errorMessage =
         resJson?.error ||
