@@ -10,6 +10,7 @@ import ScriptingLive from "./screens/ScriptingLive";
 import ScriptingLiveSelectPlayers from "./screens/ScriptingLiveSelectPlayers";
 import ReviewSelectionScreen from "./screens/ReviewSelection";
 import ReviewVideo from "./screens/ReviewVideo";
+import ScriptingLiveSelectSession from "./screens/ScriptingLiveSelectSession";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -45,6 +46,10 @@ export default function App() {
             component={ReviewSelectionScreen}
           />
           <Stack.Screen name="ReviewVideo" component={ReviewVideo} />
+          <Stack.Screen
+            name="ScriptingLiveSelectSession"
+            component={ScriptingLiveSelectSession}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

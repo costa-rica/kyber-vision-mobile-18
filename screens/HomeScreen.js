@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { updateContractTeamUserArray } from "../reducers/user";
-import ModalSelectSession from "./subcomponents/modals/ModalSelectSession";
+import { updateSessionsArray } from "../reducers/script";
 
 export default function HomeScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -21,6 +21,7 @@ export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
   const [isVisibleModalSelectSession, setIsVisibleModalSelectSession] =
     useState(false);
+  const [sessionsArray, setSessionsArray] = useState([]);
 
   const handleTribeSelect = (selectedId) => {
     const updatedArray = userReducer.contractTeamUserArray.map((tribe) => ({
@@ -114,12 +115,22 @@ export default function HomeScreen({ navigation }) {
     }
     console.log("--- here are the matches ---");
     console.log(resJson);
+    let tempArray = [];
+    resJson.sessionsArray.map((session) => {
+      tempArray.push({
+        ...session,
+        selected: false,
+      });
+    });
+    dispatch(updateSessionsArray(tempArray));
   };
 
   const handleSelectScriptingButton = async () => {
-    setIsVisibleModalSelectSession(true);
+    // setIsVisibleModalSelectSession(true);
     fetchSessionsArray();
+    navigation.navigate("ScriptingLiveSelectSession");
   };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -146,7 +157,7 @@ export default function HomeScreen({ navigation }) {
           </View>
         </View>
       </View>
-      {isVisibleModalSelectSession && (
+      {/* {isVisibleModalSelectSession && (
         <Modal
           visible={isVisibleModalSelectSession}
           transparent={true}
@@ -157,10 +168,12 @@ export default function HomeScreen({ navigation }) {
             <ModalSelectSession
               isVisibleModalSelectSession={isVisibleModalSelectSession}
               setIsVisibleModalSelectSession={setIsVisibleModalSelectSession}
+              sessionsArray={sessionsArray}
+              navigation={navigation}
             />
           </View>
         </Modal>
-      )}
+      )} */}
     </TemplateViewWithTopChildren>
   );
 }
