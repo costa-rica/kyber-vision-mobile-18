@@ -24,9 +24,9 @@ export default function ScriptingLiveSelectSession({ navigation }) {
   const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
   // const [displayWarning, setDisplayWarning] = useState(false);
-  const [isVisibleModalSelectLeague, setIsVisibleModalSelectLeague] =
+  const [isVisibleModalCreateSession, setIsVisibleModalCreateSession] =
     useState(false);
-  const [sessionsArray, setSessionsArray] = useState([]);
+  // const [sessionsArray, setSessionsArray] = useState([]);
   const [leaguesArray, setLeaguesArray] = useState([]);
 
   const topChildren = (
@@ -69,7 +69,15 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     }
     console.log("--- here are the leagues ---");
     console.log(resJson);
-    setLeaguesArray(resJson.leaguesArray);
+    let tempArray = [];
+    resJson.leaguesArray.forEach((league) => {
+      tempArray.push({
+        id: league.id,
+        name: league.name,
+        selected: false,
+      });
+    });
+    setLeaguesArray(tempArray);
   };
 
   return (
@@ -113,7 +121,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
               onPress={() => {
                 console.log("New Live Session");
                 fetchLeaguesArray();
-                setIsVisibleModalSelectLeague(true);
+                setIsVisibleModalCreateSession(true);
               }}
             >
               New Live Session
@@ -121,18 +129,19 @@ export default function ScriptingLiveSelectSession({ navigation }) {
           </View>
         </View>
       </View>
-      {isVisibleModalSelectLeague && (
+      {isVisibleModalCreateSession && (
         <Modal
-          visible={isVisibleModalSelectLeague}
+          visible={isVisibleModalCreateSession}
           transparent={true}
           animationType="fade"
-          onRequestClose={() => setIsVisibleModalSelectLeague(false)}
+          onRequestClose={() => setIsVisibleModalCreateSession(false)}
         >
           <View style={styles.modalOverlay}>
             <ModalCreateSession
-              isVisibleModalSelectLeague={isVisibleModalSelectLeague}
-              setIsVisibleModalSelectLeague={setIsVisibleModalSelectLeague}
+              isVisibleModalCreateSession={isVisibleModalCreateSession}
+              setIsVisibleModalCreateSession={setIsVisibleModalCreateSession}
               leaguesArray={leaguesArray}
+              setLeaguesArray={setLeaguesArray}
               navigation={navigation}
             />
           </View>
