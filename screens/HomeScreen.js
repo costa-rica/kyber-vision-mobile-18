@@ -10,8 +10,7 @@ import {
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateContractTeamUserArray } from "../reducers/user";
 import { updateSessionsArray } from "../reducers/script";
 
@@ -113,7 +112,7 @@ export default function HomeScreen({ navigation }) {
     if (contentType?.includes("application/json")) {
       resJson = await response.json();
     }
-    console.log("--- here are the matches ---");
+    console.log("--- here are the sessions ---");
     console.log(resJson);
     let tempArray = [];
     resJson.sessionsArray.map((session) => {
@@ -126,7 +125,6 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleSelectScriptingButton = async () => {
-    // setIsVisibleModalSelectSession(true);
     fetchSessionsArray();
     navigation.navigate("ScriptingLiveSelectSession");
   };

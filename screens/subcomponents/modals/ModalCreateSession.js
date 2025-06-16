@@ -7,21 +7,22 @@ import {
 } from "react-native";
 import ButtonKvStd from "../buttons/ButtonKvStd";
 // import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
-// import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { updateSessionId } from "../../../reducers/script";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Platform } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { updateSessionsArray } from "../../../reducers/script";
 
 export default function ModalCreateSession({
   isVisibleModalCreateSession,
   setIsVisibleModalCreateSession,
   leaguesArray,
   setLeaguesArray,
+  fetchLeaguesArray,
 }) {
   const userReducer = useSelector((state) => state.user);
+  const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -51,8 +52,15 @@ export default function ModalCreateSession({
     setLeaguesArray(tempArray);
   };
 
+  // #GoodApiCall
+  // --> This is good template for API calls
   const handleCreateSession = async () => {
     const leagueId = leaguesArray.find((league) => league.selected)?.id;
+    const contractLeagueTeamId = leaguesArray.find(
+      (league) => league.selected
+    )?.contractLeagueTeamId;
+    console.log("leagueId", leagueId);
+    console.log("contractLeagueTeamId", contractLeagueTeamId);
 
     if (!leagueId) {
       // console.warn("No league selected.");
@@ -72,6 +80,7 @@ export default function ModalCreateSession({
 
     const bodyObj = {
       teamId: leagueId,
+      contractLeagueTeamId,
       sessionDate,
     };
 
@@ -93,12 +102,24 @@ export default function ModalCreateSession({
 
       if (contentType?.includes("application/json")) {
         const resJson = await response.json();
-        console.log("✅ Session created:", resJson);
+        console.log("--- Here is the NEW session ---");
+        console.log(resJson);
+        if (resJson.result) {
+          alert("Session created successfully");
+          let tempArray = [...scriptReducer.sessionsArray];
+          tempArray.push(resJson.sessionNew);
+          dispatch(updateSessionsArray(tempArray));
+          setIsVisibleModalCreateSession(false);
+        } else {
+          alert(`Failed to create session: ${resJson.error}`);
+        }
       } else {
         console.warn("Unexpected response type");
+        alert("Unexpected response type");
       }
     } catch (error) {
       console.error("❌ Failed to create session:", error);
+      alert(`Failed to create session: ${error}`);
     }
   };
 

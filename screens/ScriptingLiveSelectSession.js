@@ -72,8 +72,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     let tempArray = [];
     resJson.leaguesArray.forEach((league) => {
       tempArray.push({
-        id: league.id,
-        name: league.name,
+        ...league,
         selected: false,
       });
     });
@@ -91,6 +90,23 @@ export default function ScriptingLiveSelectSession({ navigation }) {
           <Text style={{ fontSize: 18, marginBottom: 20 }}>
             Which session do you want to script for?
           </Text>
+          {/* {scriptReducer.sessionsArray.map((session) => (
+            <View style={styles.vwSessionItem} key={session.id}>
+              <TouchableOpacity
+                style={styles.btnSelectSession}
+                onPress={() => handleSelectSession(session.id)}
+              >
+                <View style={styles.vwSessionItemDate}>
+                  <Text style={styles.txtSessionItemDate}>
+                    {session.id}
+                  </Text>
+                </View>
+                <View style={styles.vwSessionItemCity}>
+                  <Text style={styles.txtSessionItemCity}>{session.city}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          ))} */}
           <FlatList
             data={scriptReducer.sessionsArray}
             renderItem={({ item }) => (
