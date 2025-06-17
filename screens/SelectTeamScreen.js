@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
-import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
+import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -132,15 +132,22 @@ export default function SelectTeamScreen({ navigation }) {
         </View>
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
-            <ButtonKvStd
+            {/* <ButtonKvStd
               onPress={() => navigation.navigate("CreateTribeScreen")}
               style={styles.btnTribe}
             >
               Create Tribe
-            </ButtonKvStd>
+            </ButtonKvStd> */}
+            <ButtonKvNoDefault
+              onPress={() => navigation.navigate("CreateTribeScreen")}
+              styleView={styles.btnTribe}
+              styleText={styles.btnTribeText}
+            >
+              Create Tribe
+            </ButtonKvNoDefault>
           </View>
           <View style={styles.vwInputGroup}>
-            <ButtonKvStd
+            {/* <ButtonKvStd
               onPress={() => {
                 if (
                   userReducer.teamsArray.filter((tribe) => tribe.selected)
@@ -154,7 +161,32 @@ export default function SelectTeamScreen({ navigation }) {
               style={styles.btnTribe}
             >
               Select Tribe
-            </ButtonKvStd>
+            </ButtonKvStd> */}
+            <ButtonKvNoDefault
+              active={
+                userReducer.teamsArray.filter((tribe) => tribe.selected)
+                  .length > 0
+              }
+              onPress={() => {
+                if (
+                  userReducer.teamsArray.filter((tribe) => tribe.selected)
+                    .length > 0
+                ) {
+                  navigation.navigate("HomeScreen");
+                } else {
+                  alert("Please select a tribe");
+                }
+              }}
+              styleView={styles.btnTribe}
+              styleText={
+                userReducer.teamsArray.filter((tribe) => tribe.selected)
+                  .length > 0
+                  ? styles.btnTribeText
+                  : styles.btnTribeTextInactive
+              }
+            >
+              Select Tribe
+            </ButtonKvNoDefault>
           </View>
         </View>
       </View>
@@ -199,14 +231,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 30,
   },
-  btnTribe: {
+  btnTribeInactive: {
     width: Dimensions.get("window").width * 0.6,
     height: 50,
     justifyContent: "center",
     fontSize: 24,
     color: "#AB8EAB",
     backgroundColor: "#C0A9C0",
-    // borderColor
+  },
+  btnTribe: {
+    width: Dimensions.get("window").width * 0.6,
+    height: 50,
+    justifyContent: "center",
+    fontSize: 24,
+    color: "white",
+    backgroundColor: "#C0A9C0",
+    borderRadius: 35,
+    alignItems: "center",
+  },
+  btnTribeText: {
+    color: "white",
+    fontSize: 24,
+  },
+  btnTribeTextInactive: {
+    color: "#AB8EAB",
+    fontSize: 24,
   },
 
   // ------------

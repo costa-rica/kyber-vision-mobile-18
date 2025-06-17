@@ -7,6 +7,7 @@ export default function ButtonKvNoDefault({
   styleText,
   pressInColor = "gray",
   children,
+  active = true,
 }) {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
@@ -14,6 +15,7 @@ export default function ButtonKvNoDefault({
     styleView.backgroundColor
   );
   const handlePressIn = () => {
+    if (!active) return;
     setCurrentBackgroundColor(pressInColor); // Change color on press
     Animated.spring(scaleValue, {
       toValue: 0.7,
@@ -22,6 +24,7 @@ export default function ButtonKvNoDefault({
   };
 
   const handlePressOut = () => {
+    if (!active) return;
     setCurrentBackgroundColor(styleView.backgroundColor); // Revert color when press is released
     Animated.spring(scaleValue, {
       toValue: 1,
@@ -42,6 +45,7 @@ export default function ButtonKvNoDefault({
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         style={styleView}
+        disabled={!active}
       >
         <Text style={styleText}>{children}</Text>
       </Pressable>
