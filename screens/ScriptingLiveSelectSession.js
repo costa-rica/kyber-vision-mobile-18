@@ -94,7 +94,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
       return { ...item, selected: false };
     });
     dispatch(updateSessionsArray(tempArray));
-    navigation.navigate("ScriptingLive");
+    navigation.navigate("ScriptingLiveSelectPlayers");
     // dispatch(setScriptingForPlayerObject(session));
   };
 

@@ -16,6 +16,7 @@ import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
+import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle.svg";
 import {
   setScriptingForPlayerObject,
@@ -107,10 +108,6 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     };
 
     return (
-      // <View
-      //   // key={player.id}
-      //   // style={player.selected ? styles.btnPlayerSelected : styles.btnPlayer}
-      // >
       <TouchableOpacity
         onPress={() => {
           // console.log(player);
@@ -127,11 +124,8 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
           <Text style={styles.txtPlayerName}>{player.lastName}</Text>
         </View>
       </TouchableOpacity>
-      // </View>
     );
   };
-
-  // console.log(`scriptReducer.playersArray`, scriptReducer.playersArray);
 
   return (
     <TemplateViewWithTopChildrenSmall
@@ -171,14 +165,13 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             )}
           </View>
           <View style={styles.vwInputGroup}>
-            <ButtonKvStd
+            {/* <ButtonKvStd
               onPress={() => {
                 if (
                   scriptReducer.playersArray.filter((player) => player.selected)
                     .length > 0
                 ) {
                   navigation.navigate("ScriptingLive");
-                  // alert("Going to Scripting screen");
                 } else {
                   setDisplayWarning(true);
                 }
@@ -186,7 +179,33 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
               style={styles.btnTribe}
             >
               Select Player
-            </ButtonKvStd>
+            </ButtonKvStd> */}
+            <ButtonKvNoDefault
+              active={
+                scriptReducer.playersArray.filter((player) => player.selected)
+                  .length > 0
+              }
+              onPress={() => {
+                if (
+                  scriptReducer.playersArray.filter((player) => player.selected)
+                    .length > 0
+                ) {
+                  navigation.navigate("ScriptingLive");
+                } else {
+                  setDisplayWarning(true);
+                }
+              }}
+              // style={styles.btnTribe}
+              styleView={styles.btnSelectPlayer}
+              styleText={
+                scriptReducer.playersArray.filter((player) => player.selected)
+                  .length > 0
+                  ? styles.btnSelectPlayerText
+                  : styles.btnSelectPlayerTextInactive
+              }
+            >
+              Select Player
+            </ButtonKvNoDefault>
           </View>
         </View>
       </View>
@@ -323,13 +342,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 30,
   },
-  btnTribe: {
+  // btnTribe: {
+  //   width: Dimensions.get("window").width * 0.6,
+  //   height: 50,
+  //   justifyContent: "center",
+  //   fontSize: 24,
+  //   color: "#AB8EAB",
+  //   backgroundColor: "#C0A9C0",
+  //   // borderColor
+  // },
+
+  btnSelectPlayer: {
     width: Dimensions.get("window").width * 0.6,
     height: 50,
     justifyContent: "center",
     fontSize: 24,
-    color: "#AB8EAB",
+    color: "white",
     backgroundColor: "#C0A9C0",
-    // borderColor
+    borderRadius: 35,
+    alignItems: "center",
+  },
+  btnSelectPlayerText: {
+    color: "white",
+    fontSize: 24,
+  },
+  btnSelectPlayerTextInactive: {
+    color: "#AB8EAB",
+    fontSize: 24,
   },
 });
