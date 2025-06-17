@@ -11,7 +11,7 @@ import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChil
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateContractTeamUserArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/user";
 import { updateSessionsArray } from "../reducers/script";
 
 export default function HomeScreen({ navigation }) {
@@ -23,11 +23,11 @@ export default function HomeScreen({ navigation }) {
   const [sessionsArray, setSessionsArray] = useState([]);
 
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.contractTeamUserArray.map((tribe) => ({
-      ...tribe,
-      selected: tribe.id === selectedId,
+    const updatedArray = userReducer.teamsArray.map((team) => ({
+      ...team,
+      selected: team.id === selectedId,
     }));
-    dispatch(updateContractTeamUserArray(updatedArray));
+    dispatch(updateTeamsArray(updatedArray));
     setDisplayTeamList(false);
   };
 

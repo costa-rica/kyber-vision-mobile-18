@@ -132,12 +132,6 @@ export default function SelectTeamScreen({ navigation }) {
         </View>
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
-            {/* <ButtonKvStd
-              onPress={() => navigation.navigate("CreateTribeScreen")}
-              style={styles.btnTribe}
-            >
-              Create Tribe
-            </ButtonKvStd> */}
             <ButtonKvNoDefault
               onPress={() => navigation.navigate("CreateTribeScreen")}
               styleView={styles.btnTribe}
@@ -147,21 +141,6 @@ export default function SelectTeamScreen({ navigation }) {
             </ButtonKvNoDefault>
           </View>
           <View style={styles.vwInputGroup}>
-            {/* <ButtonKvStd
-              onPress={() => {
-                if (
-                  userReducer.teamsArray.filter((tribe) => tribe.selected)
-                    .length > 0
-                ) {
-                  navigation.navigate("HomeScreen");
-                } else {
-                  alert("Please select a tribe");
-                }
-              }}
-              style={styles.btnTribe}
-            >
-              Select Tribe
-            </ButtonKvStd> */}
             <ButtonKvNoDefault
               active={
                 userReducer.teamsArray.filter((tribe) => tribe.selected)
@@ -230,14 +209,6 @@ const styles = StyleSheet.create({
     width: "90%",
     alignItems: "center",
     paddingTop: 30,
-  },
-  btnTribeInactive: {
-    width: Dimensions.get("window").width * 0.6,
-    height: 50,
-    justifyContent: "center",
-    fontSize: 24,
-    color: "#AB8EAB",
-    backgroundColor: "#C0A9C0",
   },
   btnTribe: {
     width: Dimensions.get("window").width * 0.6,
