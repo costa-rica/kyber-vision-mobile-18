@@ -15,7 +15,7 @@ import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import {
   setScriptingForPlayerObject,
   updatePlayersArray,
-  // updateSessionId,
+  updateSessionsArray,
 } from "../reducers/script";
 import ModalCreateSession from "./subcomponents/modals/ModalCreateSession";
 
@@ -79,6 +79,25 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     setLeaguesArray(tempArray);
   };
 
+  const handleSelectSession = (session) => {
+    // dispatch(setScriptingForPlayerObject({ sessionId }));
+    // navigation.navigate("ScriptingLive");
+    console.log(" --- handleSelectSession ---");
+    console.log(session);
+    let tempArray = scriptReducer.sessionsArray.map((item) => {
+      if (item.id === session.id) {
+        return {
+          ...item,
+          selected: true,
+        };
+      }
+      return { ...item, selected: false };
+    });
+    dispatch(updateSessionsArray(tempArray));
+    navigation.navigate("ScriptingLive");
+    // dispatch(setScriptingForPlayerObject(session));
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -90,30 +109,13 @@ export default function ScriptingLiveSelectSession({ navigation }) {
           <Text style={{ fontSize: 18, marginBottom: 20 }}>
             Which session do you want to script for?
           </Text>
-          {/* {scriptReducer.sessionsArray.map((session) => (
-            <View style={styles.vwSessionItem} key={session.id}>
-              <TouchableOpacity
-                style={styles.btnSelectSession}
-                onPress={() => handleSelectSession(session.id)}
-              >
-                <View style={styles.vwSessionItemDate}>
-                  <Text style={styles.txtSessionItemDate}>
-                    {session.id}
-                  </Text>
-                </View>
-                <View style={styles.vwSessionItemCity}>
-                  <Text style={styles.txtSessionItemCity}>{session.city}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          ))} */}
           <FlatList
             data={scriptReducer.sessionsArray}
             renderItem={({ item }) => (
               <View style={styles.vwSessionItem}>
                 <TouchableOpacity
                   style={styles.btnSelectSession}
-                  onPress={() => handleSelectSession(item.id)}
+                  onPress={() => handleSelectSession(item)}
                 >
                   <View style={styles.vwSessionItemDate}>
                     <Text style={styles.txtSessionItemDate}>

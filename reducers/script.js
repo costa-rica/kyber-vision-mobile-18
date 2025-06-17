@@ -204,8 +204,6 @@ export const scriptSlice = createSlice({
       state.scriptId = action.payload;
     },
     updateSessionsArray: (state, action) => {
-      console.log("--- updateSessionsArray ---");
-      console.log(action.payload);
       state.sessionsArray = action.payload;
     },
   },
