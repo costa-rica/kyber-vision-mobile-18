@@ -170,7 +170,7 @@ export default function ScriptingLive({ navigation }) {
   //  Add Action
   // -----------------
   const addNewActionToScriptReducersActionsArrayNoWheel = () => {
-    // console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
+    console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
       timestamp: new Date().toISOString(),
@@ -185,7 +185,13 @@ export default function ScriptingLive({ navigation }) {
       rotation: scriptReducer.rotationArray[0],
       opponentServed: false,
       favorite: false,
+      sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
+      playerId: scriptReducer.scriptingForPlayerObject.id,
     };
+
+    console.log("--- newActionObj ---");
+    console.log(newActionObj);
+    console.log("--- END newActionObj ---");
 
     // create new array with
     // let newScriptReducerActionArray = [
@@ -226,10 +232,15 @@ export default function ScriptingLive({ navigation }) {
 
     const bodyObj = {
       actionsArray: scriptReducer.matchActionsArray,
-      matchId: userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
-        .practiceMatch.id,
+      // matchId: userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
+      //   .practiceMatch.id,
+      sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
       scriptId: scriptReducer.scriptId,
     };
+
+    // console.log("-- bodyObj --");
+    // console.log(bodyObj);
+    // console.log("-- END bodyObj --");
 
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,

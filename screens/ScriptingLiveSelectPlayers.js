@@ -165,21 +165,6 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
             )}
           </View>
           <View style={styles.vwInputGroup}>
-            {/* <ButtonKvStd
-              onPress={() => {
-                if (
-                  scriptReducer.playersArray.filter((player) => player.selected)
-                    .length > 0
-                ) {
-                  navigation.navigate("ScriptingLive");
-                } else {
-                  setDisplayWarning(true);
-                }
-              }}
-              style={styles.btnTribe}
-            >
-              Select Player
-            </ButtonKvStd> */}
             <ButtonKvNoDefault
               active={
                 scriptReducer.playersArray.filter((player) => player.selected)

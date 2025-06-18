@@ -542,7 +542,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvStd
               onPress={() => {
                 console.log("pressed send script");
-                console.log(scriptReducer.matchActionsArray);
+                // console.log(scriptReducer.matchActionsArray);
                 props.sendScriptReducerMatchActionsArrayToServer();
               }}
               style={{
