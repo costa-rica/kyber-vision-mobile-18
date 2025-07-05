@@ -19,6 +19,15 @@ import {
 } from "../reducers/script";
 import ModalCreateSession from "./subcomponents/modals/ModalCreateSession";
 
+function formatSessionDateToLocal(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const monthShort = date.toLocaleString("default", { month: "short" });
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${day} ${monthShort} ${hours}h${minutes}`;
+}
+
 export default function ScriptingLiveSelectSession({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
@@ -119,7 +128,8 @@ export default function ScriptingLiveSelectSession({ navigation }) {
                 >
                   <View style={styles.vwSessionItemDate}>
                     <Text style={styles.txtSessionItemDate}>
-                      {item.sessionDateString}
+                      {/* {item.sessionDateString} */}
+                      {formatSessionDateToLocal(item.sessionDate)}
                     </Text>
                   </View>
                   <View style={styles.vwSessionItemCity}>
