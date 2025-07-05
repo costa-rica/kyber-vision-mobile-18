@@ -474,7 +474,7 @@ export default function ScriptingLivePortrait(props) {
               onPress={() => {
                 console.log("pressed service");
                 dispatch(
-                  replaceScriptMatchActionsArray({ matchActionsArray: [] })
+                  replaceScriptMatchActionsArray({ sessionActionsArray: [] })
                 );
               }}
               style={styles.btnRallyGroupBottom}
@@ -526,12 +526,12 @@ export default function ScriptingLivePortrait(props) {
           <View style={styles.vwScriptDetails}>
             <Text style={{ color: "#806181" }}>
               {" "}
-              {scriptReducer.matchActionsArray.length} actions recorded
+              {scriptReducer.sessionActionsArray.length} actions recorded
             </Text>
             <Text style={{ fontStyle: "italic", color: "#806181" }}>
               {" "}
               {
-                scriptReducer.matchActionsArray.filter(
+                scriptReducer.sessionActionsArray.filter(
                   (action) => action.favorite
                 ).length
               }{" "}
@@ -542,7 +542,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvStd
               onPress={() => {
                 console.log("pressed send script");
-                // console.log(scriptReducer.matchActionsArray);
+                // console.log(scriptReducer.sessionActionsArray);
                 props.sendScriptReducerMatchActionsArrayToServer();
               }}
               style={{

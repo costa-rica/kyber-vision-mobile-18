@@ -12,7 +12,7 @@ import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateTribeArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/user";
 import {
   updateReviewReducerVideoObject,
   createReviewActionsArray,
@@ -32,7 +32,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       ...tribe,
       selected: tribe.id === selectedId,
     }));
-    dispatch(updateTribeArray(updatedArray));
+    dispatch(updateTeamsArray(updatedArray));
     setDisplayTribeList(false);
     fetchVideoArray(selectedId);
   };
@@ -194,7 +194,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       }
     }
 
-    console.log("resJson: ", resJson);
+    // console.log("resJson: ", resJson);
 
     let tempCleanActionsArray = [];
     for (const elem of resJson.actionsArray) {

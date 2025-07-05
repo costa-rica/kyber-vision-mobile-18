@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   scriptId: null,
   sessionsArray: [],
-  matchActionsArray: [], // former actionsArray
-  matchPointsTableArray: [], // former pointsTableArray
+  sessionActionsArray: [], // former actionsArray
+  sessionPointsTableArray: [], // former pointsTableArray
   playersArray: [],
   scriptingPlayerCount: null,
   scriptingForPlayerObject: null, // <-- player object (id, firstName, lastName, shirtNumber)
@@ -83,10 +83,10 @@ export const scriptSlice = createSlice({
     emptyMatchActionsArray: (state) => {
       // state.scriptId = null;
       // state.tokenWithUserId = null;
-      state.matchActionsArray = [];
+      state.sessionActionsArray = [];
     },
     replaceScriptMatchActionsArray: (state, action) => {
-      state.matchActionsArray = action.payload.matchActionsArray;
+      state.sessionActionsArray = action.payload.sessionActionsArray;
       // state.scriptId = action.payload?.scriptId;
     },
     updateScriptingPlayerCount: (state, action) => {
@@ -97,22 +97,22 @@ export const scriptSlice = createSlice({
       const { timestamp, quality } = action.payload;
 
       // Find the index of the object to update
-      const index = state.matchActionsArray.findIndex(
+      const index = state.sessionActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.matchActionsArray[index], quality };
+        const updatedObject = { ...state.sessionActionsArray[index], quality };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.sessionActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.sessionActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.matchActionsArray = updatedArray.sort(
+        state.sessionActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
@@ -121,22 +121,22 @@ export const scriptSlice = createSlice({
       const { timestamp, type } = action.payload;
 
       // Find the index of the object to update
-      const index = state.matchActionsArray.findIndex(
+      const index = state.sessionActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.matchActionsArray[index], type };
+        const updatedObject = { ...state.sessionActionsArray[index], type };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.sessionActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.sessionActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.matchActionsArray = updatedArray.sort(
+        state.sessionActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
@@ -145,28 +145,28 @@ export const scriptSlice = createSlice({
       const { timestamp, subtype } = action.payload;
 
       // Find the index of the object to update
-      const index = state.matchActionsArray.findIndex(
+      const index = state.sessionActionsArray.findIndex(
         (obj) => obj.timestamp === timestamp
       );
       if (index !== -1) {
         // Create a new object with the updated quality
-        const updatedObject = { ...state.matchActionsArray[index], subtype };
+        const updatedObject = { ...state.sessionActionsArray[index], subtype };
 
         // Create a new array with the updated object
         const updatedArray = [
-          ...state.matchActionsArray.slice(0, index), // gets all objects from 0 to index
+          ...state.sessionActionsArray.slice(0, index), // gets all objects from 0 to index
           updatedObject,
-          ...state.matchActionsArray.slice(index + 1), // gets all object from index+1 to end
+          ...state.sessionActionsArray.slice(index + 1), // gets all object from index+1 to end
         ];
 
         // Sort the array by timeStamp
-        state.matchActionsArray = updatedArray.sort(
+        state.sessionActionsArray = updatedArray.sort(
           (a, b) => a.timestamp - b.timestamp
         );
       }
     },
     updateMatchPointsTableArray: (state, action) => {
-      state.matchPointsTableArray = action.payload.matchPointsTableArray;
+      state.sessionPointsTableArray = action.payload.sessionPointsTableArray;
     },
     rotatePlayerNamesArray: (state) => {
       if (state.playerNamesArrayRotated.length === 0) {

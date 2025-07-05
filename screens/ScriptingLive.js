@@ -196,7 +196,7 @@ export default function ScriptingLive({ navigation }) {
     // create new array with
     // let newScriptReducerActionArray = [
     let newScriptReducerMatchActionsArray = [
-      ...scriptReducer.matchActionsArray,
+      ...scriptReducer.sessionActionsArray,
       newActionObj,
     ];
 
@@ -204,7 +204,7 @@ export default function ScriptingLive({ navigation }) {
     newScriptReducerMatchActionsArray.sort((a, b) => a.timeStamp - b.timeStamp);
     dispatch(
       replaceScriptMatchActionsArray({
-        matchActionsArray: newScriptReducerMatchActionsArray,
+        sessionActionsArray: newScriptReducerMatchActionsArray,
       })
     );
     // Reset Last Action
@@ -231,7 +231,7 @@ export default function ScriptingLive({ navigation }) {
     console.log("----> sendScriptReducerMatchActionsArrayToServer");
 
     const bodyObj = {
-      actionsArray: scriptReducer.matchActionsArray,
+      actionsArray: scriptReducer.sessionActionsArray,
       // matchId: userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
       //   .practiceMatch.id,
       sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
