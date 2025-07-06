@@ -543,7 +543,7 @@ export default function ScriptingLivePortrait(props) {
               onPress={() => {
                 console.log("pressed send script");
                 // console.log(scriptReducer.sessionActionsArray);
-                props.sendScriptReducerMatchActionsArrayToServer();
+                props.sendScriptReducerSessionActionsArrayToServer();
               }}
               style={{
                 backgroundColor: "#806181",

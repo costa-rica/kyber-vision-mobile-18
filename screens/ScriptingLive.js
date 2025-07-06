@@ -200,22 +200,6 @@ export default function ScriptingLive({ navigation }) {
       setTapIsActive(false);
     }
   });
-  // const gestureTapBegin = Gesture.Tap().onBegin((event) => {
-  //   console.log("gestureTapBegin");
-  //   // if (tapIsActive) {
-  //   const timestamp = new Date().toISOString();
-  //   const { x, y, absoluteX, absoluteY } = event;
-  //   if (orientation == "portrait") {
-  //     calculateCenterCircle(
-  //       x,
-  //       y + scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y
-  //     );
-  //   } else {
-  //     calculateCenterCircle(x, y);
-  //   }
-  //   // calculateCenterCircle(absoluteX, absoluteY);
-  //   // }
-  // });
 
   const gestureTapEnd = Gesture.Tap()
     .maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
@@ -243,15 +227,6 @@ export default function ScriptingLive({ navigation }) {
       setPadVisible(false);
       setTapIsActive(true);
     });
-
-  // const gestureTapEnd = Gesture.Tap().onEnd(() => {
-  //   console.log("gestureTapEnd");
-  //   // setTapIsActive(true);
-  //   // addNewActionToScriptReducersActionsArrayNoWheel();
-  //   addNewActionToScriptReducersActionsArray();
-
-  //   setCirclePosition({ x: 0, y: 0 });
-  // });
 
   const gestureSwipeOnChange = Gesture.Pan().onChange(
     (event) => {
@@ -659,20 +634,6 @@ export default function ScriptingLive({ navigation }) {
     }
   };
 
-  // const calculateCenterCircle = (x, y) => {
-  //   const centerX = x - circleSize.width / 2;
-  //   const centerY = y - circleSize.height / 2;
-
-  //   setCirclePosition({
-  //     x: centerX,
-  //     y: centerY,
-  //   });
-  // };
-
-  // -----------------
-  //  Add Action
-  // -----------------
-
   const addNewActionToScriptReducersActionsArray = () => {
     // console.log(`triggered addNewActionToScriptReducersActionsArray -`);
     const newActionObj = {
@@ -680,7 +641,7 @@ export default function ScriptingLive({ navigation }) {
       timestamp: new Date().toISOString(),
       type: lastActionType,
       subtype: lastActionSubtype,
-      quality: lastActionQuality,
+      quality: lastActionQuality || 0,
       playerId: scriptReducer.scriptingForPlayerObject.id,
       setNumber: 0,
       scoreTeamAnalyzed: 0,
@@ -766,8 +727,9 @@ export default function ScriptingLive({ navigation }) {
   //   // );
   // };
 
-  const sendScriptReducerMatchActionsArrayToServer = async () => {
-    console.log("----> sendScriptReducerMatchActionsArrayToServer");
+  // const sendScriptReducerMatchActionsArrayToServer = async () => {
+  const sendScriptReducerSessionActionsArrayToServer = async () => {
+    console.log("----> sendScriptReducerSessionActionsArrayToServer");
 
     const bodyObj = {
       actionsArray: scriptReducer.sessionActionsArray,
@@ -963,8 +925,8 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisibleSubtype={
           setLastActionDropDownIsVisibleSubtype
         }
-        sendScriptReducerMatchActionsArrayToServer={
-          sendScriptReducerMatchActionsArrayToServer
+        sendScriptReducerSessionActionsArrayToServer={
+          sendScriptReducerSessionActionsArrayToServer
         }
       />
       {/* {circlePosition.y > 0 && <View style={stylesCircle} />} */}
