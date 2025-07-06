@@ -29,6 +29,20 @@ const initialState = {
     "Pwr",
     "Rol",
     "B3",
+  ],
+  qualityArrayOuterCircle: [
+    "0",
+    "-",
+    "+",
+    "0",
+    "-",
+    "-",
+    "0",
+    "+",
+    "-",
+    "0",
+    "+",
+    "+",
     "tap",
   ],
   qualityArray: ["=", "-", "0", "+", "#"],
@@ -80,12 +94,12 @@ export const scriptSlice = createSlice({
     //   console.log("END newScript (in script reduer)");
     // },
     // deleteScript: (state) => {
-    emptyMatchActionsArray: (state) => {
+    emptySessionActionsArray: (state) => {
       // state.scriptId = null;
       // state.tokenWithUserId = null;
       state.sessionActionsArray = [];
     },
-    replaceScriptMatchActionsArray: (state, action) => {
+    replaceScriptSessionActionsArray: (state, action) => {
       state.sessionActionsArray = action.payload.sessionActionsArray;
       // state.scriptId = action.payload?.scriptId;
     },
@@ -93,7 +107,7 @@ export const scriptSlice = createSlice({
       state.scriptingPlayerCount = action.payload;
     },
 
-    updateQualityPropertyInObjectOfMatchActionsArray: (state, action) => {
+    updateQualityPropertyInObjectOfSessionActionsArray: (state, action) => {
       const { timestamp, quality } = action.payload;
 
       // Find the index of the object to update
@@ -117,7 +131,7 @@ export const scriptSlice = createSlice({
         );
       }
     },
-    updateTypePropertyInObjectOfMatchActionsArray: (state, action) => {
+    updateTypePropertyInObjectOfSessionActionsArray: (state, action) => {
       const { timestamp, type } = action.payload;
 
       // Find the index of the object to update
@@ -141,7 +155,7 @@ export const scriptSlice = createSlice({
         );
       }
     },
-    updateSubtypePropertyInObjectOfMatchActionsArray: (state, action) => {
+    updateSubtypePropertyInObjectOfSessionActionsArray: (state, action) => {
       const { timestamp, subtype } = action.payload;
 
       // Find the index of the object to update
@@ -165,7 +179,7 @@ export const scriptSlice = createSlice({
         );
       }
     },
-    updateMatchPointsTableArray: (state, action) => {
+    updateSessionPointsTableArray: (state, action) => {
       state.sessionPointsTableArray = action.payload.sessionPointsTableArray;
     },
     rotatePlayerNamesArray: (state) => {
@@ -212,13 +226,13 @@ export const scriptSlice = createSlice({
 export const {
   // newScript,
   // deleteScript,
-  emptyMatchActionsArray,
-  replaceScriptMatchActionsArray,
+  emptySessionActionsArray,
+  replaceScriptSessionActionsArray,
   updateScriptingPlayerCount,
-  updateQualityPropertyInObjectOfMatchActionsArray,
-  updateTypePropertyInObjectOfMatchActionsArray,
-  updateSubtypePropertyInObjectOfMatchActionsArray,
-  updateMatchPointsTableArray,
+  updateQualityPropertyInObjectOfSessionActionsArray,
+  updateTypePropertyInObjectOfSessionActionsArray,
+  updateSubtypePropertyInObjectOfSessionActionsArray,
+  updateSessionPointsTableArray,
   rotatePlayerNamesArray,
   initializePlayerNamesArrayRotated,
   setScriptingForPlayerObject,
