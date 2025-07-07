@@ -44,7 +44,7 @@ export default function ScriptingLive({ navigation }) {
     teamOpponent: 0,
   });
   // Last Action
-  const [lastActionQuality, setLastActionQuality] = useState("?");
+  // const [lastActionQuality, setLastActionQuality] = useState("?");
   const [lastActionPosition, setLastActionPosition] = useState("?");
   const [lastActionPlayer, setLastActionPlayer] = useState(
     scriptReducer.playersArray.find((p) => p.selected)
@@ -372,9 +372,9 @@ export default function ScriptingLive({ navigation }) {
       // setLastActionType(
       //   scriptReducer.typesArray[lastActionTypeIndexRef.current]
       // );
-      setLastActionQuality(
-        scriptReducer.qualityArrayOuterCircle[lastActionQualityIndexRef.current]
-      );
+      // setLastActionQuality(
+      //   scriptReducer.qualityArrayOuterCircle[lastActionQualityIndexRef.current]
+      // );
       // setLastActionSubtype("?");
       addNewActionToScriptReducersActionsArray(
         scriptReducer.typesArray[lastActionTypeIndexRef.current],
@@ -481,6 +481,7 @@ export default function ScriptingLive({ navigation }) {
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
       if (!inMiddleCircle) {
         wheelPositionOuter = 16; // like 16
+        lastActionQualityIndexRef.current = 0;
         if (-relativeToPadCenterY > boundary15Y) {
           // console.log("--- Right Top ---");
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
@@ -509,6 +510,7 @@ export default function ScriptingLive({ navigation }) {
     } else if (relativeToPadCenterY > Math.abs(boundary45Y)) {
       // Bottom
       wheelPositionMiddle = 2;
+      lastActionQualityIndexRef.current = 0;
       handleSwipeColorChange(wheelPositionMiddle);
       // setLastActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]);
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
@@ -542,6 +544,7 @@ export default function ScriptingLive({ navigation }) {
     } else if (relativeToPadCenterY > boundary45Y) {
       // Left
       wheelPositionMiddle = 3;
+      lastActionQualityIndexRef.current = 0;
       handleSwipeColorChange(wheelPositionMiddle);
       // setLastActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]);
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
@@ -572,6 +575,7 @@ export default function ScriptingLive({ navigation }) {
     } else if (relativeToPadCenterY < boundary45Y) {
       // Top
       wheelPositionMiddle = 4;
+      lastActionQualityIndexRef.current = 0;
       handleSwipeColorChange(wheelPositionMiddle);
       // setLastActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]);
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
@@ -709,6 +713,26 @@ export default function ScriptingLive({ navigation }) {
     setLastActionPlayer(player);
   };
 
+  const handleModifyQuality = (quality) => {
+    console.log(`lastActionQuality: ${quality}`);
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, quality }
+        : action
+    );
+
+    dispatch(
+      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
+    );
+  };
+
   const handleModifyType = (type) => {
     console.log(`lastActionType: ${type}`);
     const lastRecordedAction =
@@ -750,19 +774,6 @@ export default function ScriptingLive({ navigation }) {
       replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
     );
   };
-  // const handleModifySubtype = (subtype) => {
-  //   console.log(`lastActionSubtype: ${subtype}`);
-  //   setLastActionSubtype(subtype);
-  //   // Get last element from sessionActionsArray
-  //   let lastRecordedAction = scriptReducer.sessionActionsArray.slice().pop();
-  //   let tempArray = scriptReducer.sessionActionsArray.slice();
-  //   tempArray.find(
-  //     (action) => action.timestamp === lastRecordedAction.timestamp
-  //   ).subtype = subtype;
-  //   dispatch(
-  //     replaceScriptSessionActionsArray({ sessionActionsArray: tempArray })
-  //   );
-  // };
 
   // -----------------
   //  Set Circle
@@ -854,8 +865,9 @@ export default function ScriptingLive({ navigation }) {
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
         // ----------- Dropdowns Value -----------
-        lastActionQuality={lastActionQuality}
-        setLastActionQuality={setLastActionQuality}
+        // lastActionQuality={lastActionQuality}
+        // setLastActionQuality={setLastActionQuality}
+        handleModifyQuality={handleModifyQuality}
         lastActionPosition={lastActionPosition}
         setLastActionPosition={setLastActionPosition}
         lastActionPlayer={lastActionPlayer}
@@ -909,8 +921,8 @@ export default function ScriptingLive({ navigation }) {
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
-        lastActionQuality={lastActionQuality}
-        setLastActionQuality={setLastActionQuality}
+        // lastActionQuality={lastActionQuality}
+        // setLastActionQuality={setLastActionQuality}
         lastActionPosition={lastActionPosition}
         setLastActionPosition={setLastActionPosition}
         lastActionPlayer={lastActionPlayer}

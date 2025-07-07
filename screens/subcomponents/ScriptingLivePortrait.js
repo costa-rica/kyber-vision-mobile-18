@@ -274,7 +274,10 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
                 styleText={styles.txtLastAction}
               >
-                {props.lastActionQuality}
+                {/* {props.lastActionQuality} */}
+                {scriptReducer.sessionActionsArray[
+                  scriptReducer.sessionActionsArray.length - 1
+                ]?.quality || "?"}
               </ButtonKvNoDefault>
               <ButtonKvNoDefault
                 onPress={() => {
@@ -304,7 +307,6 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {/* {props.lastActionType} */}
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.type || "?"}
@@ -317,7 +319,6 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {/* {props.lastActionSubtype} */}
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.subtype || "?"}
@@ -334,7 +335,8 @@ export default function ScriptingLivePortrait(props) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        props.setLastActionQuality(quality);
+                        // props.setLastActionQuality(quality);
+                        props.handleModifyQuality(quality);
                         props.setLastActionDropDownIsVisibleQuality(false);
                       }}
                       style={styles.btnDropDown}
