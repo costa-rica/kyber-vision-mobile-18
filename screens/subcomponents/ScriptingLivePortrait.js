@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import TemplateView from "./TemplateView";
 import { useState } from "react";
@@ -560,6 +561,21 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
+      {/* ------------ FLATLIST Container ------------ */}
+      <View style={styles.containerFlatListActions}>
+        <FlatList
+          data={scriptReducer.sessionActionsArray}
+          renderItem={({ item }) => (
+            <View style={styles.itemContainer}>
+              <Text>
+                scriptId: {scriptReducer.scriptId}, type: {item.type}, quality:{" "}
+                {item.quality}
+              </Text>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
     </View>
   );
 }
@@ -812,6 +828,7 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     width: "100%",
+    backgroundColor: "green",
   },
   vwRallyButtonsGroup: {
     flexDirection: "row",

@@ -301,7 +301,6 @@ export default function ScriptingLive({ navigation }) {
     // -- if actions recorded in sessionActionsArray then update to the last action in the sessionActionsArray
     if (distanceFromCenter > userReducer.circleRadiusInner) {
       // console.log(" !! Add action ");
-      addNewActionToScriptReducersActionsArray();
 
       console.log(
         `tapDetails: ${tapDetails.padPosCenterX} - ${tapDetails.padPosCenterY}`
@@ -319,6 +318,8 @@ export default function ScriptingLive({ navigation }) {
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
         }`
       );
+
+      // Determine posistion
       if (
         tapYAdjusted >
         scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
@@ -330,16 +331,19 @@ export default function ScriptingLive({ navigation }) {
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
         ) {
           console.log("right");
-          setLastActionPosition(1);
+          lastActionPositionIndexRef.current = 1;
+          // setLastActionPosition(1);
         } else if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
         ) {
           console.log("middle");
-          setLastActionPosition(6);
+          lastActionPositionIndexRef.current = 6;
+          // setLastActionPosition(6);
         } else {
           console.log("left ");
-          setLastActionPosition(5);
+          lastActionPositionIndexRef.current = 5;
+          // setLastActionPosition(5);
         }
       } else {
         console.log("front row");
@@ -348,18 +352,23 @@ export default function ScriptingLive({ navigation }) {
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
         ) {
           console.log("right");
-          setLastActionPosition(2);
+          lastActionPositionIndexRef.current = 2;
+          // setLastActionPosition(2);
         } else if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
         ) {
           console.log("middle");
-          setLastActionPosition(3);
+          lastActionPositionIndexRef.current = 3;
+          // setLastActionPosition(3);
         } else {
           console.log("left ");
-          setLastActionPosition(4);
+          lastActionPositionIndexRef.current = 4;
+          // setLastActionPosition(4);
         }
       }
+      setLastActionPosition(lastActionPositionIndexRef.current);
+
       setLastActionType(
         scriptReducer.typesArray[lastActionTypeIndexRef.current]
       );
@@ -367,54 +376,15 @@ export default function ScriptingLive({ navigation }) {
         scriptReducer.qualityArrayOuterCircle[lastActionQualityIndexRef.current]
       );
       setLastActionSubtype("?");
+      addNewActionToScriptReducersActionsArray(
+        scriptReducer.typesArray[lastActionTypeIndexRef.current],
+        scriptReducer.qualityArrayOuterCircle[
+          lastActionQualityIndexRef.current
+        ],
+        lastActionPositionIndexRef.current
+      );
     } else {
-      // console.log(" no action registered on this swipe ");
-      // if (
-      //   scriptReducer.sessionActionsArray[
-      //     scriptReducer.sessionActionsArray.length - 1
-      //   ]?.type
-      // ) {
-      //   console.log(" !! Last action registered on this swipe ");
-      //   setLastActionType(
-      //     scriptReducer.sessionActionsArray[
-      //       scriptReducer.sessionActionsArray.length - 1
-      //     ]?.type
-      //   );
-      //   // setLastActionSubtype(
-      //   //   scriptReducer.sessionActionsArray[
-      //   //     scriptReducer.sessionActionsArray.length - 1
-      //   //   ]?.subtype
-      //   // );
-      //   setLastActionQuality(
-      //     scriptReducer.sessionActionsArray[
-      //       scriptReducer.sessionActionsArray.length - 1
-      //     ]?.quality
-      //   );
-      //   // setLastActionPosition(
-      //   //   scriptReducer.sessionActionsArray[
-      //   //     scriptReducer.sessionActionsArray.length - 1
-      //   //   ]?.position
-      //   // );
-      //   // setLastActionPlayer(
-      //   //   scriptReducer.sessionActionsArray[
-      //   //     scriptReducer.sessionActionsArray.length - 1
-      //   //   ]?.player
-      //   // );
-      // } else {
-      //   // console.log("no actions registered ever");
-      //   setLastActionType("?");
-      //   // setLastActionSubtype("?");
-      //   setLastActionQuality("?");
-      //   // setLastActionPosition("?");
-      //   // setLastActionPlayer("?");
-      // }
-      // console.log(
-      //   `lastActionType from array: ${
-      //     scriptReducer.sessionActionsArray[
-      //       scriptReducer.sessionActionsArray.length - 1
-      //     ]?.type
-      //   }`
-      // );
+      console.log(" no action registered on this swipe ");
     }
   });
 
@@ -485,6 +455,7 @@ export default function ScriptingLive({ navigation }) {
 
   const lastActionTypeIndexRef = useRef(null);
   const lastActionQualityIndexRef = useRef(null);
+  const lastActionPositionIndexRef = useRef(null);
 
   const logicFourTwelveCircle = (
     relativeToPadCenterX,
@@ -634,20 +605,25 @@ export default function ScriptingLive({ navigation }) {
     }
   };
 
-  const addNewActionToScriptReducersActionsArray = () => {
-    // console.log(`triggered addNewActionToScriptReducersActionsArray -`);
+  const addNewActionToScriptReducersActionsArray = (
+    type,
+    quality,
+    position
+  ) => {
     const newActionObj = {
       dateScripted: new Date().toISOString(), // Convert to ISO string
       timestamp: new Date().toISOString(),
-      type: lastActionType,
+      // type: lastActionType,
+      type: type,
       subtype: lastActionSubtype,
-      quality: lastActionQuality || 0,
+      quality: quality || 0,
       playerId: scriptReducer.scriptingForPlayerObject.id,
       setNumber: 0,
       scoreTeamAnalyzed: 0,
       scoreTeamOpponent: 0,
       // rotation: scriptReducer.rotationArray[0],
       rotation: "rotation not set yet",
+      zone: position,
       opponentServed: false,
       favorite: false,
       sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
@@ -665,76 +641,11 @@ export default function ScriptingLive({ navigation }) {
     );
   };
 
-  // const addNewActionToScriptReducersActionsArrayNoWheel = () => {
-  //   console.log(`triggered addNewActionToScriptReducersActionsArrayNoWheel -`);
-  //   const newActionObj = {
-  //     dateScripted: new Date().toISOString(), // Convert to ISO string
-  //     timestamp: new Date().toISOString(),
-  //     type: scriptReducer.typesArray[scriptReducer.typesArray.length - 1],
-  //     subtype:
-  //       scriptReducer.subtypesArray[scriptReducer.subtypesArray.length - 1],
-  //     quality: scriptReducer.qualityArray[2],
-  //     playerId: scriptReducer.scriptingForPlayerObject.id,
-  //     setNumber: 0,
-  //     scoreTeamAnalyzed: 0,
-  //     scoreTeamOpponent: 0,
-  //     rotation: scriptReducer.rotationArray[0],
-  //     opponentServed: false,
-  //     favorite: false,
-  //     sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
-  //     playerId: scriptReducer.scriptingForPlayerObject.id,
-  //   };
-
-  //   console.log("--- newActionObj ---");
-  //   console.log(newActionObj);
-  //   console.log("--- END newActionObj ---");
-
-  //   // create new array with
-  //   // let newScriptReducerActionArray = [
-  //   let newScriptReducerSessionActionsArray = [
-  //     ...scriptReducer.sessionActionsArray,
-  //     newActionObj,
-  //   ];
-
-  //   // sort
-  //   newScriptReducerSessionActionsArray.sort(
-  //     (a, b) => a.timeStamp - b.timeStamp
-  //   );
-  //   dispatch(
-  //     // replaceScriptMatchActionsArray({
-  //     replaceScriptSessionActionsArray({
-  //       sessionActionsArray: newScriptReducerSessionActionsArray,
-  //     })
-  //   );
-  //   // Reset Last Action
-  //   setLastActionQuality("?");
-  //   setLastActionPosition("?");
-  //   setLastActionPlayer(scriptReducer.playersArray.find((p) => p.selected));
-  //   setLastActionType("?");
-  //   setLastActionSubtype("?");
-  //   // if (scriptReducerActionArray.length > 0) {
-  //   //   setScriptReducerActionArray([...scriptReducerActionArray, newActionObj]);
-  //   // } else {
-  //   //   setScriptReducerActionArray([newActionObj]);
-  //   // }
-
-  //   //setPadVisible(false);
-  //   //setTapIsActive(true);
-  //   // setSwipePadServeIsActive(false);
-  //   // setSwipePadReceptionIsActive(false);
-  //   // console.log(
-  //   //   "addNewActionToScriptReducersActionsArrayNoWheel: Working (end of function)"
-  //   // );
-  // };
-
-  // const sendScriptReducerMatchActionsArrayToServer = async () => {
   const sendScriptReducerSessionActionsArrayToServer = async () => {
     console.log("----> sendScriptReducerSessionActionsArrayToServer");
 
     const bodyObj = {
       actionsArray: scriptReducer.sessionActionsArray,
-      // matchId: userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
-      //   .practiceMatch.id,
       sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
       scriptId: scriptReducer.scriptId,
     };
