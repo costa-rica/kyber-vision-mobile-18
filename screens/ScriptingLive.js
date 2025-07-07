@@ -45,10 +45,10 @@ export default function ScriptingLive({ navigation }) {
   });
   // Last Action
   // const [lastActionQuality, setLastActionQuality] = useState("?");
-  const [lastActionPosition, setLastActionPosition] = useState("?");
-  const [lastActionPlayer, setLastActionPlayer] = useState(
-    scriptReducer.playersArray.find((p) => p.selected)
-  );
+  // const [lastActionPosition, setLastActionPosition] = useState("?");
+  // const [lastActionPlayer, setLastActionPlayer] = useState(
+  //   scriptReducer.playersArray.find((p) => p.selected)
+  // );
   // const [lastActionType, setLastActionType] = useState("?");
   // const [lastActionSubtype, setLastActionSubtype] = useState("?");
   // Dropdowns Visibility
@@ -367,7 +367,7 @@ export default function ScriptingLive({ navigation }) {
           // setLastActionPosition(4);
         }
       }
-      setLastActionPosition(lastActionPositionIndexRef.current);
+      // setLastActionPosition(lastActionPositionIndexRef.current);
 
       // setLastActionType(
       //   scriptReducer.typesArray[lastActionTypeIndexRef.current]
@@ -694,24 +694,24 @@ export default function ScriptingLive({ navigation }) {
   // -----------------
   //  Last Action - Modify
   // -----------------
-  const handleLastActionPlayerPress = (player) => {
-    console.log(`- selected player: ${player.firstName}`);
-    // const handleSelectPlayer = () => {
-    const tempArray = scriptReducer.playersArray.map((player) => {
-      if (player.id === player.id) {
-        // setDisplayWarning(false);
-        return {
-          ...player,
-          selected: !player.selected,
-        };
-      }
-      return { ...player, selected: false };
-    });
-    dispatch(updatePlayersArray(tempArray));
-    dispatch(setScriptingForPlayerObject(player));
-    console.log(`- selected player [2]: ${player.firstName}`);
-    setLastActionPlayer(player);
-  };
+  // const handleLastActionPlayerPress = (player) => {
+  //   console.log(`- selected player: ${player.firstName}`);
+  //   // const handleSelectPlayer = () => {
+  //   const tempArray = scriptReducer.playersArray.map((player) => {
+  //     if (player.id === player.id) {
+  //       // setDisplayWarning(false);
+  //       return {
+  //         ...player,
+  //         selected: !player.selected,
+  //       };
+  //     }
+  //     return { ...player, selected: false };
+  //   });
+  //   dispatch(updatePlayersArray(tempArray));
+  //   dispatch(setScriptingForPlayerObject(player));
+  //   console.log(`- selected player [2]: ${player.firstName}`);
+  //   // setLastActionPlayer(player);
+  // };
 
   const handleModifyQuality = (quality) => {
     console.log(`lastActionQuality: ${quality}`);
@@ -725,6 +725,59 @@ export default function ScriptingLive({ navigation }) {
     const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
       action.timestamp === lastRecordedAction.timestamp
         ? { ...action, quality }
+        : action
+    );
+
+    dispatch(
+      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
+    );
+  };
+  const handleModifyPosition = (position) => {
+    console.log(`lastActionPosition: ${position}`);
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, zone: position }
+        : action
+    );
+
+    dispatch(
+      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
+    );
+  };
+
+  const handleModifyPlayer = (playerObj) => {
+    console.log(`lastActionPlayer: ${playerObj.firstName}`);
+    const tempArray = scriptReducer.playersArray.map((player) => {
+      if (player.id === playerObj.id) {
+        console.log("***** found the player ***");
+        return {
+          ...player,
+          selected: !player.selected,
+        };
+      }
+      return { ...player, selected: false };
+    });
+    dispatch(updatePlayersArray(tempArray));
+    dispatch(setScriptingForPlayerObject(playerObj));
+    console.log(`- selected player [2]: ${playerObj.firstName}`);
+    // setLastActionPlayer(player);
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, playerId: playerObj.id }
         : action
     );
 
@@ -868,11 +921,13 @@ export default function ScriptingLive({ navigation }) {
         // lastActionQuality={lastActionQuality}
         // setLastActionQuality={setLastActionQuality}
         handleModifyQuality={handleModifyQuality}
-        lastActionPosition={lastActionPosition}
-        setLastActionPosition={setLastActionPosition}
-        lastActionPlayer={lastActionPlayer}
+        // lastActionPosition={lastActionPosition}
+        // setLastActionPosition={setLastActionPosition}
+        handleModifyPosition={handleModifyPosition}
+        // lastActionPlayer={lastActionPlayer}
+        handleModifyPlayer={handleModifyPlayer}
         // setLastActionPlayer={setLastActionPlayer}
-        handleLastActionPlayerPress={handleLastActionPlayerPress}
+        // handleLastActionPlayerPress={handleLastActionPlayerPress}
         // lastActionType={lastActionType}
         // setLastActionType={setLastActionType}
         handleModifyType={handleModifyType}
@@ -923,10 +978,10 @@ export default function ScriptingLive({ navigation }) {
         handleSetScorePress={handleSetScorePress}
         // lastActionQuality={lastActionQuality}
         // setLastActionQuality={setLastActionQuality}
-        lastActionPosition={lastActionPosition}
-        setLastActionPosition={setLastActionPosition}
-        lastActionPlayer={lastActionPlayer}
-        setLastActionPlayer={setLastActionPlayer}
+        // lastActionPosition={lastActionPosition}
+        // setLastActionPosition={setLastActionPosition}
+        // lastActionPlayer={lastActionPlayer}
+        // setLastActionPlayer={setLastActionPlayer}
         // lastActionType={lastActionType}
         // setLastActionType={setLastActionType}
         // lastActionSubtype={lastActionSubtype}

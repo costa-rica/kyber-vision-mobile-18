@@ -287,7 +287,10 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
                 styleText={styles.txtLastAction}
               >
-                {props.lastActionPosition}
+                {/* {props.lastActionPosition} */}
+                {scriptReducer.sessionActionsArray[
+                  scriptReducer.sessionActionsArray.length - 1
+                ]?.zone || "?"}
               </ButtonKvNoDefault>
               <ButtonKvNoDefault
                 onPress={() => {
@@ -297,7 +300,11 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {props.lastActionPlayer.firstName.slice(0, 4)}
+                {/* {props.lastActionPlayer.firstName.slice(0, 4)} */}
+                {scriptReducer.scriptingForPlayerObject?.firstName.slice(
+                  0,
+                  4
+                ) || "?"}
               </ButtonKvNoDefault>
               <ButtonKvNoDefault
                 onPress={() => {
@@ -358,7 +365,8 @@ export default function ScriptingLivePortrait(props) {
                       <TouchableOpacity
                         key={index}
                         onPress={() => {
-                          props.setLastActionPosition(positionalArea);
+                          // props.setLastActionPosition(positionalArea);
+                          props.handleModifyPosition(positionalArea);
                           props.setLastActionDropDownIsVisiblePosition(false);
                         }}
                         style={styles.btnDropDown}
@@ -383,7 +391,8 @@ export default function ScriptingLivePortrait(props) {
                       key={index}
                       onPress={() => {
                         // console.log(`player pressed: ${player.firstName}`);
-                        props.handleLastActionPlayerPress(player);
+                        // props.handleLastActionPlayerPress(player);
+                        props.handleModifyPlayer(player);
                         props.setLastActionDropDownIsVisiblePlayer(false);
                       }}
                       style={styles.btnDropDown}
@@ -457,15 +466,16 @@ export default function ScriptingLivePortrait(props) {
               <View style={styles.vwPlayer}>
                 <View style={styles.vwPlayerLeft}>
                   <Text style={styles.txtShirtNumber}>
-                    {props.lastActionPlayer.shirtNumber}
+                    {/* {props.lastActionPlayer.shirtNumber} */}
+                    {scriptReducer.scriptingForPlayerObject?.shirtNumber}
                   </Text>
                 </View>
                 <View style={styles.vwPlayerRight}>
                   <Text style={styles.txtPlayerName}>
-                    {props.lastActionPlayer.firstName}
+                    {scriptReducer.scriptingForPlayerObject?.firstName}
                   </Text>
                   <Text style={styles.txtPlayerName}>
-                    {props.lastActionPlayer.lastName}
+                    {scriptReducer.scriptingForPlayerObject?.lastName}
                   </Text>
                 </View>
               </View>
@@ -572,20 +582,40 @@ export default function ScriptingLivePortrait(props) {
         </View>
       </View>
       {/* ------------ FLATLIST Container ------------ */}
-      <View style={styles.containerFlatListActions}>
+      {/* <View style={styles.containerFlatListActions}>
         <FlatList
           data={scriptReducer.sessionActionsArray}
           renderItem={({ item }) => (
             <View style={styles.itemContainer}>
               <Text>
                 scriptId: {scriptReducer.scriptId}, type: {item.type}, quality:{" "}
-                {item.quality}, subtype: {item.subtype}
+                {item.quality}, subtype: {item.subtype}, position: {item.zone},
+                player: {item.playerId}
               </Text>
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
         />
-      </View>
+        <Text>
+          scriptingForPlayerObject:
+          {scriptReducer.scriptingForPlayerObject.firstName},
+          {scriptReducer.scriptingForPlayerObject.id}
+        </Text>
+        <Text>
+          sessionActionsArray:
+          {
+            scriptReducer.sessionActionsArray.find(
+              (action) => action.selected === true
+            )?.firstName
+          }
+          ,
+          {
+            scriptReducer.sessionActionsArray[
+              scriptReducer.sessionActionsArray.length - 1
+            ]?.playerId
+          }
+        </Text>
+      </View> */}
     </View>
   );
 }
@@ -838,7 +868,7 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     width: "100%",
-    backgroundColor: "green",
+    // backgroundColor: "green",
   },
   vwRallyButtonsGroup: {
     flexDirection: "row",
