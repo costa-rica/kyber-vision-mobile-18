@@ -304,7 +304,10 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {props.lastActionType}
+                {/* {props.lastActionType} */}
+                {scriptReducer.sessionActionsArray[
+                  scriptReducer.sessionActionsArray.length - 1
+                ]?.type || "?"}
               </ButtonKvNoDefault>
               <ButtonKvNoDefault
                 onPress={() => {
@@ -314,8 +317,12 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {props.lastActionSubtype}
+                {/* {props.lastActionSubtype} */}
+                {scriptReducer.sessionActionsArray[
+                  scriptReducer.sessionActionsArray.length - 1
+                ]?.subtype || "?"}
               </ButtonKvNoDefault>
+              {/* ---- Dropdowns ---- */}
               {props.lastActionDropDownIsVisibleQuality && (
                 <View
                   style={[
@@ -337,7 +344,6 @@ export default function ScriptingLivePortrait(props) {
                   ))}
                 </View>
               )}
-
               {props.lastActionDropDownIsVisiblePosition && (
                 <View
                   style={[
@@ -398,7 +404,8 @@ export default function ScriptingLivePortrait(props) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        props.setLastActionType(type);
+                        // props.setLastActionType(type);
+                        props.handleModifyType(type);
                         props.setLastActionDropDownIsVisibleType(false);
                       }}
                       style={styles.btnDropDown}
@@ -419,8 +426,9 @@ export default function ScriptingLivePortrait(props) {
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
-                        props.setLastActionSubtype(subtype);
+                        // props.setLastActionSubtype(subtype);
                         props.setLastActionDropDownIsVisibleSubtype(false);
+                        props.handleModifySubtype(subtype);
                       }}
                       style={styles.btnDropDown}
                     >
@@ -569,7 +577,7 @@ export default function ScriptingLivePortrait(props) {
             <View style={styles.itemContainer}>
               <Text>
                 scriptId: {scriptReducer.scriptId}, type: {item.type}, quality:{" "}
-                {item.quality}
+                {item.quality}, subtype: {item.subtype}
               </Text>
             </View>
           )}

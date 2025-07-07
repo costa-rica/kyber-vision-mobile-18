@@ -49,8 +49,8 @@ export default function ScriptingLive({ navigation }) {
   const [lastActionPlayer, setLastActionPlayer] = useState(
     scriptReducer.playersArray.find((p) => p.selected)
   );
-  const [lastActionType, setLastActionType] = useState("?");
-  const [lastActionSubtype, setLastActionSubtype] = useState("?");
+  // const [lastActionType, setLastActionType] = useState("?");
+  // const [lastActionSubtype, setLastActionSubtype] = useState("?");
   // Dropdowns Visibility
   const [
     lastActionDropDownIsVisibleQuality,
@@ -369,13 +369,13 @@ export default function ScriptingLive({ navigation }) {
       }
       setLastActionPosition(lastActionPositionIndexRef.current);
 
-      setLastActionType(
-        scriptReducer.typesArray[lastActionTypeIndexRef.current]
-      );
+      // setLastActionType(
+      //   scriptReducer.typesArray[lastActionTypeIndexRef.current]
+      // );
       setLastActionQuality(
         scriptReducer.qualityArrayOuterCircle[lastActionQualityIndexRef.current]
       );
-      setLastActionSubtype("?");
+      // setLastActionSubtype("?");
       addNewActionToScriptReducersActionsArray(
         scriptReducer.typesArray[lastActionTypeIndexRef.current],
         scriptReducer.qualityArrayOuterCircle[
@@ -615,7 +615,7 @@ export default function ScriptingLive({ navigation }) {
       timestamp: new Date().toISOString(),
       // type: lastActionType,
       type: type,
-      subtype: lastActionSubtype,
+      subtype: null,
       quality: quality || 0,
       playerId: scriptReducer.scriptingForPlayerObject.id,
       setNumber: 0,
@@ -708,6 +708,61 @@ export default function ScriptingLive({ navigation }) {
     console.log(`- selected player [2]: ${player.firstName}`);
     setLastActionPlayer(player);
   };
+
+  const handleModifyType = (type) => {
+    console.log(`lastActionType: ${type}`);
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, type }
+        : action
+    );
+
+    dispatch(
+      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
+    );
+  };
+
+  const handleModifySubtype = (subtype) => {
+    console.log(`lastActionSubtype: ${subtype}`);
+    // setLastActionSubtype(subtype);
+
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, subtype }
+        : action
+    );
+
+    dispatch(
+      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
+    );
+  };
+  // const handleModifySubtype = (subtype) => {
+  //   console.log(`lastActionSubtype: ${subtype}`);
+  //   setLastActionSubtype(subtype);
+  //   // Get last element from sessionActionsArray
+  //   let lastRecordedAction = scriptReducer.sessionActionsArray.slice().pop();
+  //   let tempArray = scriptReducer.sessionActionsArray.slice();
+  //   tempArray.find(
+  //     (action) => action.timestamp === lastRecordedAction.timestamp
+  //   ).subtype = subtype;
+  //   dispatch(
+  //     replaceScriptSessionActionsArray({ sessionActionsArray: tempArray })
+  //   );
+  // };
 
   // -----------------
   //  Set Circle
@@ -806,10 +861,12 @@ export default function ScriptingLive({ navigation }) {
         lastActionPlayer={lastActionPlayer}
         // setLastActionPlayer={setLastActionPlayer}
         handleLastActionPlayerPress={handleLastActionPlayerPress}
-        lastActionType={lastActionType}
-        setLastActionType={setLastActionType}
-        lastActionSubtype={lastActionSubtype}
-        setLastActionSubtype={setLastActionSubtype}
+        // lastActionType={lastActionType}
+        // setLastActionType={setLastActionType}
+        handleModifyType={handleModifyType}
+        // lastActionSubtype={lastActionSubtype}
+        // setLastActionSubtype={setLastActionSubtype}
+        handleModifySubtype={handleModifySubtype}
         // --------- Dropdowns Toggles -----------
         // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
@@ -858,10 +915,10 @@ export default function ScriptingLive({ navigation }) {
         setLastActionPosition={setLastActionPosition}
         lastActionPlayer={lastActionPlayer}
         setLastActionPlayer={setLastActionPlayer}
-        lastActionType={lastActionType}
-        setLastActionType={setLastActionType}
-        lastActionSubtype={lastActionSubtype}
-        setLastActionSubtype={setLastActionSubtype}
+        // lastActionType={lastActionType}
+        // setLastActionType={setLastActionType}
+        // lastActionSubtype={lastActionSubtype}
+        // setLastActionSubtype={setLastActionSubtype}
         lastActionDropDownIsVisible={lastActionDropDownIsVisible}
         setLastActionDropDownIsVisible={setLastActionDropDownIsVisible}
       />
