@@ -68,17 +68,26 @@ export const reviewSlice = createSlice({
 
         // 🔹 Step 2: Find the closest action, but ensure it's after the current time
         let futureActions = displayedActions.filter(
-          (action) => action.timestamp >= currentTime
+          // (action) => action.timestamp >= currentTime
+          (action) => action.timestamp >= currentTime - 2
         );
 
         // 🔹 Step 2.1: Find the closest action, but ensure it's after the current time
         if (futureActions.length > 0) {
-          newPlayingAction = futureActions.reduce((prev, curr) => {
-            return Math.abs(curr.timestamp - currentTime) <
-              Math.abs(prev.timestamp - currentTime)
-              ? curr
-              : prev;
-          });
+          // ------- New method of getting closeest action (Nick's method ;) ) -------
+          if (
+            currentTime - 1 < futureActions[0].timestamp &&
+            currentTime + 2 > futureActions[0].timestamp
+          ) {
+            newPlayingAction = futureActions[0];
+          }
+          // ----- Old ChatGPT method of getting closeest action -----
+          // newPlayingAction = futureActions.reduce((prev, curr) => {
+          //   return Math.abs(curr.timestamp - currentTime) <
+          //     Math.abs(prev.timestamp - currentTime)
+          //     ? curr
+          //     : prev;
+          // });
         } else {
           // If no future actions exist, just keep the last available action
           newPlayingAction = displayedActions[displayedActions.length - 1];

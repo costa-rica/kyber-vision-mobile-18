@@ -151,7 +151,7 @@ export default function ReviewVideo({ navigation, route }) {
   // --------- YouTube / Video Related ---------
 
   const handleSelectedAction = (action) => {
-    playerRef.current.seekTo(action.timestamp, true);
+    playerRef.current.seekTo(action.timestamp - 1, true);
   };
 
   // Filtering actions
