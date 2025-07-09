@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
+import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/user";
@@ -139,8 +140,6 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
             <ButtonKvStd
-              // onPress={() => navigation.navigate("ScriptingLiveSelectPlayers")}
-              // onPress={() => setIsVisibleModalSelectSession(true)}
               onPress={() => handleSelectScriptingButton()}
               style={styles.btnHomeNavigation}
             >
@@ -152,6 +151,13 @@ export default function HomeScreen({ navigation }) {
             >
               Review
             </ButtonKvStd>
+            <ButtonKvNoDefault
+              onPress={() => navigation.navigate("UploadVideoScreen")}
+              styleView={styles.btnHomeNavigationUploadVideo}
+              styleText={styles.txtHomeNavigationUploadVideo}
+            >
+              Upload Video
+            </ButtonKvNoDefault>
           </View>
         </View>
       </View>
@@ -277,6 +283,23 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     backgroundColor: "#806181",
+  },
+
+  btnHomeNavigationUploadVideo: {
+    width: Dimensions.get("window").width * 0.6,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: 24,
+    color: "white",
+    backgroundColor: "#E8E8E8",
+    borderRadius: 35,
+    borderColor: "#806181",
+    borderWidth: 2,
+  },
+  txtHomeNavigationUploadVideo: {
+    fontSize: 24,
+    color: "#806181",
   },
 
   // ------------

@@ -11,6 +11,7 @@ import ScriptingLiveSelectPlayers from "./screens/ScriptingLiveSelectPlayers";
 import ReviewSelectionScreen from "./screens/ReviewSelection";
 import ReviewVideo from "./screens/ReviewVideo";
 import ScriptingLiveSelectSession from "./screens/ScriptingLiveSelectSession";
+import UploadVideoScreen from "./screens/UploadVideoScreen";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -49,6 +50,10 @@ export default function App() {
           <Stack.Screen
             name="ScriptingLiveSelectSession"
             component={ScriptingLiveSelectSession}
+          />
+          <Stack.Screen
+            name="UploadVideoScreen"
+            component={UploadVideoScreen}
           />
         </Stack.Navigator>
       </NavigationContainer>

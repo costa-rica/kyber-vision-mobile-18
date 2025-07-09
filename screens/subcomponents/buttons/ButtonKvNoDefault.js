@@ -52,5 +52,3 @@ export default function ButtonKvNoDefault({
     </Animated.View>
   );
 }
-
-// export default ButtonKv;
