@@ -1,4 +1,10 @@
-import { StyleSheet, View, Image, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableWithoutFeedback,
+} from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
 import { useNavigation } from "@react-navigation/native";
@@ -8,6 +14,9 @@ export default function TemplateViewWithTopChildren({
   navigation,
   topChildren,
   screenName,
+  displayModal = false,
+  setDisplayModal = () => {},
+  modalComponent = null,
 }) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
@@ -45,6 +54,14 @@ export default function TemplateViewWithTopChildren({
         </View>
       </View>
       <View style={styles.containerBottom}>{children}</View>
+
+      {displayModal && (
+        <TouchableWithoutFeedback onPress={() => setDisplayModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View onStartShouldSetResponder={() => true}>{modalComponent}</View>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }
@@ -79,5 +96,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  // ------------
+  // Modal
+  // ------------
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  modalContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
 });

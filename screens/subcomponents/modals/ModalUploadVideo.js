@@ -14,13 +14,15 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { updateSessionsArray } from "../../../reducers/script";
 
-export default function ModalUploadVideo({
-  isVisibleModalUploadVideo,
-  setIsVisibleModalUploadVideo,
-  //   leaguesArray,
-  //   setLeaguesArray,
-  //   fetchLeaguesArray,
-}) {
+export default function ModalUploadVideo(
+  {
+    // isVisibleModalUploadVideo,
+    // setIsVisibleModalUploadVideo,
+    //   leaguesArray,
+    //   setLeaguesArray,
+    //   fetchLeaguesArray,
+  }
+) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();

@@ -116,6 +116,9 @@ export default function UploadVideoScreen({ navigation }) {
       navigation={navigation}
       topChildren={topChildren}
       screenName={"UploadVideoScreen"}
+      displayModal={isVisibleModalUploadVideo}
+      setDisplayModal={setIsVisibleModalUploadVideo}
+      modalComponent={<ModalUploadVideo />}
     >
       <View style={styles.container}>
         {/* -------- TOP ----- */}
@@ -175,13 +178,13 @@ export default function UploadVideoScreen({ navigation }) {
         </View>
       </View>
 
-      {isVisibleModalUploadVideo && (
+      {/* {isVisibleModalUploadVideo && (
         <TouchableWithoutFeedback
           onPress={() => setIsVisibleModalUploadVideo(false)}
         >
           <View style={styles.modalOverlay}>
             <View onStartShouldSetResponder={() => true}>
-              {/* to prevent modal from closing when tapping inside */}
+              
               <ModalUploadVideo
                 isVisibleModalUploadVideo={isVisibleModalUploadVideo}
                 setIsVisibleModalUploadVideo={setIsVisibleModalUploadVideo}
@@ -189,7 +192,7 @@ export default function UploadVideoScreen({ navigation }) {
             </View>
           </View>
         </TouchableWithoutFeedback>
-      )}
+      )} */}
     </TemplateViewWithTopChildren>
   );
 }
