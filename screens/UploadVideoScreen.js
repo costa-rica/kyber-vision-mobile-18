@@ -5,11 +5,14 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { updateTeamsArray } from "../reducers/user";
+import * as ImagePicker from "expo-image-picker";
+import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 
 export default function UploadVideoScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -78,6 +81,28 @@ export default function UploadVideoScreen({ navigation }) {
     </View>
   );
 
+  const [selectedVideosArray, setSelectedVideosArray] = useState([]);
+
+  const handleSelectVideo = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Permission denied", "We need access to your media.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["videos"],
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const assets = result.assets || [];
+      setSelectedVideosArray((prev) => [...prev, ...assets]);
+      //   console.log(result.assets);
+    }
+  };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -88,9 +113,47 @@ export default function UploadVideoScreen({ navigation }) {
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
           <Text> Upload Video </Text>
+          <ButtonKvNoDefault
+            onPress={() => {
+              console.log("Upload Video");
+              handleSelectVideo();
+            }}
+            styleView={styles.btnSelectVideo}
+            styleText={styles.txtSelectVideo}
+          >
+            Select Video(s)
+          </ButtonKvNoDefault>
         </View>
         <View style={styles.containerBottom}>
           <Text> Upload Video Bottom </Text>
+          <View style={styles.vwVideoHeader}>
+            <Text style={styles.txtVideoItemFilename}>Filename</Text>
+            {/* <Text>Filename</Text> */}
+            <Text style={styles.txtVideoItemShort}>Dur. (s)</Text>
+            <Text style={styles.txtVideoItemShort}>Size (MB)</Text>
+            <Text style={styles.txtVideoItemDimensions}>Dimensions</Text>
+          </View>
+          <View style={styles.underline} />
+          <FlatList
+            data={selectedVideosArray}
+            keyExtractor={(item) => item.uri}
+            renderItem={({ item }) => (
+              <View style={styles.vwVideoItem}>
+                <Text style={styles.txtVideoItemFilename}>{item.fileName}</Text>
+                <Text style={styles.txtVideoItem}>
+                  {(item.duration / 1000).toFixed(0)}
+                </Text>
+                <Text style={styles.txtVideoItem}>
+                  {(item.fileSize / 1000000)
+                    .toFixed(0)
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </Text>
+                <Text style={styles.txtVideoItem}>
+                  {item.height} x {item.width}
+                </Text>
+              </View>
+            )}
+          />
         </View>
       </View>
     </TemplateViewWithTopChildren>
@@ -168,74 +231,91 @@ const styles = StyleSheet.create({
 
   // ----- TOP -----
   containerTop: {
-    flex: 1,
-  },
-  vwEmailButtons: {
-    width: "100%",
-    // height: 170,
-    flex: 1,
-    justifyContent: "center",
+    // flex: 1,
     alignItems: "center",
-    gap: "10%",
+    // justifyContent: "center",
   },
-  btnEmailRegister: {
+
+  btnSelectVideo: {
     width: Dimensions.get("window").width * 0.8,
     backgroundColor: "#806181",
     fontSize: 24,
     height: 50,
     justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 35,
   },
-  btnEmailLogin: {
-    width: Dimensions.get("window").width * 0.8,
-    backgroundColor: "white",
-    color: "#585858",
+  txtSelectVideo: {
+    color: "white",
     fontSize: 24,
-    borderColor: "#585858",
-    borderWidth: 2,
-    borderStyle: "solid",
-    padding: 5,
-    height: 50,
-    justifyContent: "center",
+    fontWeight: "bold",
   },
 
-  vwLineContainer: {
-    width: Dimensions.get("window").width,
-    alignItems: "center",
-  },
-  vwLine: {
-    width: "80%",
-    borderColor: "#A3A3A3",
-    borderWidth: 1,
-    borderStyle: "solid",
-  },
-  vwOr: {
-    width: Dimensions.get("window").width,
-    alignItems: "center",
-  },
-  vwSocials: {
-    width: Dimensions.get("window").width,
-    alignItems: "center",
-    // height: 100,
-    // backgroundColor: "gray",
-  },
+  // ----- BOTTOM -----
+
   containerBottom: {
     // height: 500,
     width: Dimensions.get("window").width,
-    // flex: 1,
-    height: 150,
+    flex: 1,
+    // height: 350,
     // backgroundColor: "gray",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
     alignItems: "center",
     justifyContent: "center",
-    // paddingTop: 50,
   },
-  btnContinueWithoutLogin: {
-    width: Dimensions.get("window").width * 0.8,
-    backgroundColor: "transparent",
-    color: "#585858",
 
-    justifyContent: "center",
+  vwVideoHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    marginTop: 10,
+    width: Dimensions.get("window").width * 0.9,
+  },
+
+  underline: {
+    height: 1,
+    backgroundColor: "#ccc",
+    width: Dimensions.get("window").width * 0.9,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
+
+  txtVideoItemFilename: {
+    width: Dimensions.get("window").width * 0.3,
+    // color: "white",
+    // fontWeight: "bold",
+  },
+
+  txtVideoItemShort: {
+    width: Dimensions.get("window").width * 0.1,
+    // color: "white",
+    fontWeight: "bold",
+    fontSize: 11,
+  },
+
+  txtVideoItemDimensions: {
+    width: Dimensions.get("window").width * 0.2,
+    // color: "white",
+    fontWeight: "bold",
+    fontSize: 11,
+  },
+
+  vwVideoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 10,
+    marginVertical: 5,
+    width: Dimensions.get("window").width * 0.9,
+    borderRadius: 10,
+    borderColor: "#806181",
+    borderWidth: 1,
   },
 });
