@@ -109,31 +109,10 @@ export default function ModalUploadVideo({
   //   };
 
   return (
-    // <View style={styles.modalWrapper}>
     <View style={styles.modalContent}>
       <Text style={{ fontSize: 18, marginBottom: 20 }}>
         Link video to session
       </Text>
-
-      {/* {scriptReducer.sessionsArray.map((session) => (
-          <View style={styles.vwSessionItem} key={session.id}>
-            <TouchableOpacity
-              style={[
-                styles.btnSelectSession,
-                session.selected && styles.btnSelectSessionSelected,
-              ]}
-              onPress={() => console.log(session)}
-            >
-              <View style={styles.vwItemDetails}>
-                <Text style={styles.txtSessionItemDate}>{session.id}</Text>
-                <Text style={styles.txtSessionItemCity}>
-                  {session.sessionDateString}
-                </Text>
-                <Text style={styles.txtSessionItemCity}>{session.city}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        ))} */}
 
       <View style={styles.vwVideoHeader}>
         <Text style={styles.txtVideoItemDate}>Date</Text>
@@ -159,15 +138,11 @@ export default function ModalUploadVideo({
       />
 
       <View style={styles.vwButtons}>
-        <ButtonKvStd onPress={() => setIsVisibleModalUploadVideo(false)}>
-          Cancel
+        <ButtonKvStd onPress={() => console.log("uploading ...")}>
+          Upload
         </ButtonKvStd>
-        {/* <ButtonKvStd onPress={() => handleCreateSession()}>
-              Create
-            </ButtonKvStd> */}
       </View>
     </View>
-    // </View>
   );
 }
 

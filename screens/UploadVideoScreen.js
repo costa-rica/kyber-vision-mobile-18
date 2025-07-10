@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
   Modal,
+  Pressable,
+  TouchableWithoutFeedback,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import { useSelector, useDispatch } from "react-redux";
@@ -174,22 +176,19 @@ export default function UploadVideoScreen({ navigation }) {
       </View>
 
       {isVisibleModalUploadVideo && (
-        <Modal
-          visible={isVisibleModalUploadVideo}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => setIsVisibleModalUploadVideo(false)}
+        <TouchableWithoutFeedback
+          onPress={() => setIsVisibleModalUploadVideo(false)}
         >
           <View style={styles.modalOverlay}>
-            <ModalUploadVideo
-              isVisibleModalUploadVideo={isVisibleModalUploadVideo}
-              setIsVisibleModalUploadVideo={setIsVisibleModalUploadVideo}
-              // leaguesArray={leaguesArray}
-              // setLeaguesArray={setLeaguesArray}
-              // fetchLeaguesArray={fetchLeaguesArray}
-            />
+            <View onStartShouldSetResponder={() => true}>
+              {/* to prevent modal from closing when tapping inside */}
+              <ModalUploadVideo
+                isVisibleModalUploadVideo={isVisibleModalUploadVideo}
+                setIsVisibleModalUploadVideo={setIsVisibleModalUploadVideo}
+              />
+            </View>
           </View>
-        </Modal>
+        </TouchableWithoutFeedback>
       )}
     </TemplateViewWithTopChildren>
   );
@@ -382,14 +381,18 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
-  // modalContent: {
-  //   // width: "80%",
-  //   width: Dimensions.get("window").width * 0.9,
-  //   height: Dimensions.get("window").height * 0.7,
-  //   padding: 20,
-  //   backgroundColor: "white",
-  //   borderRadius: 10,
-  //   alignItems: "center",
-  // },
+
+  modalContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
+  },
 });
