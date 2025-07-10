@@ -383,11 +383,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  modalContent: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "white",
-    borderRadius: 10,
-    alignItems: "center",
-  },
+  // modalContent: {
+  //   // width: "80%",
+  //   width: Dimensions.get("window").width * 0.9,
+  //   height: Dimensions.get("window").height * 0.7,
+  //   padding: 20,
+  //   backgroundColor: "white",
+  //   borderRadius: 10,
+  //   alignItems: "center",
+  // },
 });

@@ -4,9 +4,10 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import ButtonKvStd from "../buttons/ButtonKvStd";
-// import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
+import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import { useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -108,13 +109,13 @@ export default function ModalUploadVideo({
   //   };
 
   return (
-    <View style={styles.modalWrapper}>
-      <View style={styles.modalContent}>
-        <Text style={{ fontSize: 18, marginBottom: 20 }}>
-          Link video to session
-        </Text>
+    // <View style={styles.modalWrapper}>
+    <View style={styles.modalContent}>
+      <Text style={{ fontSize: 18, marginBottom: 20 }}>
+        Link video to session
+      </Text>
 
-        {scriptReducer.sessionsArray.map((session) => (
+      {/* {scriptReducer.sessionsArray.map((session) => (
           <View style={styles.vwSessionItem} key={session.id}>
             <TouchableOpacity
               style={[
@@ -132,95 +133,107 @@ export default function ModalUploadVideo({
               </View>
             </TouchableOpacity>
           </View>
-        ))}
+        ))} */}
 
-        {/* <FlatList
-          data={leaguesArray}
-          renderItem={({ item }) => (
-            <View style={styles.vwSessionItem}>
-              <TouchableOpacity
-                style={[
-                  styles.btnSelectSession,
-                  item.selected && styles.btnSelectSessionSelected,
-                ]}
-                onPress={() => handleSelectSession(item.id)}
-              >
-                <View style={styles.vwItemDetails}>
-                  <Text style={styles.txtSessionItemDate}>{item.id}</Text>
-                  <Text style={styles.txtSessionItemCity}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        /> */}
+      <View style={styles.vwVideoHeader}>
+        <Text style={styles.txtVideoItemDate}>Date</Text>
+        <Text style={styles.txtVideoItemCity}>City</Text>
+        <Text style={styles.txtVideoItemSessionId}>Session ID</Text>
+      </View>
+      <View style={styles.underline} />
+      <FlatList
+        data={scriptReducer.sessionsArray}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <ButtonKvNoDefault
+            onPress={() => console.log(item)}
+            styleView={styles.btnVideoItem}
+          >
+            <Text style={styles.txtVideoItemDate}>
+              {item.sessionDateString}
+            </Text>
+            <Text style={styles.txtVideoItemCity}>{item.city}</Text>
+            <Text style={styles.txtVideoItemSessionId}>{item.id}</Text>
+          </ButtonKvNoDefault>
+        )}
+      />
 
-        <View style={styles.vwButtons}>
-          <ButtonKvStd onPress={() => setIsVisibleModalUploadVideo(false)}>
-            Cancel
-          </ButtonKvStd>
-          {/* <ButtonKvStd onPress={() => handleCreateSession()}>
+      <View style={styles.vwButtons}>
+        <ButtonKvStd onPress={() => setIsVisibleModalUploadVideo(false)}>
+          Cancel
+        </ButtonKvStd>
+        {/* <ButtonKvStd onPress={() => handleCreateSession()}>
               Create
             </ButtonKvStd> */}
-        </View>
       </View>
     </View>
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
-  modalWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  //   modalWrapper: {
+  //     flex: 1,
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     // width: Dimensions.get("window").width * 0.95,
+  //     height: Dimensions.get("window").height * 0.9,
+  //   },
   modalContent: {
-    width: "80%",
-    padding: 20,
+    // width: "80%",
+    width: Dimensions.get("window").width * 0.95,
+    height: Dimensions.get("window").height * 0.5,
+    padding: 2,
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
   },
-  vwSessionItem: {
-    marginBottom: 10,
-  },
-  btnSelectSession: {
-    width: "100%",
-    height: 40,
-    borderRadius: 5,
+  vwVideoHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "#806181",
-  },
-  btnSelectSessionSelected: {
-    backgroundColor: "#806181",
-  },
-  vwItemDetails: {
-    flexDirection: "row",
-    // justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    paddingLeft: 10,
-    gap: 5,
+    // justifyContent: "space-between",
+    paddingHorizontal: 5,
+    marginTop: 10,
+    width: Dimensions.get("window").width * 0.8,
   },
-  // vwSessionItemCity: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  txtSessionItemDate: {
-    fontSize: 16,
-    // fontWeight: "bold",
+  underline: {
+    height: 1,
+    backgroundColor: "#ccc",
+    width: Dimensions.get("window").width * 0.9,
+    alignSelf: "center",
+    marginBottom: 5,
   },
-  txtSessionItemCity: {
-    fontSize: 16,
-    fontWeight: "bold",
+  txtVideoItemDate: {
+    width: Dimensions.get("window").width * 0.3,
+    color: "black",
+    fontSize: 11,
+    // backgroundColor: "red",
   },
-  vwButtons: {
+  txtVideoItemCity: {
+    width: Dimensions.get("window").width * 0.3,
+    color: "black",
+    fontSize: 11,
+    // textAlign: "center",
+  },
+  txtVideoItemSessionId: {
+    width: Dimensions.get("window").width * 0.2,
+    color: "black",
+    fontSize: 11,
+    textAlign: "center",
+    // backgroundColor: "red",
+  },
+  btnVideoItem: {
+    backgroundColor: "#E8E8E8",
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    marginVertical: 5,
+    // width: Dimensions.get("window").width * 0.95,
     width: "100%",
-    marginTop: 20,
+    borderColor: "#806181",
+    borderWidth: 1,
   },
 });
