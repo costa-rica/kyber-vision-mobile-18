@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
+  Modal,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,9 +14,12 @@ import { useState, useEffect } from "react";
 import { updateTeamsArray } from "../reducers/user";
 import * as ImagePicker from "expo-image-picker";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
+import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
+import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
 
 export default function UploadVideoScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const scriptReducer = useSelector((state) => state.script);
   const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
 
@@ -82,6 +86,8 @@ export default function UploadVideoScreen({ navigation }) {
   );
 
   const [selectedVideosArray, setSelectedVideosArray] = useState([]);
+  const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
+    useState(false);
 
   const handleSelectVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -112,8 +118,11 @@ export default function UploadVideoScreen({ navigation }) {
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
-          <Text> Upload Video </Text>
-          <ButtonKvNoDefault
+          <Text> Videos Uploaded </Text>
+          <Text> {scriptReducer.sessionsArray.length} sessions </Text>
+        </View>
+        <View style={styles.containerBottom}>
+          <ButtonKvNoDefaultTextOnly
             onPress={() => {
               console.log("Upload Video");
               handleSelectVideo();
@@ -122,9 +131,7 @@ export default function UploadVideoScreen({ navigation }) {
             styleText={styles.txtSelectVideo}
           >
             Select Video(s)
-          </ButtonKvNoDefault>
-        </View>
-        <View style={styles.containerBottom}>
+          </ButtonKvNoDefaultTextOnly>
           <Text> Upload Video Bottom </Text>
           <View style={styles.vwVideoHeader}>
             <Text style={styles.txtVideoItemFilename}>Filename</Text>
@@ -138,24 +145,52 @@ export default function UploadVideoScreen({ navigation }) {
             data={selectedVideosArray}
             keyExtractor={(item) => item.uri}
             renderItem={({ item }) => (
-              <View style={styles.vwVideoItem}>
+              <ButtonKvNoDefault
+                onPress={() => {
+                  console.log("Select Video");
+                  setIsVisibleModalUploadVideo(true);
+                }}
+                styleView={styles.btnVideoItem}
+                styleText={styles.txtVideoItem}
+              >
+                {/* <View style={styles.vwVideoItem}> */}
                 <Text style={styles.txtVideoItemFilename}>{item.fileName}</Text>
-                <Text style={styles.txtVideoItem}>
+                <Text style={styles.txtVideoItemShort}>
                   {(item.duration / 1000).toFixed(0)}
                 </Text>
-                <Text style={styles.txtVideoItem}>
+                <Text style={styles.txtVideoItemShort}>
                   {(item.fileSize / 1000000)
                     .toFixed(0)
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                 </Text>
-                <Text style={styles.txtVideoItem}>
+                <Text style={styles.txtVideoItemDimensions}>
                   {item.height} x {item.width}
                 </Text>
-              </View>
+                {/* </View> */}
+              </ButtonKvNoDefault>
             )}
           />
         </View>
       </View>
+
+      {isVisibleModalUploadVideo && (
+        <Modal
+          visible={isVisibleModalUploadVideo}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setIsVisibleModalUploadVideo(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <ModalUploadVideo
+              isVisibleModalUploadVideo={isVisibleModalUploadVideo}
+              setIsVisibleModalUploadVideo={setIsVisibleModalUploadVideo}
+              // leaguesArray={leaguesArray}
+              // setLeaguesArray={setLeaguesArray}
+              // fetchLeaguesArray={fetchLeaguesArray}
+            />
+          </View>
+        </Modal>
+      )}
     </TemplateViewWithTopChildren>
   );
 }
@@ -232,8 +267,12 @@ const styles = StyleSheet.create({
   // ----- TOP -----
   containerTop: {
     // flex: 1,
+    height: 100,
     alignItems: "center",
     // justifyContent: "center",
+    borderWidth: 2, // Adjust thickness as needed
+    borderColor: "gray", // Change color as desired
+    borderStyle: "dashed",
   },
 
   btnSelectVideo: {
@@ -285,24 +324,39 @@ const styles = StyleSheet.create({
 
   txtVideoItemFilename: {
     width: Dimensions.get("window").width * 0.3,
-    // color: "white",
+    color: "black",
     // fontWeight: "bold",
+    fontSize: 11,
   },
 
   txtVideoItemShort: {
     width: Dimensions.get("window").width * 0.1,
-    // color: "white",
-    fontWeight: "bold",
+    color: "black",
+    // fontWeight: "bold",
     fontSize: 11,
   },
 
   txtVideoItemDimensions: {
     width: Dimensions.get("window").width * 0.2,
-    // color: "white",
-    fontWeight: "bold",
+    color: "black",
+    // fontWeight: "bold",
     fontSize: 11,
   },
-
+  btnVideoItem: {
+    backgroundColor: "#E8E8E8",
+    // display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    marginVertical: 5,
+    width: Dimensions.get("window").width * 0.9,
+    borderRadius: 10,
+    borderColor: "#806181",
+    borderWidth: 1,
+  },
   vwVideoItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -317,5 +371,23 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#806181",
     borderWidth: 1,
+  },
+
+  // ------------
+  // Modal
+  // ------------
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
   },
 });

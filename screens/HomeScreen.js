@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
-import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
+import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/user";
@@ -86,6 +86,10 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 
+  useEffect(() => {
+    fetchSessionsArray();
+  }, []);
+
   const fetchSessionsArray = async () => {
     console.log(" -- fetchSessionsArray ---");
 
@@ -125,11 +129,6 @@ export default function HomeScreen({ navigation }) {
     dispatch(updateSessionsArray(tempArray));
   };
 
-  const handleSelectScriptingButton = async () => {
-    fetchSessionsArray();
-    navigation.navigate("ScriptingLiveSelectSession");
-  };
-
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -140,7 +139,7 @@ export default function HomeScreen({ navigation }) {
         <View style={styles.containerTop}>
           <View style={styles.vwInputGroup}>
             <ButtonKvStd
-              onPress={() => handleSelectScriptingButton()}
+              onPress={() => navigation.navigate("ScriptingLiveSelectSession")}
               style={styles.btnHomeNavigation}
             >
               Scripting
@@ -151,13 +150,13 @@ export default function HomeScreen({ navigation }) {
             >
               Review
             </ButtonKvStd>
-            <ButtonKvNoDefault
+            <ButtonKvNoDefaultTextOnly
               onPress={() => navigation.navigate("UploadVideoScreen")}
               styleView={styles.btnHomeNavigationUploadVideo}
               styleText={styles.txtHomeNavigationUploadVideo}
             >
               Upload Video
-            </ButtonKvNoDefault>
+            </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
       </View>

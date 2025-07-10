@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Animated, Pressable, Text } from "react-native";
 
-export default function ButtonKvNoDefault({
+export default function ButtonKvNoDefaultTextOnly({
   onPress,
   styleView,
   styleText,
@@ -47,7 +47,7 @@ export default function ButtonKvNoDefault({
         style={styleView}
         disabled={!active}
       >
-        {children}
+        <Text style={styleText}>{children}</Text>
       </Pressable>
     </Animated.View>
   );

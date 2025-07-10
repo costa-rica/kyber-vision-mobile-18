@@ -14,7 +14,7 @@ import { useState } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import ButtonKvStd from "./buttons/ButtonKvStd";
-import ButtonKvNoDefault from "./buttons/ButtonKvNoDefault";
+import ButtonKvNoDefaultTextOnly from "./buttons/ButtonKvNoDefaultTextOnly";
 import { loginUser } from "../../reducers/user";
 import {
   GestureHandlerRootView,
@@ -266,7 +266,7 @@ export default function ScriptingLivePortrait(props) {
           {/* --------- Last Action Buttons --------- */}
           <View style={styles.vwGroupLastActionButtonsSuper}>
             <View style={styles.vwGroupLastActionButtons}>
-              <ButtonKvNoDefault
+              <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Quality");
                   props.setLastActionDropDownIsVisibleQuality((prev) => !prev);
@@ -278,8 +278,8 @@ export default function ScriptingLivePortrait(props) {
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.quality || "?"}
-              </ButtonKvNoDefault>
-              <ButtonKvNoDefault
+              </ButtonKvNoDefaultTextOnly>
+              <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Position");
                   props.setLastActionDropDownIsVisiblePosition((prev) => !prev);
@@ -291,8 +291,8 @@ export default function ScriptingLivePortrait(props) {
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.zone || "?"}
-              </ButtonKvNoDefault>
-              <ButtonKvNoDefault
+              </ButtonKvNoDefaultTextOnly>
+              <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Player");
                   props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
@@ -305,8 +305,8 @@ export default function ScriptingLivePortrait(props) {
                   0,
                   4
                 ) || "?"}
-              </ButtonKvNoDefault>
-              <ButtonKvNoDefault
+              </ButtonKvNoDefaultTextOnly>
+              <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Type");
                   props.setLastActionDropDownIsVisibleType((prev) => !prev);
@@ -317,8 +317,8 @@ export default function ScriptingLivePortrait(props) {
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.type || "?"}
-              </ButtonKvNoDefault>
-              <ButtonKvNoDefault
+              </ButtonKvNoDefaultTextOnly>
+              <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Subtype");
                   props.setLastActionDropDownIsVisibleSubtype((prev) => !prev);
@@ -329,7 +329,7 @@ export default function ScriptingLivePortrait(props) {
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
                 ]?.subtype || "?"}
-              </ButtonKvNoDefault>
+              </ButtonKvNoDefaultTextOnly>
               {/* ---- Dropdowns ---- */}
               {props.lastActionDropDownIsVisibleQuality && (
                 <View

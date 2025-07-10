@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
-import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
+import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -132,16 +132,16 @@ export default function SelectTeamScreen({ navigation }) {
         </View>
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
-            <ButtonKvNoDefault
+            <ButtonKvNoDefaultTextOnly
               onPress={() => navigation.navigate("CreateTribeScreen")}
               styleView={styles.btnTribe}
               styleText={styles.btnTribeText}
             >
               Create Tribe
-            </ButtonKvNoDefault>
+            </ButtonKvNoDefaultTextOnly>
           </View>
           <View style={styles.vwInputGroup}>
-            <ButtonKvNoDefault
+            <ButtonKvNoDefaultTextOnly
               active={
                 userReducer.teamsArray.filter((tribe) => tribe.selected)
                   .length > 0
@@ -165,7 +165,7 @@ export default function SelectTeamScreen({ navigation }) {
               }
             >
               Select Tribe
-            </ButtonKvNoDefault>
+            </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
       </View>
