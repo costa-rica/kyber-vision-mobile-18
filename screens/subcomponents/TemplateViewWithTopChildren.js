@@ -9,6 +9,7 @@ import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
 // import { useNavigation } from "@react-navigation/native";
 import ModalLoading from "./modals/ModalLoading";
+import { useSelector } from "react-redux";
 
 export default function TemplateViewWithTopChildren({
   children,
@@ -18,8 +19,9 @@ export default function TemplateViewWithTopChildren({
   isVisibleModal = false,
   setDisplayModal = () => {},
   modalComponent = null,
-  isVisibleModalLoading = false,
+  // isVisibleModalLoading = false,
 }) {
+  const uploadReducer = useSelector((state) => state.upload);
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
     //   ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -64,7 +66,8 @@ export default function TemplateViewWithTopChildren({
           </View>
         </TouchableWithoutFeedback>
       )}
-      {isVisibleModalLoading && (
+      {/* {isVisibleModalLoading && ( */}
+      {uploadReducer.uploadReducerLoading && (
         <View style={styles.modalOverlay}>
           <ModalLoading />
         </View>

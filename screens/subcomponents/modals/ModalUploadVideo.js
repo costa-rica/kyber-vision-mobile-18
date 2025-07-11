@@ -12,17 +12,18 @@ import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import { useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-
-import { updateSessionsArray } from "../../../reducers/script";
+import { updateUploadReducerLoading } from "../../../reducers/upload";
 
 export default function ModalUploadVideo() {
   const userReducer = useSelector((state) => state.user);
   const reviewReducer = useSelector((state) => state.review);
   const scriptReducer = useSelector((state) => state.script);
-  const dispatch = useDispatch();
+  const uploadReducer = useSelector((state) => state.upload);
   const [selectedSession, setSelectedSession] = useState(null);
+  const dispatch = useDispatch();
 
   const handleSendVideo = async (video) => {
+    dispatch(updateUploadReducerLoading(true));
     const formData = new FormData();
     formData.append("video", {
       uri: video.uri,
@@ -33,6 +34,10 @@ export default function ModalUploadVideo() {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
+    console.log("uploading ... ");
+    console.log("sessionId: ", selectedSession.id);
+    console.log(`formData: `);
+    console.log(formData);
 
     try {
       const response = await fetch(
@@ -49,12 +54,20 @@ export default function ModalUploadVideo() {
       clearTimeout(timeout);
       const data = await response.json();
       console.log("Upload response:", data);
+      dispatch(updateUploadReducerLoading(false));
       Alert.alert("Success", "Video sent successfully!");
     } catch (error) {
       clearTimeout(timeout);
       console.error("Upload error:", error);
+      dispatch(updateUploadReducerLoading(false));
       Alert.alert("Error", "Failed to send video.");
     }
+  };
+  const handleUploadVideoTest = async () => {
+    dispatch(updateUploadReducerLoading(true));
+    setTimeout(() => {
+      dispatch(updateUploadReducerLoading(false));
+    }, 5000);
   };
 
   return (
@@ -63,7 +76,7 @@ export default function ModalUploadVideo() {
         Link video to session
       </Text>
       <Text>{selectedSession?.id}</Text>
-      <Text>{reviewReducer.selectedVideoObject?.fileName}</Text>
+      <Text>{uploadReducer.uploadReducerSelectedVideoObject?.fileName}</Text>
 
       <View style={styles.vwVideoHeader}>
         <Text style={styles.txtVideoItemDate}>Date</Text>
@@ -91,8 +104,10 @@ export default function ModalUploadVideo() {
       <View style={styles.vwButtons}>
         <ButtonKvStd
           onPress={() => {
-            console.log("uploading ...");
-            handleSendVideo(reviewReducer.selectedVideoObject);
+            console.log("uploading ....");
+            // handleSendVideo(reviewReducer.selectedVideoObject);
+            handleSendVideo(uploadReducer.uploadReducerSelectedVideoObject);
+            // handleUploadVideoTest();
           }}
         >
           Upload

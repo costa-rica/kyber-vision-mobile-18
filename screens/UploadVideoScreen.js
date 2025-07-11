@@ -14,7 +14,11 @@ import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChil
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { updateTeamsArray } from "../reducers/user";
-import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
+// import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
+import {
+  updateUploadReducerSelectedVideoObject,
+  updateUploadReducerLoading,
+} from "../reducers/upload";
 import * as ImagePicker from "expo-image-picker";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
@@ -91,7 +95,7 @@ export default function UploadVideoScreen({ navigation }) {
   const [selectedVideosArray, setSelectedVideosArray] = useState([]);
   const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
     useState(false);
-  const [isVisibleModalLoading, setIsVisibleModalLoading] = useState(false);
+  // const [isVisibleModalLoading, setIsVisibleModalLoading] = useState(false);
 
   const handleSelectVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -99,7 +103,8 @@ export default function UploadVideoScreen({ navigation }) {
       Alert.alert("Permission denied", "We need access to your media.");
       return;
     }
-    setIsVisibleModalLoading(true);
+    // setIsVisibleModalLoading(true);
+    dispatch(updateUploadReducerLoading(true));
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["videos"],
       allowsMultipleSelection: true,
@@ -111,7 +116,8 @@ export default function UploadVideoScreen({ navigation }) {
       setSelectedVideosArray((prev) => [...prev, ...assets]);
       //   console.log(result.assets);
     }
-    setIsVisibleModalLoading(false);
+    // setIsVisibleModalLoading(false);
+    dispatch(updateUploadReducerLoading(false));
   };
 
   return (
@@ -122,7 +128,7 @@ export default function UploadVideoScreen({ navigation }) {
       isVisibleModal={isVisibleModalUploadVideo}
       setDisplayModal={setIsVisibleModalUploadVideo}
       modalComponent={<ModalUploadVideo />}
-      isVisibleModalLoading={isVisibleModalLoading}
+      // isVisibleModalLoading={isVisibleModalLoading}
     >
       <View style={styles.container}>
         {/* -------- TOP ----- */}
@@ -157,7 +163,7 @@ export default function UploadVideoScreen({ navigation }) {
               <ButtonKvNoDefault
                 onPress={() => {
                   console.log("Select Video");
-                  dispatch(updateReviewReducerSelectedVideoObject(item));
+                  dispatch(updateUploadReducerSelectedVideoObject(item));
                   setIsVisibleModalUploadVideo(true);
                 }}
                 styleView={styles.btnVideoItem}

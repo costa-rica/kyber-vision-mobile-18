@@ -18,9 +18,10 @@ import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
 import review from "./reducers/review";
 import script from "./reducers/script";
+import upload from "./reducers/upload";
 
 const store = configureStore({
-  reducer: { user, script, review },
+  reducer: { user, script, review, upload },
 });
 
 export default function App() {
