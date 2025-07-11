@@ -5,9 +5,8 @@ const initialState = {
   reviewReducerActionsArray: [],
   reviewReducerListOfPlayerDbObjects: [],
   isFavoriteToggle: false,
-  // manuallySelectedActionId: null, // New property to track user-selected action
   selectedActionObject: null, // New property to track user-selected action
-  // selectedActionTimestamp: null, // New property to track user-selected action
+  selectedVideoObject: null,
 };
 
 // --- Elements of reviewActionsArray:
@@ -218,6 +217,9 @@ export const reviewSlice = createSlice({
           isDisplayed: true,
         }));
     },
+    updateReviewReducerSelectedVideoObject: (state, action) => {
+      state.selectedVideoObject = action.payload;
+    },
   },
 });
 
@@ -230,9 +232,9 @@ export const {
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
   filterReviewReducerActionsArrayShowAll,
-
   updateReviewReducerIsPlayingforActionsArrayV5,
   pressedActionInReviewReducerActionArray,
+  updateReviewReducerSelectedVideoObject,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;

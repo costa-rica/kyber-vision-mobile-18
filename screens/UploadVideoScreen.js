@@ -14,6 +14,7 @@ import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChil
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { updateTeamsArray } from "../reducers/user";
+import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
 import * as ImagePicker from "expo-image-picker";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
@@ -156,6 +157,7 @@ export default function UploadVideoScreen({ navigation }) {
               <ButtonKvNoDefault
                 onPress={() => {
                   console.log("Select Video");
+                  dispatch(updateReviewReducerSelectedVideoObject(item));
                   setIsVisibleModalUploadVideo(true);
                 }}
                 styleView={styles.btnVideoItem}

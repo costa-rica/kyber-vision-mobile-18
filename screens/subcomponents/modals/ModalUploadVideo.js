@@ -5,6 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from "react-native";
 import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
@@ -14,107 +15,55 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { updateSessionsArray } from "../../../reducers/script";
 
-export default function ModalUploadVideo(
-  {
-    // isVisibleModalUploadVideo,
-    // setIsVisibleModalUploadVideo,
-    //   leaguesArray,
-    //   setLeaguesArray,
-    //   fetchLeaguesArray,
-  }
-) {
+export default function ModalUploadVideo() {
   const userReducer = useSelector((state) => state.user);
+  const reviewReducer = useSelector((state) => state.review);
   const scriptReducer = useSelector((state) => state.script);
   const dispatch = useDispatch();
+  const [selectedSession, setSelectedSession] = useState(null);
 
-  //   const handleSelectSession = (sessionId) => {
-  //     let tempArray = [...leaguesArray];
-  //     tempArray.forEach((league) => {
-  //       if (league.id === sessionId) {
-  //         league.selected = true;
-  //       } else {
-  //         league.selected = false;
-  //       }
-  //     });
-  //     setLeaguesArray(tempArray);
-  //   };
+  const handleSendVideo = async (video) => {
+    const formData = new FormData();
+    formData.append("video", {
+      uri: video.uri,
+      name: video.fileName || "video.mp4",
+      type: "video/mp4",
+    });
+    formData.append("sessionId", selectedSession.id);
 
-  //   // #GoodApiCall
-  //   // --> This is good template for API calls
-  //   const handleCreateSession = async () => {
-  //     const leagueId = leaguesArray.find((league) => league.selected)?.id;
-  //     const contractLeagueTeamId = leaguesArray.find(
-  //       (league) => league.selected
-  //     )?.contractLeagueTeamId;
-  //     console.log("leagueId", leagueId);
-  //     console.log("contractLeagueTeamId", contractLeagueTeamId);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
 
-  //     if (!leagueId) {
-  //       // console.warn("No league selected.");
-  //       alert("No league selected.");
-  //       return;
-  //     }
-
-  //     //   const combinedDateTime = new Date(
-  //     //     selectedDate.getFullYear(),
-  //     //     selectedDate.getMonth(),
-  //     //     selectedDate.getDate(),
-  //     //     selectedTime.getHours(),
-  //     //     selectedTime.getMinutes()
-  //     //   );
-
-  //     //   const sessionDate = combinedDateTime.toISOString();
-
-  //     const bodyObj = {
-  //       teamId: leagueId,
-  //       contractLeagueTeamId,
-  //       sessionDate,
-  //     };
-
-  //     try {
-  //       const response = await fetch(
-  //         `${process.env.EXPO_PUBLIC_API_URL}/sessions/create`,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: `Bearer ${userReducer.token}`,
-  //           },
-  //           body: JSON.stringify(bodyObj),
-  //         }
-  //       );
-
-  //       console.log("Received response:", response.status);
-  //       const contentType = response.headers.get("Content-Type");
-
-  //       if (contentType?.includes("application/json")) {
-  //         const resJson = await response.json();
-  //         console.log("--- Here is the NEW session ---");
-  //         console.log(resJson);
-  //         if (resJson.result) {
-  //           alert("Session created successfully");
-  //           let tempArray = [...scriptReducer.sessionsArray];
-  //           tempArray.push(resJson.sessionNew);
-  //           dispatch(updateSessionsArray(tempArray));
-  //           setIsVisibleModalCreateSession(false);
-  //         } else {
-  //           alert(`Failed to create session: ${resJson.error}`);
-  //         }
-  //       } else {
-  //         console.warn("Unexpected response type");
-  //         alert("Unexpected response type");
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Failed to create session:", error);
-  //       alert(`Failed to create session: ${error}`);
-  //     }
-  //   };
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
+        {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+          headers: {
+            Authorization: `Bearer ${userReducer.token}`,
+          },
+        }
+      );
+      clearTimeout(timeout);
+      const data = await response.json();
+      console.log("Upload response:", data);
+      Alert.alert("Success", "Video sent successfully!");
+    } catch (error) {
+      clearTimeout(timeout);
+      console.error("Upload error:", error);
+      Alert.alert("Error", "Failed to send video.");
+    }
+  };
 
   return (
     <View style={styles.modalContent}>
       <Text style={{ fontSize: 18, marginBottom: 20 }}>
         Link video to session
       </Text>
+      <Text>{selectedSession?.id}</Text>
+      <Text>{reviewReducer.selectedVideoObject?.fileName}</Text>
 
       <View style={styles.vwVideoHeader}>
         <Text style={styles.txtVideoItemDate}>Date</Text>
@@ -127,7 +76,7 @@ export default function ModalUploadVideo(
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ButtonKvNoDefault
-            onPress={() => console.log(item)}
+            onPress={() => setSelectedSession(item)}
             styleView={styles.btnVideoItem}
           >
             <Text style={styles.txtVideoItemDate}>
@@ -140,7 +89,12 @@ export default function ModalUploadVideo(
       />
 
       <View style={styles.vwButtons}>
-        <ButtonKvStd onPress={() => console.log("uploading ...")}>
+        <ButtonKvStd
+          onPress={() => {
+            console.log("uploading ...");
+            handleSendVideo(reviewReducer.selectedVideoObject);
+          }}
+        >
           Upload
         </ButtonKvStd>
       </View>
