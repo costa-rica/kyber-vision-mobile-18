@@ -7,7 +7,8 @@ import {
 } from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
+import ModalLoading from "./modals/ModalLoading";
 
 export default function TemplateViewWithTopChildren({
   children,

@@ -90,6 +90,7 @@ export default function UploadVideoScreen({ navigation }) {
   const [selectedVideosArray, setSelectedVideosArray] = useState([]);
   const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
     useState(false);
+  const [isVisibleModalLoading, setIsVisibleModalLoading] = useState(false);
 
   const handleSelectVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -97,7 +98,7 @@ export default function UploadVideoScreen({ navigation }) {
       Alert.alert("Permission denied", "We need access to your media.");
       return;
     }
-
+    setIsVisibleModalLoading(true);
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["videos"],
       allowsMultipleSelection: true,
@@ -109,6 +110,7 @@ export default function UploadVideoScreen({ navigation }) {
       setSelectedVideosArray((prev) => [...prev, ...assets]);
       //   console.log(result.assets);
     }
+    setIsVisibleModalLoading(false);
   };
 
   return (
@@ -119,6 +121,7 @@ export default function UploadVideoScreen({ navigation }) {
       isVisibleModal={isVisibleModalUploadVideo}
       setDisplayModal={setIsVisibleModalUploadVideo}
       modalComponent={<ModalUploadVideo />}
+      isVisibleModalLoading={isVisibleModalLoading}
     >
       <View style={styles.container}>
         {/* -------- TOP ----- */}
