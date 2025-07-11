@@ -116,7 +116,7 @@ export default function UploadVideoScreen({ navigation }) {
       navigation={navigation}
       topChildren={topChildren}
       screenName={"UploadVideoScreen"}
-      displayModal={isVisibleModalUploadVideo}
+      isVisibleModal={isVisibleModalUploadVideo}
       setDisplayModal={setIsVisibleModalUploadVideo}
       modalComponent={<ModalUploadVideo />}
     >

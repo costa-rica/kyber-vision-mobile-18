@@ -14,9 +14,10 @@ export default function TemplateViewWithTopChildren({
   navigation,
   topChildren,
   screenName,
-  displayModal = false,
+  isVisibleModal = false,
   setDisplayModal = () => {},
   modalComponent = null,
+  isVisibleModalLoading = false,
 }) {
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
@@ -55,12 +56,17 @@ export default function TemplateViewWithTopChildren({
       </View>
       <View style={styles.containerBottom}>{children}</View>
 
-      {displayModal && (
+      {isVisibleModal && (
         <TouchableWithoutFeedback onPress={() => setDisplayModal(false)}>
           <View style={styles.modalOverlay}>
             <View onStartShouldSetResponder={() => true}>{modalComponent}</View>
           </View>
         </TouchableWithoutFeedback>
+      )}
+      {isVisibleModalLoading && (
+        <View style={styles.modalOverlay}>
+          <ModalLoading />
+        </View>
       )}
     </View>
   );
