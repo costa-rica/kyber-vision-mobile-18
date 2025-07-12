@@ -29,7 +29,14 @@ export default function UploadVideoScreen({ navigation }) {
   const scriptReducer = useSelector((state) => state.script);
   const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
+  const [selectedVideosArray, setSelectedVideosArray] = useState([]);
+  const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
+    useState(false);
+  const [userVideosArray, setUserVideosArray] = useState([]);
 
+  useEffect(() => {
+    fetchUserVideosArray();
+  }, []);
   const handleTribeSelect = (selectedId) => {
     const updatedArray = userReducer.teamsArray.map((team) => ({
       ...team,
@@ -92,11 +99,6 @@ export default function UploadVideoScreen({ navigation }) {
     </View>
   );
 
-  const [selectedVideosArray, setSelectedVideosArray] = useState([]);
-  const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
-    useState(false);
-  // const [isVisibleModalLoading, setIsVisibleModalLoading] = useState(false);
-
   const handleSelectVideo = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permission.granted) {
@@ -120,6 +122,46 @@ export default function UploadVideoScreen({ navigation }) {
     dispatch(updateUploadReducerLoading(false));
   };
 
+  const fetchUserVideosArray = async () => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/videos/user`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
+
+    console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok`);
+      const tempArray = resJson.videosArray.map((item) => {
+        return {
+          ...item,
+          selected: false,
+        };
+      });
+      console.log(`Count of videos: ${tempArray.length}`);
+      // console.log(`tempArray: ${JSON.stringify(tempArray, null, 2)}`);
+      setUserVideosArray(tempArray);
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+  };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -133,10 +175,6 @@ export default function UploadVideoScreen({ navigation }) {
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
-          <Text> Videos Uploaded </Text>
-          <Text> {scriptReducer.sessionsArray.length} sessions </Text>
-        </View>
-        <View style={styles.containerBottom}>
           <ButtonKvNoDefaultTextOnly
             onPress={() => {
               console.log("Upload Video");
@@ -145,9 +183,9 @@ export default function UploadVideoScreen({ navigation }) {
             styleView={styles.btnSelectVideo}
             styleText={styles.txtSelectVideo}
           >
-            Select Video(s)
+            Add new files from the Gallery
           </ButtonKvNoDefaultTextOnly>
-          <Text> Upload Video Bottom </Text>
+
           <View style={styles.vwVideoHeader}>
             <Text style={styles.txtVideoItemFilename}>Filename</Text>
             {/* <Text>Filename</Text> */}
@@ -187,23 +225,95 @@ export default function UploadVideoScreen({ navigation }) {
             )}
           />
         </View>
-      </View>
-
-      {/* {isVisibleModalUploadVideo && (
-        <TouchableWithoutFeedback
-          onPress={() => setIsVisibleModalUploadVideo(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View onStartShouldSetResponder={() => true}>
-              
-              <ModalUploadVideo
-                isVisibleModalUploadVideo={isVisibleModalUploadVideo}
-                setIsVisibleModalUploadVideo={setIsVisibleModalUploadVideo}
-              />
-            </View>
+        <View style={styles.containerBottom}>
+          <Text> Videos Uploaded </Text>
+          <View style={styles.vwVideoHeader}>
+            <Text style={styles.txtVideoItemFilename}>Filename</Text>
+            <Text style={styles.txtVideoItemShort}>Date</Text>
+            {/* <Text style={styles.txtVideoItemShort}>Size (MB)</Text>
+            <Text style={styles.txtVideoItemDimensions}>Dimensions</Text> */}
+            <Text
+              style={[styles.txtVideoItemShort, { textAlign: "right" }]}
+            ></Text>
           </View>
-        </TouchableWithoutFeedback>
-      )} */}
+          <View style={styles.underline} />
+
+          <FlatList
+            data={userVideosArray}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.vwUserVideoItem}>
+                <Text style={styles.txtVideoItemFilename}>{item.filename}</Text>
+                <Text>
+                  {new Date(item.session.sessionDate).toLocaleDateString(
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                    }
+                  )}{" "}
+                  {new Date(item.session.sessionDate).toLocaleTimeString(
+                    "en-GB",
+                    {
+                      hour: "2-digit",
+                    }
+                  )}
+                  h
+                </Text>
+                {/* <Text style={styles.txtVideoItemShort}>
+                  {item.duration ? (item.duration / 1000).toFixed(0) : "-"}
+                </Text>
+                <Text style={styles.txtVideoItemShort}>
+                  {item.fileSize
+                    ? (item.fileSize / 1000000)
+                        .toFixed(0)
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : "-"}
+                </Text>
+                <Text style={styles.txtVideoItemDimensions}>
+                  {item.height && item.width
+                    ? `${item.height} x ${item.width}`
+                    : "-"}
+                </Text> */}
+                <ButtonKvNoDefault
+                  onPress={() => {
+                    console.log("Delete video", item.id);
+                    setUserVideosArray((prev) =>
+                      prev.filter((video) => video.id !== item.id)
+                    );
+                  }}
+                  styleView={styles.btnDeleteVideo}
+                  styleText={styles.txtDeleteVideo}
+                >
+                  <Text>X</Text>
+                </ButtonKvNoDefault>
+              </View>
+            )}
+          />
+          {/* {userVideosArray.length > 0 &&
+            userVideosArray.map((video) => (
+              <View key={video.id}>
+                <Text>{video.filename}</Text>
+                <Text>
+                  {new Date(video.session.sessionDate).toLocaleDateString(
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                    }
+                  )}{" "}
+                  {new Date(video.session.sessionDate).toLocaleTimeString(
+                    "en-GB",
+                    {
+                      hour: "2-digit",
+                    }
+                  )}
+                  h
+                </Text>
+              </View>
+            ))} */}
+        </View>
+      </View>
     </TemplateViewWithTopChildren>
   );
 }
@@ -276,16 +386,21 @@ const styles = StyleSheet.create({
   vwRightCapsule: {
     height: "100%",
   },
-
-  // ----- TOP -----
+  // ------------
+  // TOP
+  // ------------
   containerTop: {
     // flex: 1,
-    height: 100,
+    height: "40%",
+    width: Dimensions.get("window").width,
     alignItems: "center",
+    paddingVertical: 10,
     // justifyContent: "center",
-    borderWidth: 2, // Adjust thickness as needed
-    borderColor: "gray", // Change color as desired
-    borderStyle: "dashed",
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "solid",
+    // borderRadius: 10,
+    // margin: 3,
   },
 
   btnSelectVideo: {
@@ -299,23 +414,58 @@ const styles = StyleSheet.create({
   },
   txtSelectVideo: {
     color: "white",
-    fontSize: 24,
+    fontSize: 16,
     fontWeight: "bold",
   },
 
-  // ----- BOTTOM -----
+  vwUserVideoItem: {
+    backgroundColor: "#806181",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    marginVertical: 5,
+    width: Dimensions.get("window").width * 0.9,
+    borderColor: "#E8E8E8",
+    borderWidth: 1,
+  },
 
+  btnDeleteVideo: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#FF5C5C",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+  },
+
+  txtDeleteVideo: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  // ------------
+  // BOTTOM
+  // ------------
   containerBottom: {
     // height: 500,
-    width: Dimensions.get("window").width,
-    flex: 1,
+    // width: Dimensions.get("window").width,
+    // flex: 1,
+    // borderWidth: 2,
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "solid",
+    // borderRadius: 10,
+    // margin: 3,
+    alignItems: "center",
+    // justifyContent: "center",
+    // backgroundColor: "green",
     // height: 350,
     // backgroundColor: "gray",
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
-    alignItems: "center",
-    justifyContent: "center",
   },
 
   vwVideoHeader: {
