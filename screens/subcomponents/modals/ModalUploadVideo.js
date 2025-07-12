@@ -12,9 +12,9 @@ import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import { useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { updateUploadReducerLoading } from "../../../reducers/upload";
+import { updateUploadReducerModalUploadVideoSelectedSessionObject } from "../../../reducers/upload";
 
-export default function ModalUploadVideo() {
+export default function ModalUploadVideo({ handleSendVideo }) {
   const userReducer = useSelector((state) => state.user);
   const reviewReducer = useSelector((state) => state.review);
   const scriptReducer = useSelector((state) => state.script);
@@ -22,53 +22,47 @@ export default function ModalUploadVideo() {
   const [selectedSession, setSelectedSession] = useState(null);
   const dispatch = useDispatch();
 
-  const handleSendVideo = async (video) => {
-    dispatch(updateUploadReducerLoading(true));
-    const formData = new FormData();
-    formData.append("video", {
-      uri: video.uri,
-      name: video.fileName || "video.mp4",
-      type: "video/mp4",
-    });
-    formData.append("sessionId", selectedSession.id);
+  // const handleSendVideo = async (video) => {
+  //   dispatch(updateUploadReducerLoading(true));
+  //   const formData = new FormData();
+  //   formData.append("video", {
+  //     uri: video.uri,
+  //     name: video.fileName || "video.mp4",
+  //     type: "video/mp4",
+  //   });
+  //   formData.append("sessionId", selectedSession.id);
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
-    console.log("uploading ... ");
-    console.log("sessionId: ", selectedSession.id);
-    console.log(`formData: `);
-    console.log(formData);
+  //   const controller = new AbortController();
+  //   const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
+  //   console.log("uploading ... ");
+  //   console.log("sessionId: ", selectedSession.id);
+  //   console.log(`formData: `);
+  //   console.log(formData);
 
-    try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
-        {
-          method: "POST",
-          body: formData,
-          signal: controller.signal,
-          headers: {
-            Authorization: `Bearer ${userReducer.token}`,
-          },
-        }
-      );
-      clearTimeout(timeout);
-      const data = await response.json();
-      console.log("Upload response:", data);
-      dispatch(updateUploadReducerLoading(false));
-      Alert.alert("Success", "Video sent successfully!");
-    } catch (error) {
-      clearTimeout(timeout);
-      console.error("Upload error:", error);
-      dispatch(updateUploadReducerLoading(false));
-      Alert.alert("Error", "Failed to send video.");
-    }
-  };
-  const handleUploadVideoTest = async () => {
-    dispatch(updateUploadReducerLoading(true));
-    setTimeout(() => {
-      dispatch(updateUploadReducerLoading(false));
-    }, 5000);
-  };
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //         signal: controller.signal,
+  //         headers: {
+  //           Authorization: `Bearer ${userReducer.token}`,
+  //         },
+  //       }
+  //     );
+  //     clearTimeout(timeout);
+  //     const data = await response.json();
+  //     console.log("Upload response:", data);
+  //     dispatch(updateUploadReducerLoading(false));
+  //     Alert.alert("Success", "Video sent successfully!");
+  //   } catch (error) {
+  //     clearTimeout(timeout);
+  //     console.error("Upload error:", error);
+  //     dispatch(updateUploadReducerLoading(false));
+  //     Alert.alert("Error", "Failed to send video.");
+  //   }
+  // };
 
   return (
     <View style={styles.modalContent}>
@@ -89,7 +83,12 @@ export default function ModalUploadVideo() {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <ButtonKvNoDefault
-            onPress={() => setSelectedSession(item)}
+            // onPress={() => setSelectedSession(item)}
+            onPress={() =>
+              dispatch(
+                updateUploadReducerModalUploadVideoSelectedSessionObject(item)
+              )
+            }
             styleView={styles.btnVideoItem}
           >
             <Text style={styles.txtVideoItemDate}>
@@ -104,7 +103,7 @@ export default function ModalUploadVideo() {
       <View style={styles.vwButtons}>
         <ButtonKvStd
           onPress={() => {
-            console.log("uploading ....");
+            console.log("uploading [ModalUploadVideo] ....");
             // handleSendVideo(reviewReducer.selectedVideoObject);
             handleSendVideo(uploadReducer.uploadReducerSelectedVideoObject);
             // handleUploadVideoTest();

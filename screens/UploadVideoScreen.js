@@ -10,7 +10,8 @@ import {
   Pressable,
   TouchableWithoutFeedback,
 } from "react-native";
-import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
+// import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
+import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { updateTeamsArray } from "../reducers/user";
@@ -18,19 +19,23 @@ import { updateTeamsArray } from "../reducers/user";
 import {
   updateUploadReducerSelectedVideoObject,
   updateUploadReducerLoading,
+  updateUploadReducerDeleteVideoObject,
 } from "../reducers/upload";
 import * as ImagePicker from "expo-image-picker";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
+import ModalYesNo from "./subcomponents/modals/ModalYesNo";
 
 export default function UploadVideoScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const scriptReducer = useSelector((state) => state.script);
+  const uploadReducer = useSelector((state) => state.upload);
   const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
   const [selectedVideosArray, setSelectedVideosArray] = useState([]);
   const [isVisibleModalUploadVideo, setIsVisibleModalUploadVideo] =
+    useState(false);
+  const [isVisibleModalDeleteVideo, setIsVisibleModalDeleteVideo] =
     useState(false);
   const [userVideosArray, setUserVideosArray] = useState([]);
 
@@ -162,18 +167,120 @@ export default function UploadVideoScreen({ navigation }) {
     }
   };
 
+  const handleSendVideo = async (video) => {
+    console.log(" --- > in handleSendVideo");
+    dispatch(updateUploadReducerLoading(true));
+    const formData = new FormData();
+    console.log(" --- > in handleSendVideo [2]");
+    formData.append("video", {
+      uri: video.uri,
+      name: video.fileName || "video.mp4",
+      type: "video/mp4",
+    });
+    // console.log(JSON.stringify(video, null, 2));
+    // formData.append("sessionId", video.session.id);
+    formData.append(
+      "sessionId",
+      uploadReducer.uploadReducerModalUploadVideoSelectedSessionObject.id
+    );
+    console.log(" --- > in handleSendVideo [3]");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
+    console.log("uploading ... ");
+    console.log(
+      "sessionId: ",
+      uploadReducer.uploadReducerModalUploadVideoSelectedSessionObject.id
+    );
+    console.log(`formData: `);
+    console.log(formData);
+
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
+        {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+          headers: {
+            Authorization: `Bearer ${userReducer.token}`,
+          },
+        }
+      );
+      clearTimeout(timeout);
+      const data = await response.json();
+      console.log("Upload response:", data);
+      dispatch(updateUploadReducerLoading(false));
+      setIsVisibleModalUploadVideo(false);
+      Alert.alert("Success", "Video sent successfully!");
+    } catch (error) {
+      clearTimeout(timeout);
+      console.error("Upload error:", error);
+      dispatch(updateUploadReducerLoading(false));
+      Alert.alert("Error", "Failed to send video.");
+    }
+  };
+
+  const handleDeleteVideo = async () => {
+    console.log("---- > handleDeleteVideo");
+    const fetchUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${uploadReducer.uploadReducerDeleteVideoObject.id}`;
+    console.log("fetchUrl: ", fetchUrl);
+    console.log("userReducer.token: ", userReducer.token);
+    const response = await fetch(fetchUrl, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userReducer.token}`, // Add token to Authorization header
+      },
+      // body: JSON.stringify({ videoId: videoObj.id }),
+    });
+    if (response.status == 200) {
+      fetchUserVideosArray();
+      const resJson = await response.json();
+      window.alert(resJson.message);
+      setIsVisibleModalDeleteVideo(false);
+    } else {
+      window.alert(`There was a server error: ${response.status}`);
+    }
+  };
+
+  const whichModalToDisplay = () => {
+    if (isVisibleModalUploadVideo) {
+      return {
+        modalComponent: <ModalUploadVideo handleSendVideo={handleSendVideo} />,
+        useState: isVisibleModalUploadVideo,
+        useStateSetter: setIsVisibleModalUploadVideo,
+      };
+    }
+
+    if (isVisibleModalDeleteVideo) {
+      return {
+        modalComponent: <ModalYesNo onPressYes={handleDeleteVideo} />,
+        useState: isVisibleModalDeleteVideo,
+        useStateSetter: setIsVisibleModalDeleteVideo,
+      };
+    }
+  };
+
   return (
-    <TemplateViewWithTopChildren
+    <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
       screenName={"UploadVideoScreen"}
-      isVisibleModal={isVisibleModalUploadVideo}
-      setDisplayModal={setIsVisibleModalUploadVideo}
-      modalComponent={<ModalUploadVideo />}
+      // isVisibleModal={isVisibleModalUploadVideo}
+      // setDisplayModal={setIsVisibleModalUploadVideo}
+      // modalComponent={<ModalUploadVideo />}
+      // modalComponent={whichModalToDisplay()}
+      modalComponentAndSetterObject={whichModalToDisplay()}
+      topHeight={"20%"}
       // isVisibleModalLoading={isVisibleModalLoading}
     >
       <View style={styles.container}>
-        {/* -------- TOP ----- */}
+        {/* -------- 
+        
+        TOP 
+        
+        ----- */}
+
         <View style={styles.containerTop}>
           <ButtonKvNoDefaultTextOnly
             onPress={() => {
@@ -225,6 +332,13 @@ export default function UploadVideoScreen({ navigation }) {
             )}
           />
         </View>
+
+        {/* ------------ 
+        
+        BOTTOM 
+        
+        ------------ */}
+
         <View style={styles.containerBottom}>
           <Text> Videos Uploaded </Text>
           <View style={styles.vwVideoHeader}>
@@ -260,61 +374,25 @@ export default function UploadVideoScreen({ navigation }) {
                   )}
                   h
                 </Text>
-                {/* <Text style={styles.txtVideoItemShort}>
-                  {item.duration ? (item.duration / 1000).toFixed(0) : "-"}
-                </Text>
-                <Text style={styles.txtVideoItemShort}>
-                  {item.fileSize
-                    ? (item.fileSize / 1000000)
-                        .toFixed(0)
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                    : "-"}
-                </Text>
-                <Text style={styles.txtVideoItemDimensions}>
-                  {item.height && item.width
-                    ? `${item.height} x ${item.width}`
-                    : "-"}
-                </Text> */}
+
                 <ButtonKvNoDefault
                   onPress={() => {
                     console.log("Delete video", item.id);
-                    setUserVideosArray((prev) =>
-                      prev.filter((video) => video.id !== item.id)
-                    );
+
+                    dispatch(updateUploadReducerDeleteVideoObject(item));
+                    setIsVisibleModalDeleteVideo(true);
                   }}
                   styleView={styles.btnDeleteVideo}
                   styleText={styles.txtDeleteVideo}
                 >
-                  <Text>X</Text>
+                  <Text style={styles.txtDeleteVideo}>X</Text>
                 </ButtonKvNoDefault>
               </View>
             )}
           />
-          {/* {userVideosArray.length > 0 &&
-            userVideosArray.map((video) => (
-              <View key={video.id}>
-                <Text>{video.filename}</Text>
-                <Text>
-                  {new Date(video.session.sessionDate).toLocaleDateString(
-                    "en-GB",
-                    {
-                      day: "2-digit",
-                      month: "short",
-                    }
-                  )}{" "}
-                  {new Date(video.session.sessionDate).toLocaleTimeString(
-                    "en-GB",
-                    {
-                      hour: "2-digit",
-                    }
-                  )}
-                  h
-                </Text>
-              </View>
-            ))} */}
         </View>
       </View>
-    </TemplateViewWithTopChildren>
+    </TemplateViewWithTopChildrenSmall>
   );
 }
 
@@ -403,71 +481,6 @@ const styles = StyleSheet.create({
     // margin: 3,
   },
 
-  btnSelectVideo: {
-    width: Dimensions.get("window").width * 0.8,
-    backgroundColor: "#806181",
-    fontSize: 24,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 35,
-  },
-  txtSelectVideo: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-
-  vwUserVideoItem: {
-    backgroundColor: "#806181",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderRadius: 10,
-    marginVertical: 5,
-    width: Dimensions.get("window").width * 0.9,
-    borderColor: "#E8E8E8",
-    borderWidth: 1,
-  },
-
-  btnDeleteVideo: {
-    width: 30,
-    height: 30,
-    backgroundColor: "#FF5C5C",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 15,
-  },
-
-  txtDeleteVideo: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  // ------------
-  // BOTTOM
-  // ------------
-  containerBottom: {
-    // height: 500,
-    // width: Dimensions.get("window").width,
-    // flex: 1,
-    // borderWidth: 2,
-    // borderColor: "gray", // Change color as desired
-    // borderStyle: "solid",
-    // borderRadius: 10,
-    // margin: 3,
-    alignItems: "center",
-    // justifyContent: "center",
-    // backgroundColor: "green",
-    // height: 350,
-    // backgroundColor: "gray",
-    // borderWidth: 2, // Adjust thickness as needed
-    // borderColor: "gray", // Change color as desired
-    // borderStyle: "dashed",
-  },
-
   vwVideoHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -534,6 +547,71 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#806181",
     borderWidth: 1,
+  },
+
+  // ------------
+  // BOTTOM
+  // ------------
+  containerBottom: {
+    alignItems: "center",
+    backgroundColor: "#FDFDFD", // ensure it's not transparent
+    shadowColor: "#000", // for iOS
+    shadowOffset: { width: 0, height: -5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5, // for Android
+    borderTopLeftRadius: 20, // optional: rounded corners
+    borderTopRightRadius: 20, // optional
+    paddingTop: 10, // space from top shadow
+    // borderWidth: 2, // Adjust thickness as needed
+    // borderColor: "gray", // Change color as desired
+    // borderStyle: "dashed",
+  },
+
+  btnSelectVideo: {
+    width: Dimensions.get("window").width * 0.8,
+    backgroundColor: "#806181",
+    fontSize: 24,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 35,
+  },
+  txtSelectVideo: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+
+  vwUserVideoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 5,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 10,
+    marginVertical: 5,
+    width: Dimensions.get("window").width * 0.9,
+    borderRadius: 10,
+    borderColor: "#806181",
+    borderWidth: 1,
+  },
+
+  btnDeleteVideo: {
+    width: 30,
+    height: 30,
+    // backgroundColor: "#FF5C5C",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+  },
+
+  txtDeleteVideo: {
+    color: "gray",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 
   // ------------

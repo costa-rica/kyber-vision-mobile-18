@@ -1,16 +1,33 @@
-import { StyleSheet, View, Image, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableWithoutFeedback,
+} from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
 import { useNavigation } from "@react-navigation/native";
 import KyberVisionLogoCrystal from "../../assets/images/KyberVisionLogoCrystal.svg";
-
+import ModalLoading from "./modals/ModalLoading";
+import { useSelector } from "react-redux";
 export default function TemplateViewWithTopChildrenSmall({
   children,
   navigation,
   topChildren,
   sizeOfLogo = 30,
   topHeight = "15%",
+  screenName,
+  // isVisibleModal = false,
+  // setDisplayModal = () => {},
+  // modalComponent = null,
+  modalComponentAndSetterObject = {
+    modalComponent: null,
+    useState: false,
+    useStateSetter: () => {},
+  },
 }) {
+  const uploadReducer = useSelector((state) => state.upload);
   const handleBackPress = async () => {
     // await ScreenOrientation.lockAsync(
     //   ScreenOrientation.OrientationLock.PORTRAIT_UP
@@ -39,10 +56,35 @@ export default function TemplateViewWithTopChildrenSmall({
         )}
         <View style={styles.vwLogoAndTopChildren}>
           <KyberVisionLogoCrystal width={sizeOfLogo} height={sizeOfLogo} />
+          {screenName && <Text style={{ color: "white" }}>{screenName}</Text>}
           {topChildren}
         </View>
       </View>
       <View style={styles.containerBottom}>{children}</View>
+      {modalComponentAndSetterObject.useState && (
+        <TouchableWithoutFeedback
+          onPress={() => modalComponentAndSetterObject.useStateSetter(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View onStartShouldSetResponder={() => true}>
+              {modalComponentAndSetterObject.modalComponent}
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
+      {/* {isVisibleModal && (
+        <TouchableWithoutFeedback onPress={() => setDisplayModal(false)}>
+          <View style={styles.modalOverlay}>
+            <View onStartShouldSetResponder={() => true}>{modalComponent}</View>
+          </View>
+        </TouchableWithoutFeedback>
+      )} */}
+      {/* {isVisibleModalLoading && ( */}
+      {uploadReducer.uploadReducerLoading && (
+        <View style={styles.modalOverlay}>
+          <ModalLoading />
+        </View>
+      )}
     </View>
   );
 }
@@ -69,8 +111,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
+    // justifyContent: "center",
+    // flexDirection: "row",
     // gap: 20,
   },
   containerBottom: {
@@ -78,5 +120,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  // ------------
+  // Modal
+  // ------------
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  modalContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
 });
