@@ -9,6 +9,7 @@ import {
   Modal,
   Pressable,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 // import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";

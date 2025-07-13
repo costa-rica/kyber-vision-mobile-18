@@ -69,9 +69,27 @@ export default function ModalUploadVideo({ handleSendVideo }) {
       <Text style={{ fontSize: 18, marginBottom: 20 }}>
         Link video to session
       </Text>
-      <Text>{selectedSession?.id}</Text>
-      <Text>{uploadReducer.uploadReducerSelectedVideoObject?.fileName}</Text>
-
+      <View style={styles.vwSelectionDetails}>
+        <View style={{ flexDirection: "row" }}>
+          <Text>Uploading:</Text>
+          <Text
+            style={{ backgroundColor: "#E8E8E8", borderRadius: 5, padding: 2 }}
+          >
+            {uploadReducer.uploadReducerSelectedVideoObject?.fileName}
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", marginTop: 5 }}>
+          <Text>To session ID:</Text>
+          <Text
+            style={{ backgroundColor: "#E8E8E8", borderRadius: 5, padding: 2 }}
+          >
+            {
+              uploadReducer.uploadReducerModalUploadVideoSelectedSessionObject
+                ?.id
+            }
+          </Text>
+        </View>
+      </View>
       <View style={styles.vwVideoHeader}>
         <Text style={styles.txtVideoItemDate}>Date</Text>
         <Text style={styles.txtVideoItemCity}>City</Text>
@@ -132,6 +150,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
+  },
+  vwSelectionDetails: {
+    // flexDirection: "row",
+    // alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    marginTop: 10,
+    // width: Dimensions.get("window").width * 0.8,
   },
   vwVideoHeader: {
     flexDirection: "row",
