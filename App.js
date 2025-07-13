@@ -12,6 +12,8 @@ import ReviewSelectionScreen from "./screens/ReviewSelection";
 import ReviewVideo from "./screens/ReviewVideo";
 import ScriptingLiveSelectSession from "./screens/ScriptingLiveSelectSession";
 import UploadVideoScreen from "./screens/UploadVideoScreen";
+import ScriptingSyncVideoSelection from "./screens/ScriptingSyncVideoSelection";
+import ScriptingSyncVideo from "./screens/ScriptingSyncVideo";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -55,6 +57,14 @@ export default function App() {
           <Stack.Screen
             name="UploadVideoScreen"
             component={UploadVideoScreen}
+          />
+          <Stack.Screen
+            name="ScriptingSyncVideoSelection"
+            component={ScriptingSyncVideoSelection}
+          />
+          <Stack.Screen
+            name="ScriptingSyncVideo"
+            component={ScriptingSyncVideo}
           />
         </Stack.Navigator>
       </NavigationContainer>

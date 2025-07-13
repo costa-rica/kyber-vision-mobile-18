@@ -157,26 +157,16 @@ export default function HomeScreen({ navigation }) {
             >
               Upload Video
             </ButtonKvNoDefaultTextOnly>
+            <ButtonKvNoDefaultTextOnly
+              onPress={() => navigation.navigate("ScriptingSyncVideoSelection")}
+              styleView={styles.btnHomeNavigationUploadVideo}
+              styleText={styles.txtHomeNavigationUploadVideo}
+            >
+              Sync Video
+            </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
       </View>
-      {/* {isVisibleModalSelectSession && (
-        <Modal
-          visible={isVisibleModalSelectSession}
-          transparent={true}
-          animationType="fade"
-          onRequestClose={() => setIsVisibleModalSelectSession(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <ModalSelectSession
-              isVisibleModalSelectSession={isVisibleModalSelectSession}
-              setIsVisibleModalSelectSession={setIsVisibleModalSelectSession}
-              sessionsArray={sessionsArray}
-              navigation={navigation}
-            />
-          </View>
-        </Modal>
-      )} */}
     </TemplateViewWithTopChildren>
   );
 }
