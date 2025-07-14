@@ -179,7 +179,7 @@ export default function ScriptingSyncVideo({ navigation }) {
             <View style={styles.coverView} />
           </View>
           <View style={styles.vwButtonContainer}>
-            <View style={styles.vwButtonRow}>
+            <View style={styles.vwManagePlaybackButtons}>
               <TouchableOpacity onPress={rewind} style={styles.skipButton}>
                 <Text style={styles.playPauseButtonText}>-2s</Text>
               </TouchableOpacity>
@@ -194,6 +194,10 @@ export default function ScriptingSyncVideo({ navigation }) {
               <TouchableOpacity onPress={forward} style={styles.skipButton}>
                 <Text style={styles.playPauseButtonText}>+5s</Text>
               </TouchableOpacity>
+            </View>
+            <View style={styles.vwDisplayTime}>
+              <Text>Current Time: {currentTime.toFixed(1)} s</Text>
+              <Text>Duration: {duration.toFixed(1)} s</Text>
             </View>
           </View>
           <View
@@ -283,9 +287,13 @@ const styles = StyleSheet.create({
   vwButtonContainer: {
     marginTop: 20,
     alignItems: "center",
-    // backgroundColor: "white",
+    flexDirection: "row",
+    // backgroundColor: "green",
+    width: "100%",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
   },
-  vwButtonRow: {
+  vwManagePlaybackButtons: {
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
@@ -305,6 +313,12 @@ const styles = StyleSheet.create({
   playPauseButtonText: {
     color: "white",
     fontSize: 16,
+  },
+  vwDisplayTime: {
+    // flexDirection: "row",
+    // alignItems: "center",
+    gap: 10,
+    // backgroundColor: "blue",
   },
 
   // -----
