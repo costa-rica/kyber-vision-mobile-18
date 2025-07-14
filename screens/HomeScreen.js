@@ -117,8 +117,8 @@ export default function HomeScreen({ navigation }) {
     if (contentType?.includes("application/json")) {
       resJson = await response.json();
     }
-    console.log("--- here are the sessions ---");
-    console.log(resJson);
+    // console.log("--- here are the sessions ---");
+    // console.log(resJson);
     let tempArray = [];
     resJson.sessionsArray.map((session) => {
       tempArray.push({

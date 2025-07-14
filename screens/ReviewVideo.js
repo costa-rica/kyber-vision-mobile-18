@@ -110,6 +110,8 @@ export default function ReviewVideo({ navigation, route }) {
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
+    // Not stable approach see the ScriptingSyncVideo component for better approach
+    // -- >uses `const playingRef = useRef(playing);`
     const interval = setInterval(async () => {
       if (playerRef.current && playing) {
         const time = await playerRef.current.getCurrentTime();

@@ -10,14 +10,10 @@ import {
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/user";
-import {
-  updateReviewReducerVideoObject,
-  createReviewActionsArray,
-  createReviewActionsArrayUniquePlayersNamesAndObjects,
-} from "../reducers/review";
+
+import { updateSyncReducerSelectedVideoObject } from "../reducers/sync";
 let reviewReducerOffline;
 
 export default function ScriptingSyncVideoSelection({ navigation }) {
@@ -172,10 +168,12 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
   };
 
   const handleVideoSelect = (videoObject) => {
-    dispatch(updateReviewReducerVideoObject(videoObject));
+    // console.log(JSON.stringify(videoObject, null, 2));
+    // dispatch(updateReviewReducerVideoObject(videoObject));
     // fetchActionsForMatch(videoObject.matchId);
-    fetchActionsForSession(videoObject.sessionId);
-    navigation.navigate("ReviewVideo");
+    // fetchActionsForSession(videoObject.sessionId);
+    dispatch(updateSyncReducerSelectedVideoObject(videoObject));
+    navigation.navigate("ScriptingSyncVideo");
   };
 
   useEffect(() => {
@@ -199,78 +197,78 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
     setVideoArray(reviewReducerOffline.videoArray);
   };
 
-  // fetch Actions for Match
-  // const fetchActionsForMatch = async (matchId) => {
-  const fetchActionsForSession = async (sessionId) => {
-    console.log("in fetchActionsForSession for sessionId: ", sessionId);
-    let resJson;
-    if (userReducer.token === "offline") {
-      console.log(" ** [offline] Fetching actions for session");
-      resJson = reviewReducerOffline;
-    } else {
-      console.log(` ** [online] Fetching actions for session: ${sessionId}`);
-      try {
-        const response = await fetch(
-          // `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
-          `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${userReducer.token}`,
-            },
-          }
-        );
-        if (response.status !== 200) {
-          alert(`There was a server error: ${response.status}`);
-          return;
-        }
-        const contentType = response.headers.get("Content-Type");
+  // // fetch Actions for Match
+  // // const fetchActionsForMatch = async (matchId) => {
+  // const fetchActionsForSession = async (sessionId) => {
+  //   console.log("in fetchActionsForSession for sessionId: ", sessionId);
+  //   let resJson;
+  //   if (userReducer.token === "offline") {
+  //     console.log(" ** [offline] Fetching actions for session");
+  //     resJson = reviewReducerOffline;
+  //   } else {
+  //     console.log(` ** [online] Fetching actions for session: ${sessionId}`);
+  //     try {
+  //       const response = await fetch(
+  //         // `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
+  //         `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${userReducer.token}`,
+  //           },
+  //         }
+  //       );
+  //       if (response.status !== 200) {
+  //         alert(`There was a server error: ${response.status}`);
+  //         return;
+  //       }
+  //       const contentType = response.headers.get("Content-Type");
 
-        if (contentType?.includes("application/json")) {
-          resJson = await response.json();
-        }
+  //       if (contentType?.includes("application/json")) {
+  //         resJson = await response.json();
+  //       }
 
-        console.log(" --- finished getting ACtions and other stuff ---");
-      } catch (error) {
-        Alert.alert("Error fetching actions for match", error.message);
-        return;
-      }
-    }
+  //       console.log(" --- finished getting ACtions and other stuff ---");
+  //     } catch (error) {
+  //       Alert.alert("Error fetching actions for match", error.message);
+  //       return;
+  //     }
+  //   }
 
-    // console.log("resJson: ", resJson);
+  //   // console.log("resJson: ", resJson);
 
-    let tempCleanActionsArray = [];
-    for (const elem of resJson.actionsArray) {
-      tempCleanActionsArray.push({
-        actionsDbTableId: elem.id,
-        reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
-        playerId: elem.playerId,
-        timestamp: elem.timestampFromStartOfVideo,
-        type: elem.type,
-        subtype: elem.subtype,
-        quality: elem.quality,
-        isDisplayed: true,
-        isFavorite: false,
-        isPlaying: false,
-      });
-    }
+  //   let tempCleanActionsArray = [];
+  //   for (const elem of resJson.actionsArray) {
+  //     tempCleanActionsArray.push({
+  //       actionsDbTableId: elem.id,
+  //       reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
+  //       playerId: elem.playerId,
+  //       timestamp: elem.timestampFromStartOfVideo,
+  //       type: elem.type,
+  //       subtype: elem.subtype,
+  //       quality: elem.quality,
+  //       isDisplayed: true,
+  //       isFavorite: false,
+  //       isPlaying: false,
+  //     });
+  //   }
 
-    dispatch(createReviewActionsArray(tempCleanActionsArray));
+  //   dispatch(createReviewActionsArray(tempCleanActionsArray));
 
-    let tempPlayerDbObjectsArray = [];
-    for (const elem of resJson.playerDbObjectsArray) {
-      tempPlayerDbObjectsArray.push({
-        ...elem,
-        isDisplayed: true,
-      });
-    }
-    dispatch(
-      createReviewActionsArrayUniquePlayersNamesAndObjects({
-        playerDbObjectsArray: tempPlayerDbObjectsArray,
-      })
-    );
-  };
+  //   let tempPlayerDbObjectsArray = [];
+  //   for (const elem of resJson.playerDbObjectsArray) {
+  //     tempPlayerDbObjectsArray.push({
+  //       ...elem,
+  //       isDisplayed: true,
+  //     });
+  //   }
+  //   dispatch(
+  //     createReviewActionsArrayUniquePlayersNamesAndObjects({
+  //       playerDbObjectsArray: tempPlayerDbObjectsArray,
+  //     })
+  //   );
+  // };
 
   const renderVideoItem = ({ item: video }) => (
     <TouchableOpacity
@@ -293,6 +291,10 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
           h
         </Text>
       </View>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Text>Session ID:</Text>
+        <Text style={styles.txtVideoSessionId}>{video.session.id}</Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -304,7 +306,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
-          <Text style={styles.txtTitle}>Videos available for review</Text>
+          <Text style={styles.txtTitle}>Videos available for sync</Text>
           <View style={styles.vwUnderLine} />
         </View>
         <View style={styles.containerMiddle}>

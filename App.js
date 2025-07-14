@@ -21,9 +21,10 @@ import user from "./reducers/user";
 import review from "./reducers/review";
 import script from "./reducers/script";
 import upload from "./reducers/upload";
+import sync from "./reducers/sync";
 
 const store = configureStore({
-  reducer: { user, script, review, upload },
+  reducer: { user, script, review, upload, sync },
 });
 
 export default function App() {

@@ -49,8 +49,8 @@ export default function SelectTeamScreen({ navigation }) {
           selected: false,
         };
       });
-      console.log(" --- here is tempArray (teamsArray) --");
-      console.log(tempArray);
+      // console.log(" --- here is tempArray (teamsArray) --");
+      // console.log(tempArray);
       dispatch(updateTeamsArray(tempArray));
     } else {
       const errorMessage =
