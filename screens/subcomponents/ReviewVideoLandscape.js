@@ -350,7 +350,7 @@ export default function ReviewVideoLandscape(props) {
         <View style={stylesVwContainerBottomLeft}>
           <ButtonKvImage
             onPress={() => {
-              console.log("rotate screen to landscape");
+              // console.log("rotate screen to landscape");
               // correctOrientationFromStart();
               //   props.player.playing ? props.player.pause() : props.player.play();
               //   props.playing ? props.player.pause() : props.player.play();
@@ -423,6 +423,7 @@ export default function ReviewVideoLandscape(props) {
             currentTime={props.currentTime}
             duration={props.duration}
             playerRef={props.playerRef}
+            onSeek={props.onSeek}
           />
         </GestureHandlerRootView>
       </View>

@@ -7,6 +7,7 @@ export default function Timeline({
   playerRef,
   currentTime,
   duration,
+  onSeek,
 }) {
   const [timelineLayout, setTimelineLayout] = useState(0);
   const calculateTimelineLength = (event) => {
@@ -38,6 +39,7 @@ export default function Timeline({
   const handleTimelineNewPosition = (newProgress) => {
     const newTime = newProgress * duration;
     playerRef.current.seekTo(newTime);
+    if (onSeek) onSeek(newTime);
   };
 
   const combinedTimelineGesture = Gesture.Race(

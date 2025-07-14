@@ -278,6 +278,7 @@ export default function ReviewVideo({ navigation, route }) {
       handleBackPress={handleBackPress}
       filterActions={filterActions}
       handlePressRequestMontageVideo={handlePressRequestMontageVideo}
+      onSeek={(time) => setCurrentTime(time)}
     />
   );
 }

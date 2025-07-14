@@ -210,6 +210,7 @@ export default function ScriptingSyncVideo({ navigation }) {
                 playerRef={playerRef}
                 currentTime={currentTime}
                 duration={duration}
+                onSeek={(time) => setCurrentTime(time)}
               />
             </GestureHandlerRootView>
           </View>
