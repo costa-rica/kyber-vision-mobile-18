@@ -16,6 +16,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
+import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import Timeline from "./subcomponents/Timeline";
 
 export default function ScriptingSyncVideo({ navigation }) {
@@ -129,19 +130,92 @@ export default function ScriptingSyncVideo({ navigation }) {
       playerRef.current.seekTo(currentTime + 5, true);
     }
   };
-
-  // --------- YouTube / Video Related ---------
-
-  const handleSelectedAction = (action) => {
-    playerRef.current.seekTo(action.timestamp - 1, true);
+  // -----------
+  // Manage Time Delta
+  // -----------
+  const handleSelectedScript = (script) => {
+    // console.log("script: ", script);
+    const isSelected = script.selected;
+    const tempArray = scriptsArray.map((item) => {
+      if (item.scriptId === script.scriptId) {
+        return {
+          ...item,
+          selected: !isSelected,
+        };
+      } else {
+        return {
+          ...item,
+          selected: false,
+        };
+      }
+    });
+    setScriptsArray(tempArray);
   };
 
-  // Filtering actions
-  const filterActions = (parameterName, object) => {
-    if (parameterName === "player") {
-      dispatch(filterReviewReducerActionsArrayOnPlayer(object));
+  const handleSyncScriptsToSession = async () => {
+    console.log("handleSyncScriptsToSession");
+    const selectedScript = scriptsArray.find((item) => item.selected);
+
+    if (!selectedScript) {
+      alert("Please select a script");
+      return;
+    }
+    console.log("selectedScript.scriptId: ", selectedScript.scriptId);
+    console.log(
+      "selectedScript.deltaTimeInSeconds: ",
+      selectedScript.deltaTimeInSeconds
+    );
+    console.log(
+      "selectedScript.contractScriptVideoId : ",
+      selectedScript.contractScriptVideoId
+    );
+    console.log("currentTime: ", currentTime);
+
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-script-video/modify-delta-time/${selectedScript.contractScriptVideoId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify({
+          newDeltaTimeInSeconds: currentTime,
+        }),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok`);
+      console.log(resJson);
+      const tempArray = scriptsArray.map((item) => {
+        if (
+          item.contractScriptVideoId === selectedScript.contractScriptVideoId
+        ) {
+          return {
+            ...item,
+            deltaTimeInSeconds: currentTime,
+          };
+        } else {
+          return item;
+        }
+      });
+      setScriptsArray(tempArray);
+      alert("Script delta time modified successfully");
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
     }
   };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -220,24 +294,45 @@ export default function ScriptingSyncVideo({ navigation }) {
           </View>
         </View>
         <View style={styles.containerBottom}>
-          <Text>Scripts</Text>
+          <Text>Scripts Linked to Session</Text>
           <FlatList
             data={scriptsArray}
             renderItem={({ item }) => (
               <ButtonKvNoDefault
                 onPress={() => handleSelectedScript(item)}
-                styleView={styles.vwScriptRow}
+                styleView={
+                  item.selected
+                    ? styles.vwScriptRowSelected
+                    : styles.vwScriptRow
+                }
               >
-                <Text style={styles.scriptText}>
-                  Script ID: {item.scriptId}
-                </Text>
-                <Text style={styles.scriptText}>
-                  Action Count: {item.actionsArray.length}
-                </Text>
+                <View style={styles.vwScriptDetailsRow}>
+                  <Text style={styles.scriptText}>
+                    Script ID: {item.scriptId}
+                  </Text>
+                  <Text style={styles.scriptText}>
+                    Action Count: {item.actionsArray.length}
+                  </Text>
+                </View>
+                <View style={styles.vwScriptDeltaTimeRow}>
+                  <Text style={styles.scriptText}>
+                    Delta Time In Seconds: {item.deltaTimeInSeconds}
+                  </Text>
+                </View>
               </ButtonKvNoDefault>
             )}
             keyExtractor={(item) => item.scriptId.toString()}
           />
+          <View style={styles.vwBottomButtonContainer}>
+            <Text> Modify Delta Time </Text>
+            <ButtonKvNoDefaultTextOnly
+              onPress={handleSyncScriptsToSession}
+              styleView={styles.btnSyncScriptsToSession}
+              styleText={styles.btnSyncScriptsToSessionText}
+            >
+              Update Delta Time of selected script
+            </ButtonKvNoDefaultTextOnly>
+          </View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -335,9 +430,62 @@ const styles = StyleSheet.create({
   },
   vwScriptRow: {
     flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "center",
-    gap: 10,
+    // gap: 10,
     padding: 10,
-    backgroundColor: "green",
+    backgroundColor: "#E8E8E8",
+    width: Dimensions.get("window").width * 0.8,
+    borderRadius: 10,
+    borderColor: "#806181",
+    borderWidth: 1,
+  },
+  vwScriptRowSelected: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    // gap: 10,
+    padding: 10,
+    backgroundColor: "#E8E8E8",
+    width: Dimensions.get("window").width * 0.8,
+    borderRadius: 10,
+    borderColor: "#806181",
+    borderWidth: 10,
+  },
+  vwScriptDetailsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "space-between",
+    gap: 10,
+    width: "100%",
+  },
+  vwScriptDeltaTimeRow: {
+    width: Dimensions.get("window").width * 0.8,
+    // flexDirection: "row",
+    // alignItems: "center",
+    // gap: 10,
+    // padding: 10,
+    // backgroundColor: "blue",
+  },
+  vwBottomButtonContainer: {
+    marginTop: 20,
+    alignItems: "center",
+    // flexDirection: "row",
+    // backgroundColor: "green",
+    width: "100%",
+    justifyContent: "space-between",
+    // paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  btnSyncScriptsToSession: {
+    // backgroundColor: "black",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    backgroundColor: "#806181",
+  },
+  btnSyncScriptsToSessionText: {
+    color: "white",
+    fontSize: 16,
   },
 });
