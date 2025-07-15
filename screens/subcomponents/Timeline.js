@@ -70,6 +70,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#170418",
     overflow: "visible",
     position: "relative",
+    borderRadius: 10,
+    overflow: "hidden",
   },
   vwTimelineProgress: {
     height: "100%",

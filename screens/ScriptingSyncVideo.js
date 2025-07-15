@@ -220,7 +220,7 @@ export default function ScriptingSyncVideo({ navigation }) {
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topHeight="20%"
-      topChildren={<Text>ScriptingSyncVideo Screen</Text>}
+      topChildren={<Text>Synchronize Video</Text>}
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
@@ -284,7 +284,7 @@ export default function ScriptingSyncVideo({ navigation }) {
           >
             <GestureHandlerRootView style={styles.gestureViewTimeline}>
               <Timeline
-                timelineWidth={Dimensions.get("window").width}
+                timelineWidth={Dimensions.get("window").width * 0.8}
                 playerRef={playerRef}
                 currentTime={currentTime}
                 duration={duration}
@@ -324,13 +324,13 @@ export default function ScriptingSyncVideo({ navigation }) {
             keyExtractor={(item) => item.scriptId.toString()}
           />
           <View style={styles.vwBottomButtonContainer}>
-            <Text> Modify Delta Time </Text>
+            {/* <Text> Modify Delta Time </Text> */}
             <ButtonKvNoDefaultTextOnly
               onPress={handleSyncScriptsToSession}
               styleView={styles.btnSyncScriptsToSession}
               styleText={styles.btnSyncScriptsToSessionText}
             >
-              Update Delta Time of selected script
+              Update delta time of selected script
             </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
@@ -344,12 +344,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerTop: {
+    height: 5,
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
-    borderWidth: 4,
-    borderColor: "gray",
-    borderStyle: "dashed",
+    // padding: 20,
+    // borderWidth: 4,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
   },
 
   // ----- TOP Childeren -----
@@ -410,10 +411,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   vwDisplayTime: {
-    // flexDirection: "row",
-    // alignItems: "center",
     gap: 10,
-    // backgroundColor: "blue",
+  },
+  gestureViewTimeline: {
+    // width: Dimensions.get("window").width * 0.8,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   // -----
@@ -461,27 +464,19 @@ const styles = StyleSheet.create({
   },
   vwScriptDeltaTimeRow: {
     width: Dimensions.get("window").width * 0.8,
-    // flexDirection: "row",
-    // alignItems: "center",
-    // gap: 10,
-    // padding: 10,
-    // backgroundColor: "blue",
   },
   vwBottomButtonContainer: {
     marginTop: 20,
     alignItems: "center",
-    // flexDirection: "row",
-    // backgroundColor: "green",
     width: "100%",
     justifyContent: "space-between",
-    // paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 50,
   },
   btnSyncScriptsToSession: {
     // backgroundColor: "black",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 35,
     backgroundColor: "#806181",
   },
   btnSyncScriptsToSessionText: {
