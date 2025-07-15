@@ -1,6 +1,6 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.16.0
+#### v 0.17.0
 
 ## .env
 
@@ -30,7 +30,7 @@ EXPO_PUBLIC_ENVIRONMENT=workstation
     "mimeType": "video/mp4",
     "rotation": 0,
     "type": "video",
-    "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540costa-rica%252Fkyber-vision-mobile-16/ImagePicker/239b138b-1734-4528-b1f9-9dd9c3eaf7ee.mp4",
+    "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540costa-rica%252Fkyber-vision-mobile-17/ImagePicker/239b138b-1734-4528-b1f9-9dd9c3eaf7ee.mp4",
     "width": 478
   }
 ]
