@@ -4,7 +4,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SelectTeamScreen from "./screens/SelectTeamScreen";
-import CreateTribeScreen from "./screens/CreateTribeScreen";
+// import CreateTribeScreen from "./screens/CreateTribeScreen";
+import CreateTeamScreen from "./screens/CreateTeamScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ScriptingLive from "./screens/ScriptingLive";
 import ScriptingLiveSelectPlayers from "./screens/ScriptingLiveSelectPlayers";
@@ -36,10 +37,11 @@ export default function App() {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="SelectTeamScreen" component={SelectTeamScreen} />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="CreateTribeScreen"
             component={CreateTribeScreen}
-          />
+          /> */}
+          <Stack.Screen name="CreateTeamScreen" component={CreateTeamScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="ScriptingLive" component={ScriptingLive} />
           <Stack.Screen

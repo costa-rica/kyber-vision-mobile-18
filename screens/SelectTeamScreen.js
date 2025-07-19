@@ -127,17 +127,17 @@ export default function SelectTeamScreen({ navigation }) {
               style={styles.flatListTeamNames}
             />
           ) : (
-            <Text>No tribes found</Text>
+            <Text>No teams found</Text>
           )}
         </View>
         <View style={styles.containerBottom}>
           <View style={styles.vwInputGroup}>
             <ButtonKvNoDefaultTextOnly
-              onPress={() => navigation.navigate("CreateTribeScreen")}
+              onPress={() => navigation.navigate("CreateTeamScreen")}
               styleView={styles.btnTribe}
               styleText={styles.btnTribeText}
             >
-              Create Tribe
+              Create Team
             </ButtonKvNoDefaultTextOnly>
           </View>
           <View style={styles.vwInputGroup}>

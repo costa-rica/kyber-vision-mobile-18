@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import SwitchKv from "./subcomponents/SwitchKv";
 
-export default function CreateTribeScreen({ navigation }) {
+export default function CreateTribeScreenOBE({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const [teamsArray, setTeamsArray] = useState([]);
   const [isSuperUser, setIsSuperUser] = useState(false);
