@@ -5,7 +5,8 @@ import { useState } from "react";
 
 export default function ModalAddPlayer({ addPlayerToTeam }) {
   const [playerObject, setPlayerObject] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     shirtNumber: null,
     position: "",
     positionAbbreviation: "",
@@ -37,23 +38,46 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
     });
   };
 
+  const validatePlayer = () => {
+    const { firstName, lastName, shirtNumber } = playerObject;
+
+    if (!firstName.trim()) {
+      alert("Please enter a player name.");
+      return false;
+    }
+
+    if (!lastName.trim()) {
+      alert("Please enter a player name.");
+      return false;
+    }
+
+    const shirtNumberStr = shirtNumber?.toString() || "";
+    const isValidNumber = /^\d{1,2}$/.test(shirtNumberStr);
+
+    if (!isValidNumber) {
+      alert("Shirt number must be 1 or 2 digits.");
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <View style={styles.modalContent}>
       {/* <Text style={{ fontSize: 18, marginBottom: 20 }}>Add Player</Text> */}
       <View style={styles.containerTop}>
         <View style={styles.vwInputs}>
-          <View style={styles.vwInputGroupName}>
+          <View style={styles.vwInputGroupFirstName}>
             <View style={styles.vwInputGroupLabelMultipleFonts}>
-              <Text style={styles.txtInputGroupLabel}>Name</Text>
-              <Text style={styles.txtInputGroupLabelRequired}>*</Text>
+              <Text style={styles.txtInputGroupLabel}>First Name</Text>
             </View>
             <View style={styles.vwInputWrapper}>
               <TextInput
-                placeholder="Earvin Ngapeth"
+                placeholder="Earvin"
                 placeholderTextColor="gray"
-                value={playerObject.name}
+                value={playerObject.firstName}
                 onChangeText={(text) =>
-                  setPlayerObject({ ...playerObject, name: text })
+                  setPlayerObject({ ...playerObject, firstName: text })
                 }
                 style={
                   playerObject.name === ""
@@ -78,6 +102,26 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
                 }
                 style={
                   playerObject.shirtNumber === ""
+                    ? styles.txtPlaceholder
+                    : styles.txtInputRegularShirtNumber
+                }
+              />
+            </View>
+          </View>
+          <View style={styles.vwInputGroupLastName}>
+            <View style={styles.vwInputGroupLabelMultipleFonts}>
+              <Text style={styles.txtInputGroupLabel}>Last Name</Text>
+            </View>
+            <View style={styles.vwInputWrapper}>
+              <TextInput
+                placeholder="Ngapeth"
+                placeholderTextColor="gray"
+                value={playerObject.lastName}
+                onChangeText={(text) =>
+                  setPlayerObject({ ...playerObject, lastName: text })
+                }
+                style={
+                  playerObject.name === ""
                     ? styles.txtPlaceholder
                     : styles.txtInputRegular
                 }
@@ -109,8 +153,9 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
       <View style={styles.containerBottom}>
         <ButtonKvStd
           onPress={() => {
-            // console.log(playerObject);
-            addPlayerToTeam(playerObject);
+            if (validatePlayer()) {
+              addPlayerToTeam(playerObject);
+            }
           }}
           style={styles.btnAddPlayer}
         >
@@ -147,18 +192,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     // padding: 10,
     flexDirection: "row",
-    gap: 10,
+    flexWrap: "wrap",
+    // gap: 10,
   },
 
-  vwInputGroupName: {
-    width: "80%",
+  vwInputGroupFirstName: {
     alignItems: "flex-start",
-    marginTop: 10,
+    width: "80%",
+  },
+  vwInputGroupLastName: {
+    alignItems: "flex-start",
+    width: "100%",
   },
   vwInputGroupShirtNumber: {
     width: "15%",
     alignItems: "flex-start",
     marginTop: 10,
+    marginLeft: 10,
   },
   vwInputGroupLabelMultipleFonts: {
     flexDirection: "row",
@@ -199,15 +249,24 @@ const styles = StyleSheet.create({
   // },
   txtPlaceholder: {
     flex: 1,
-    paddingVertical: 15,
+    height: 45,
     paddingHorizontal: 10,
     color: "gray",
     fontStyle: "italic",
   },
   txtInputRegular: {
     flex: 1,
-    paddingVertical: 15,
+    height: 45,
     paddingHorizontal: 10,
+    color: "black",
+    fontStyle: "normal",
+  },
+  txtInputRegularShirtNumber: {
+    flex: 1,
+    height: 45,
+    width: 20,
+    // paddingVertical: 15,
+    // paddingHorizontal: 10,
     color: "black",
     fontStyle: "normal",
   },

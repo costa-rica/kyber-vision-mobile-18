@@ -36,7 +36,8 @@ import {
 
 export default function ScriptingLivePortrait(props) {
   const scriptReducer = useSelector((state) => state.script);
-  const userReducer = useSelector((state) => state.user);
+  // const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
 
   const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
@@ -124,7 +125,7 @@ export default function ScriptingLivePortrait(props) {
           <View style={styles.vwTeamNameSub}>
             <Text style={styles.txtTeamName}>
               {
-                userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
+                teamReducer.teamsArray.filter((tribe) => tribe.selected)[0]
                   .teamName
               }
             </Text>
@@ -574,7 +575,7 @@ export default function ScriptingLivePortrait(props) {
             >
               Send script to{" "}
               {
-                userReducer.teamsArray.filter((tribe) => tribe.selected)[0]
+                teamReducer.teamsArray.filter((tribe) => tribe.selected)[0]
                   .teamName
               }
             </ButtonKvStd>

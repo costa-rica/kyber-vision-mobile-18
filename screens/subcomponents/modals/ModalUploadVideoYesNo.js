@@ -11,7 +11,7 @@ import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefault from "../buttons/ButtonKvNoDefault";
 import { useSelector } from "react-redux";
 
-export default function ModalYesNo({ onPressYes }) {
+export default function ModalUploadVideoYesNo({ onPressYes }) {
   const uploadReducer = useSelector((state) => state.upload);
   return (
     <View style={styles.modalContent}>

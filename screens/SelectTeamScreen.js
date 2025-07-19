@@ -13,10 +13,11 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTeamsArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/team";
 
 export default function SelectTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
 
   const fetchTeams = async () => {
@@ -88,7 +89,7 @@ export default function SelectTeamScreen({ navigation }) {
     return (
       <Pressable
         onPress={() => {
-          const tempArray = userReducer.teamsArray.map((team) => {
+          const tempArray = teamReducer.teamsArray.map((team) => {
             if (team.id === item.id) {
               return {
                 ...team,
@@ -119,9 +120,22 @@ export default function SelectTeamScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <Tribe />
-          {userReducer.teamsArray?.length > 0 ? (
+          {/* {teamReducer.teamsArray.map((item) => {
+            return (
+              <View style={styles.vwTeamRow} key={item.id}>
+                <Text>{item.teamName}</Text>
+              </View>
+            );
+          })} */}
+          {/* <FlatList
+            data={teamReducer.teamsArray}
+            renderItem={createTribeRow}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.flatListTeamNames}
+          /> */}
+          {teamReducer.teamsArray?.length > 0 ? (
             <FlatList
-              data={userReducer.teamsArray}
+              data={teamReducer.teamsArray}
               renderItem={createTribeRow}
               keyExtractor={(item) => item.id.toString()}
               style={styles.flatListTeamNames}
@@ -143,12 +157,12 @@ export default function SelectTeamScreen({ navigation }) {
           <View style={styles.vwInputGroup}>
             <ButtonKvNoDefaultTextOnly
               active={
-                userReducer.teamsArray.filter((tribe) => tribe.selected)
+                teamReducer.teamsArray.filter((tribe) => tribe.selected)
                   .length > 0
               }
               onPress={() => {
                 if (
-                  userReducer.teamsArray.filter((tribe) => tribe.selected)
+                  teamReducer.teamsArray.filter((tribe) => tribe.selected)
                     .length > 0
                 ) {
                   navigation.navigate("HomeScreen");
@@ -158,7 +172,7 @@ export default function SelectTeamScreen({ navigation }) {
               }}
               styleView={styles.btnTribe}
               styleText={
-                userReducer.teamsArray.filter((tribe) => tribe.selected)
+                teamReducer.teamsArray.filter((tribe) => tribe.selected)
                   .length > 0
                   ? styles.btnTribeText
                   : styles.btnTribeTextInactive

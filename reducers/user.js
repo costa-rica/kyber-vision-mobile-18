@@ -7,7 +7,7 @@ const initialState = {
     email: null,
   },
   // tribeArray: [],
-  teamsArray: [],
+  // teamsArray: [],
   // playersArray: [],
   portraitHeight: null,
   portraitWidth: null,
@@ -123,10 +123,10 @@ export const userSlice = createSlice({
       state.scriptPositionGuides = !state.scriptPositionGuides;
     },
     // updateTribeArray: (state, action) => {
-    updateTeamsArray: (state, action) => {
-      // console.log(" 🟢 updateTribeArray");
-      state.teamsArray = action.payload;
-    },
+    // updateTeamsArray: (state, action) => {
+    //   // console.log(" 🟢 updateTribeArray");
+    //   state.teamsArray = action.payload;
+    // },
     // updatePlayersArray: (state, action) => {
     //   state.playersArray = action.payload;
     // },
@@ -140,7 +140,7 @@ export const {
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
   // updateTribeArray,
-  updateTeamsArray,
+  // updateTeamsArray,
   // updatePlayersArray,
 } = userSlice.actions;
 export default userSlice.reducer;

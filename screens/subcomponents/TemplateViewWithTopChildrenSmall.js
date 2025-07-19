@@ -26,13 +26,11 @@ export default function TemplateViewWithTopChildrenSmall({
     useState: false,
     useStateSetter: () => {},
   },
+  onBackPress = () => {},
 }) {
   const uploadReducer = useSelector((state) => state.upload);
   const handleBackPress = async () => {
-    // await ScreenOrientation.lockAsync(
-    //   ScreenOrientation.OrientationLock.PORTRAIT_UP
-    // ); // Force back to portrait
-    // setOrientation("portrait");
+    onBackPress();
     navigation.goBack();
   };
 

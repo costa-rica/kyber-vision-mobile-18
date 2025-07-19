@@ -26,6 +26,7 @@ import {
 export default function ScriptingLiveSelectPlayers({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
+  const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
   const [displayWarning, setDisplayWarning] = useState(false);
 
@@ -33,7 +34,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     <View style={styles.vwTopChildren}>
       <Text style={styles.txtTopChildren}>Scripting Live Select Players</Text>
       <Text style={styles.txtSelectedTribeName}>
-        {userReducer.teamsArray.find((tribe) => tribe.selected)?.teamName}
+        {teamReducer.teamsArray.find((tribe) => tribe.selected)?.teamName}
       </Text>
     </View>
   );
@@ -41,7 +42,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
   const fetchPlayers = async () => {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
-        userReducer.teamsArray.find((tribe) => tribe.selected)?.id
+        teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       }`,
       {
         method: "GET",

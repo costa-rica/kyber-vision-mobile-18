@@ -12,11 +12,12 @@ import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateTeamsArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/team";
 import { updateSessionsArray } from "../reducers/script";
 
 export default function HomeScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
   const [isVisibleModalSelectSession, setIsVisibleModalSelectSession] =
@@ -24,7 +25,7 @@ export default function HomeScreen({ navigation }) {
   const [sessionsArray, setSessionsArray] = useState([]);
 
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.teamsArray.map((team) => ({
+    const updatedArray = teamReducer.teamsArray.map((team) => ({
       ...team,
       selected: team.id === selectedId,
     }));
@@ -42,7 +43,7 @@ export default function HomeScreen({ navigation }) {
             {displayTeamList ? (
               // <View style={styles.vwDropdownList}>
               <View>
-                {userReducer.teamsArray.map((tribe) => (
+                {teamReducer.teamsArray.map((tribe) => (
                   <TouchableOpacity
                     key={tribe.id}
                     onPress={() => handleTribeSelect(tribe.id)}
@@ -61,7 +62,7 @@ export default function HomeScreen({ navigation }) {
               </View>
             ) : (
               <Text style={styles.txtTopChildSelectedTribeName}>
-                {userReducer.teamsArray.find((tribe) => tribe.selected)
+                {teamReducer.teamsArray.find((tribe) => tribe.selected)
                   ?.teamName || "No tribe selected"}
               </Text>
             )}
@@ -93,11 +94,11 @@ export default function HomeScreen({ navigation }) {
   const fetchSessionsArray = async () => {
     console.log(" -- fetchSessionsArray ---");
 
-    console.log(userReducer.teamsArray.filter((team) => team.selected)[0].id);
+    console.log(teamReducer.teamsArray.filter((team) => team.selected)[0].id);
     const response = await fetch(
       // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
       `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
-        userReducer.teamsArray.filter((team) => team.selected)[0].id
+        teamReducer.teamsArray.filter((team) => team.selected)[0].id
       }`,
       {
         method: "GET",

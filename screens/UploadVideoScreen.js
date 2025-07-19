@@ -26,7 +26,7 @@ import * as ImagePicker from "expo-image-picker";
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
-import ModalYesNo from "./subcomponents/modals/ModalYesNo";
+import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
 
 export default function UploadVideoScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -44,7 +44,7 @@ export default function UploadVideoScreen({ navigation }) {
     fetchUserVideosArray();
   }, []);
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.teamsArray.map((team) => ({
+    const updatedArray = teamReducer.teamsArray.map((team) => ({
       ...team,
       selected: team.id === selectedId,
     }));
@@ -61,7 +61,7 @@ export default function UploadVideoScreen({ navigation }) {
             {displayTeamList ? (
               // <View style={styles.vwDropdownList}>
               <View>
-                {userReducer.teamsArray.map((tribe) => (
+                {teamReducer.teamsArray.map((tribe) => (
                   <TouchableOpacity
                     key={tribe.id}
                     onPress={() => handleTribeSelect(tribe.id)}
@@ -80,7 +80,7 @@ export default function UploadVideoScreen({ navigation }) {
               </View>
             ) : (
               <Text style={styles.txtTopChildSelectedTribeName}>
-                {userReducer.teamsArray.find((tribe) => tribe.selected)
+                {teamReducer.teamsArray.find((tribe) => tribe.selected)
                   ?.teamName || "No tribe selected"}
               </Text>
             )}
@@ -255,7 +255,9 @@ export default function UploadVideoScreen({ navigation }) {
 
     if (isVisibleModalDeleteVideo) {
       return {
-        modalComponent: <ModalYesNo onPressYes={handleDeleteVideo} />,
+        modalComponent: (
+          <ModalUploadVideoYesNo onPressYes={handleDeleteVideo} />
+        ),
         useState: isVisibleModalDeleteVideo,
         useStateSetter: setIsVisibleModalDeleteVideo,
       };

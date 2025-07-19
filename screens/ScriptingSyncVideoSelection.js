@@ -24,7 +24,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
   const [userVideosArray, setUserVideosArray] = useState([]);
 
   const handleTribeSelect = (selectedId) => {
-    const updatedArray = userReducer.teamsArray.map((tribe) => ({
+    const updatedArray = teamReducer.teamsArray.map((tribe) => ({
       ...tribe,
       selected: tribe.id === selectedId,
     }));
@@ -43,7 +43,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
             {displayTribeList ? (
               // <View style={styles.vwDropdownList}>
               <View>
-                {userReducer.teamsArray.map((tribe) => (
+                {teamReducer.teamsArray.map((tribe) => (
                   <TouchableOpacity
                     key={tribe.id}
                     onPress={() => handleTribeSelect(tribe.id)}
@@ -62,7 +62,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
               </View>
             ) : (
               <Text style={styles.txtTopChildSelectedTribeName}>
-                {userReducer.teamsArray.find((tribe) => tribe.selected)
+                {teamReducer.teamsArray.find((tribe) => tribe.selected)
                   ?.teamName || "No tribe selected"}
               </Text>
             )}
@@ -186,7 +186,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
     } else {
       fetchUserVideosArray();
       // fetchVideoArray(
-      //   userReducer.teamsArray.find((tribe) => tribe.selected)?.id
+      //   teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       // );
     }
   }, []);

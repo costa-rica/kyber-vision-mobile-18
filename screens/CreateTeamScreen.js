@@ -7,23 +7,37 @@ import {
   FlatList,
   Pressable,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import ModalAddPlayer from "./subcomponents/modals/ModalAddPlayer";
+import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
+import ModalTeamYesNo from "./subcomponents/modals/ModalTeamYesNo";
+import { useDispatch } from "react-redux";
+import {
+  updatePlayersArray,
+  updateSelectedPlayerObject,
+  updateTeamDetails,
+  clearTeamReducer,
+  updateTeamsArray,
+} from "../reducers/team";
 
 export default function CreateTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const [playersArray, setPlayersArray] = useState([]);
-  const [teamInputs, setTeamInputs] = useState({
-    teamName: "",
-    teamDescription: "",
-    teamImage: null,
-  });
+  const teamReducer = useSelector((state) => state.team);
+  const dispatch = useDispatch();
+  // const [playersArray, setPlayersArray] = useState([]);
+  // const [teamInputs, setTeamInputs] = useState({
+  //   teamName: "",
+  //   teamDescription: "",
+  //   teamImage: null,
+  // });
   const [isVisibleModalAddPlayer, setIsVisibleModalAddPlayer] = useState(false);
+  const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] =
+    useState(false);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -31,7 +45,7 @@ export default function CreateTeamScreen({ navigation }) {
     </View>
   );
 
-  const teamRosterTableRow = ({ item }) => {
+  const teamTablePlayerRow = ({ item }) => {
     if (item.name === "Add Player") {
       return (
         <View style={styles.vwPlayerRowAddPlayerButton}>
@@ -46,22 +60,30 @@ export default function CreateTeamScreen({ navigation }) {
       );
     }
     return (
-      <View style={styles.vwPlayerRow}>
+      <TouchableOpacity
+        style={styles.vwPlayerRow}
+        onPress={() => {
+          dispatch(updateSelectedPlayerObject(item));
+          setIsVisibleRemovePlayerModal(true);
+        }}
+      >
         <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowLeft]}>
           <Text style={styles.txtPlayerName}>{item.shirtNumber}</Text>
         </View>
         <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowMiddle]}>
-          <Text style={styles.txtPlayerName}>{item.name}</Text>
+          <Text style={styles.txtPlayerName}>
+            {item.firstName} {item.lastName}
+          </Text>
         </View>
         <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowRight]}>
           <Text style={styles.txtPlayerName}>{item.positionAbbreviation}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const addPlayerToTeam = (playerObject) => {
-    const filteredPlayers = playersArray.filter(
+    const filteredPlayers = teamReducer.playersArray.filter(
       (item) => item.name !== "Add Player"
     );
 
@@ -73,34 +95,102 @@ export default function CreateTeamScreen({ navigation }) {
       position: "",
     });
 
-    setPlayersArray(updatedArray);
+    dispatch(updatePlayersArray(updatedArray));
     setIsVisibleModalAddPlayer(false);
   };
-  // const addPlayerToTeam = (playerObject) => {
-  //   const addPlayerElementFromPlayersArray = playersArray.filter(
-  //     (item) => item.name === "Add Player"
-  //   );
-  //   const nonAddPlayerElementsFromPlayersArray = playersArray.filter(
-  //     (item) => item.name !== "Add Player"
-  //   );
-  //   const tempArray = [
-  //     ...nonAddPlayerElementsFromPlayersArray,
-  //     ...addPlayerElementFromPlayersArray,
-  //   ];
-  //   tempArray.push(playerObject);
-  //   setPlayersArray(tempArray);
-  //   setIsVisibleModalAddPlayer(false);
-  // };
+
+  const handleCreateTeam = async () => {
+    console.log("handleCreateTeam");
+    const playersArrayMinusAddPlayer = teamReducer.playersArray.filter(
+      (item) => item.name !== "Add Player"
+    );
+
+    if (playersArrayMinusAddPlayer.length === 0) {
+      alert("Please add at least one player to the team.");
+      return;
+    }
+    if (teamReducer.teamDetails?.teamName === "") {
+      alert("Please enter a team name.");
+      return;
+    }
+    const bodyObj = {
+      teamName: teamReducer.teamDetails?.teamName,
+      description: teamReducer.teamDetails?.teamDescription,
+      playersArray: playersArrayMinusAddPlayer,
+    };
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/teams/create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      alert("Team created successfully");
+      let tempArray = [...teamReducer.teamsArray];
+      tempArray.push(resJson.teamNew);
+      dispatch(updateTeamsArray(tempArray));
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+  };
+
+  const handleRemovePlayer = () => {
+    const filteredPlayers = teamReducer.playersArray.filter((item) => {
+      console.log(
+        "item.shirtNumber !== playerObject.shirtNumber",
+        item.shirtNumber !== teamReducer.selectedPlayerObject.shirtNumber
+      );
+      return item.shirtNumber !== teamReducer.selectedPlayerObject.shirtNumber;
+    });
+    // console.log("filteredPlayers", filteredPlayers);
+    dispatch(updatePlayersArray(filteredPlayers));
+    setIsVisibleRemovePlayerModal(false);
+  };
+
+  const whichModalToDisplay = () => {
+    if (isVisibleModalAddPlayer) {
+      return {
+        modalComponent: <ModalAddPlayer addPlayerToTeam={addPlayerToTeam} />,
+        useState: isVisibleModalAddPlayer,
+        useStateSetter: setIsVisibleModalAddPlayer,
+      };
+    }
+
+    if (isVisibleRemovePlayerModal) {
+      return {
+        modalComponent: <ModalTeamYesNo onPressYes={handleRemovePlayer} />,
+        useState: isVisibleRemovePlayerModal,
+        useStateSetter: setIsVisibleRemovePlayerModal,
+      };
+    }
+  };
 
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
-      modalComponentAndSetterObject={{
-        modalComponent: <ModalAddPlayer addPlayerToTeam={addPlayerToTeam} />,
-        useState: isVisibleModalAddPlayer,
-        useStateSetter: setIsVisibleModalAddPlayer,
-      }}
+      // onBackPress={() => dispatch(clearTeamReducer())}
+      onBackPress={() => dispatch(clearTeamReducer())}
+      // modalComponentAndSetterObject={{
+      //   modalComponent: <ModalAddPlayer addPlayerToTeam={addPlayerToTeam} />,
+      //   useState: isVisibleModalAddPlayer,
+      //   useStateSetter: setIsVisibleModalAddPlayer,
+      // }}
+      modalComponentAndSetterObject={whichModalToDisplay()}
       //   topHeight={"20%"}
     >
       <View style={styles.container}>
@@ -115,14 +205,20 @@ export default function CreateTeamScreen({ navigation }) {
                 <TextInput
                   placeholder="Région M Aix-en-Provence"
                   placeholderTextColor="gray"
-                  value={teamInputs.teamName}
+                  value={teamReducer.teamDetails?.teamName}
                   onChangeText={(text) =>
-                    setTeamInputs({ ...teamInputs, teamName: text })
+                    // setTeamInputs({ ...teamInputs, teamName: text })
+                    dispatch(
+                      updateTeamDetails({
+                        ...teamReducer.teamDetails,
+                        teamName: text,
+                      })
+                    )
                   }
                   style={
-                    teamInputs.teamName === ""
-                      ? styles.txtPlaceholder
-                      : styles.txtInputRegular
+                    teamReducer.teamDetails?.teamName !== ""
+                      ? styles.txtInputRegular
+                      : styles.txtPlaceholder
                   }
                 />
               </View>
@@ -135,15 +231,21 @@ export default function CreateTeamScreen({ navigation }) {
                 <TextInput
                   placeholder="A team under the sun"
                   placeholderTextColor="gray"
-                  value={teamInputs.teamDescription}
+                  value={teamReducer.teamDetails?.teamDescription}
                   onChangeText={(text) =>
-                    setTeamInputs({ ...teamInputs, teamDescription: text })
+                    // setTeamInputs({ ...teamInputs, teamDescription: text })
+                    dispatch(
+                      updateTeamDetails({
+                        ...teamReducer.teamDetails,
+                        teamDescription: text,
+                      })
+                    )
                   }
                   // style={styles.txtInput}
                   style={
-                    teamInputs.teamDescription === ""
-                      ? styles.txtPlaceholder
-                      : styles.txtInputRegular
+                    teamReducer.teamDetails?.teamDescription !== ""
+                      ? styles.txtInputRegular
+                      : styles.txtPlaceholder
                   }
                 />
               </View>
@@ -155,11 +257,10 @@ export default function CreateTeamScreen({ navigation }) {
           <Text style={styles.txtInputGroupLabel}>Team roster</Text>
 
           <View style={styles.vwRosterTable}>
-            {playersArray.length > 0 ? (
+            {teamReducer.playersArray.length > 0 ? (
               <FlatList
-                data={playersArray}
-                renderItem={teamRosterTableRow}
-                // keyExtractor={(item) => item.id.toString()}
+                data={teamReducer.playersArray}
+                renderItem={teamTablePlayerRow}
                 keyExtractor={(item) => item.shirtNumber}
                 style={styles.flatListTeamNames}
               />
@@ -167,7 +268,7 @@ export default function CreateTeamScreen({ navigation }) {
               <Text>No players found</Text>
             )}
 
-            {playersArray.length === 0 && (
+            {teamReducer.playersArray.length === 0 && (
               <View style={styles.vwNewPlayerWhenNoPlayers}>
                 <ButtonKvNoDefaultTextOnly
                   onPress={() => setIsVisibleModalAddPlayer(true)}
@@ -182,7 +283,10 @@ export default function CreateTeamScreen({ navigation }) {
 
           {/* <View style={styles.vwInputGroup}> */}
           <ButtonKvStd
-            onPress={() => console.log("Create Team")}
+            onPress={() => {
+              console.log("Create Team");
+              handleCreateTeam();
+            }}
             style={styles.btnTribe}
           >
             Create Team

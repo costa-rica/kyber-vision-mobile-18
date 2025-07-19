@@ -31,6 +31,7 @@ function formatSessionDateToLocal(dateString) {
 export default function ScriptingLiveSelectSession({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
+  const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
   // const [displayWarning, setDisplayWarning] = useState(false);
   const [isVisibleModalCreateSession, setIsVisibleModalCreateSession] =
@@ -42,7 +43,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     <View style={styles.vwTopChildren}>
       <Text style={styles.txtTopChildren}>Scripting Live Select Session</Text>
       <Text style={styles.txtSelectedTribeName}>
-        {userReducer.teamsArray.find((tribe) => tribe.selected)?.teamName}
+        {teamReducer.teamsArray.find((tribe) => tribe.selected)?.teamName}
       </Text>
     </View>
   );
@@ -57,7 +58,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
 
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/leagues/${
-        userReducer.teamsArray.filter((team) => team.selected)[0].id
+        teamReducer.teamsArray.filter((team) => team.selected)[0].id
       }`,
       {
         method: "GET",

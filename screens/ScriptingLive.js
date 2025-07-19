@@ -654,10 +654,6 @@ export default function ScriptingLive({ navigation }) {
       scriptId: scriptReducer.scriptId,
     };
 
-    // console.log("-- bodyObj --");
-    // console.log(bodyObj);
-    // console.log("-- END bodyObj --");
-
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
       {
@@ -680,9 +676,10 @@ export default function ScriptingLive({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      console.log(`response ok`);
-      console.log(resJson);
       dispatch(updateScriptId(resJson.scriptId));
+      alert(
+        `${scriptReducer.sessionActionsArray.length} actions sent to server successfully`
+      );
     } else {
       const errorMessage =
         resJson?.error ||
