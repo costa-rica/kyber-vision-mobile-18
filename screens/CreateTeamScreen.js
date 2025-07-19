@@ -17,9 +17,7 @@ import ModalAddPlayer from "./subcomponents/modals/ModalAddPlayer";
 
 export default function CreateTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const [playersArray, setPlayersArray] = useState([
-    { playerName: "Add Player", shirtNumber: 9999, position: "" },
-  ]);
+  const [playersArray, setPlayersArray] = useState([]);
   const [teamInputs, setTeamInputs] = useState({
     teamName: "",
     teamDescription: "",
@@ -34,11 +32,11 @@ export default function CreateTeamScreen({ navigation }) {
   );
 
   const teamRosterTableRow = ({ item }) => {
-    if (item.playerName === "Add Player") {
+    if (item.name === "Add Player") {
       return (
-        <View style={styles.vwPlayerRow}>
+        <View style={styles.vwPlayerRowAddPlayerButton}>
           <ButtonKvNoDefaultTextOnly
-            onPress={() => console.log("Add Player")}
+            onPress={() => setIsVisibleModalAddPlayer(true)}
             styleView={styles.btnAddPlayer}
             styleText={styles.btnAddPlayerText}
           >
@@ -49,17 +47,50 @@ export default function CreateTeamScreen({ navigation }) {
     }
     return (
       <View style={styles.vwPlayerRow}>
-        <Text style={styles.txtPlayerName}>{item.playerName}</Text>
+        <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowLeft]}>
+          <Text style={styles.txtPlayerName}>{item.shirtNumber}</Text>
+        </View>
+        <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowMiddle]}>
+          <Text style={styles.txtPlayerName}>{item.name}</Text>
+        </View>
+        <View style={[styles.vwPlayerRowCircle, styles.vwPlayerRowRight]}>
+          <Text style={styles.txtPlayerName}>{item.positionAbbreviation}</Text>
+        </View>
       </View>
     );
   };
 
   const addPlayerToTeam = (playerObject) => {
-    const tempArray = [...playersArray];
-    tempArray.push(playerObject);
-    setPlayersArray(tempArray);
+    const filteredPlayers = playersArray.filter(
+      (item) => item.name !== "Add Player"
+    );
+
+    const updatedArray = [...filteredPlayers, playerObject];
+
+    updatedArray.push({
+      name: "Add Player",
+      shirtNumber: 9999,
+      position: "",
+    });
+
+    setPlayersArray(updatedArray);
     setIsVisibleModalAddPlayer(false);
   };
+  // const addPlayerToTeam = (playerObject) => {
+  //   const addPlayerElementFromPlayersArray = playersArray.filter(
+  //     (item) => item.name === "Add Player"
+  //   );
+  //   const nonAddPlayerElementsFromPlayersArray = playersArray.filter(
+  //     (item) => item.name !== "Add Player"
+  //   );
+  //   const tempArray = [
+  //     ...nonAddPlayerElementsFromPlayersArray,
+  //     ...addPlayerElementFromPlayersArray,
+  //   ];
+  //   tempArray.push(playerObject);
+  //   setPlayersArray(tempArray);
+  //   setIsVisibleModalAddPlayer(false);
+  // };
 
   return (
     <TemplateViewWithTopChildrenSmall
@@ -88,7 +119,11 @@ export default function CreateTeamScreen({ navigation }) {
                   onChangeText={(text) =>
                     setTeamInputs({ ...teamInputs, teamName: text })
                   }
-                  style={styles.txtInput}
+                  style={
+                    teamInputs.teamName === ""
+                      ? styles.txtPlaceholder
+                      : styles.txtInputRegular
+                  }
                 />
               </View>
             </View>
@@ -104,7 +139,12 @@ export default function CreateTeamScreen({ navigation }) {
                   onChangeText={(text) =>
                     setTeamInputs({ ...teamInputs, teamDescription: text })
                   }
-                  style={styles.txtInput}
+                  // style={styles.txtInput}
+                  style={
+                    teamInputs.teamDescription === ""
+                      ? styles.txtPlaceholder
+                      : styles.txtInputRegular
+                  }
                 />
               </View>
             </View>
@@ -115,7 +155,7 @@ export default function CreateTeamScreen({ navigation }) {
           <Text style={styles.txtInputGroupLabel}>Team roster</Text>
 
           <View style={styles.vwRosterTable}>
-            {playersArray.length > 1 ? (
+            {playersArray.length > 0 ? (
               <FlatList
                 data={playersArray}
                 renderItem={teamRosterTableRow}
@@ -127,7 +167,7 @@ export default function CreateTeamScreen({ navigation }) {
               <Text>No players found</Text>
             )}
 
-            {playersArray.length === 1 && (
+            {playersArray.length === 0 && (
               <View style={styles.vwNewPlayerWhenNoPlayers}>
                 <ButtonKvNoDefaultTextOnly
                   onPress={() => setIsVisibleModalAddPlayer(true)}
@@ -211,16 +251,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#fff",
   },
-  //   faIcon: {
-  //     marginRight: 8,
-  //   },
-  txtInput: {
+
+  txtPlaceholder: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    color: "gray",
+    fontStyle: "italic",
+  },
+  txtInputRegular: {
     flex: 1,
     paddingVertical: 15,
     paddingHorizontal: 10,
     color: "black",
-    fontStyle: "italic",
+    fontStyle: "normal",
   },
+
   txtInputGroupLabel: {
     fontSize: 14,
     color: "#5B5B5B",
@@ -280,11 +326,41 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  vwPlayerRow: {
+  vwPlayerRowAddPlayerButton: {
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: "#C0A9C0",
+    // backgroundColor: "#C0A9C0",
+  },
+  vwPlayerRow: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 2,
+    // backgroundColor: "#C0A9C0",
+    flexDirection: "row",
+    gap: 5,
+  },
+  vwPlayerRowCircle: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderStyle: "solid",
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+  },
+  vwPlayerRowLeft: {
+    width: "13%",
+  },
+  vwPlayerRowMiddle: {
+    width: "70%",
+    alignItems: "flex-start",
+    paddingLeft: 15,
+  },
+  vwPlayerRowRight: {
+    width: "13%",
   },
 });

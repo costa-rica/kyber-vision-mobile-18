@@ -8,28 +8,33 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
     name: "",
     shirtNumber: null,
     position: "",
+    positionAbbreviation: "",
   });
 
   const [positionArray, setPositionArray] = useState([
-    { position: "Outside hitter", selected: false },
-    { position: "Middle blocker", selected: false },
-    { position: "Setter", selected: false },
-    { position: "Opposite", selected: false },
-    { position: "Libero", selected: false },
-    { position: "Flex", selected: false },
+    { position: "Outside hitter", positionAbbreviation: "OH", selected: false },
+    { position: "Middle blocker", positionAbbreviation: "MB", selected: false },
+    { position: "Setter", positionAbbreviation: "SET", selected: false },
+    { position: "Opposite", positionAbbreviation: "OPP", selected: false },
+    { position: "Libero", positionAbbreviation: "L", selected: false },
+    { position: "Flex", positionAbbreviation: "Flex", selected: false },
   ]);
 
-  const handleSelectedPosition = (position) => {
+  const handleSelectedPosition = (positionItem) => {
     const tempArray = [...positionArray];
     tempArray.forEach((item) => {
-      if (item.position === position) {
+      if (item.position === positionItem.position) {
         item.selected = !item.selected;
       } else {
         item.selected = false;
       }
     });
     setPositionArray(tempArray);
-    setPlayerObject({ ...playerObject, position: position });
+    setPlayerObject({
+      ...playerObject,
+      position: positionItem.position,
+      positionAbbreviation: positionItem.positionAbbreviation,
+    });
   };
 
   return (
@@ -50,7 +55,11 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
                 onChangeText={(text) =>
                   setPlayerObject({ ...playerObject, name: text })
                 }
-                style={styles.txtInput}
+                style={
+                  playerObject.name === ""
+                    ? styles.txtPlaceholder
+                    : styles.txtInputRegular
+                }
               />
             </View>
           </View>
@@ -67,7 +76,11 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
                 onChangeText={(text) =>
                   setPlayerObject({ ...playerObject, shirtNumber: text })
                 }
-                style={styles.txtInputShirtNumber}
+                style={
+                  playerObject.shirtNumber === ""
+                    ? styles.txtPlaceholder
+                    : styles.txtInputRegular
+                }
               />
             </View>
           </View>
@@ -77,7 +90,7 @@ export default function ModalAddPlayer({ addPlayerToTeam }) {
         {positionArray.map((item, index) => (
           <ButtonKvNoDefaultTextOnly
             onPress={() => {
-              handleSelectedPosition(item.position);
+              handleSelectedPosition(item);
             }}
             styleView={
               item.selected ? styles.btnPositionSelected : styles.btnPosition
@@ -177,12 +190,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: "#fff",
   },
-  txtInput: {
+  // txtInput: {
+  //   flex: 1,
+  //   paddingVertical: 15,
+  //   paddingHorizontal: 10,
+  //   color: "black",
+  //   fontStyle: "italic",
+  // },
+  txtPlaceholder: {
+    flex: 1,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    color: "gray",
+    fontStyle: "italic",
+  },
+  txtInputRegular: {
     flex: 1,
     paddingVertical: 15,
     paddingHorizontal: 10,
     color: "black",
-    fontStyle: "italic",
+    fontStyle: "normal",
   },
   txtInputShirtNumber: {
     flex: 1,
