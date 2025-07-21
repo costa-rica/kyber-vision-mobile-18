@@ -34,7 +34,7 @@ export default function ScriptingSyncVideo({ navigation }) {
     );
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/sessions/${syncReducer.syncReducerSelectedVideoObject.session.id}/script-and-actions-for-syncing`,
+      `${process.env.EXPO_PUBLIC_API_URL}/sessions/scripting-sync-video-screen/get-actions-for-syncing/${syncReducer.syncReducerSelectedVideoObject.session.id}`,
       {
         method: "GET",
         headers: {
@@ -57,7 +57,13 @@ export default function ScriptingSyncVideo({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      const tempArray = resJson.formattedScriptsArray.map((item) => {
+      // const tempArray = resJson.formattedScriptsArray.map((item) => {
+      //   return {
+      //     ...item,
+      //     selected: false,
+      //   };
+      // });
+      const tempArray = resJson.actionsArrayByScript.map((item) => {
         return {
           ...item,
           selected: false,
@@ -160,19 +166,10 @@ export default function ScriptingSyncVideo({ navigation }) {
       alert("Please select a script");
       return;
     }
-    console.log("selectedScript.scriptId: ", selectedScript.scriptId);
-    console.log(
-      "selectedScript.deltaTimeInSeconds: ",
-      selectedScript.deltaTimeInSeconds
-    );
-    console.log(
-      "selectedScript.contractScriptVideoId : ",
-      selectedScript.contractScriptVideoId
-    );
-    console.log("currentTime: ", currentTime);
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-script-video/modify-delta-time/${selectedScript.contractScriptVideoId}`,
+      // `${process.env.EXPO_PUBLIC_API_URL}/contract-script-video/modify-delta-time/${selectedScript.contractScriptVideoId}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script/${selectedScript.scriptId}`,
       {
         method: "POST",
         headers: {
@@ -316,12 +313,19 @@ export default function ScriptingSyncVideo({ navigation }) {
                 </View>
                 <View style={styles.vwScriptDeltaTimeRow}>
                   <Text style={styles.scriptText}>
-                    Delta Time In Seconds: {item.deltaTimeInSeconds}
+                    Delta Time In Seconds: {item.deltaTimeInSeconds.toFixed(1)}
+                  </Text>
+                </View>
+                <View style={styles.vwScriptDeltaTimeRow}>
+                  <Text style={styles.scriptText}>
+                    Same delta for all actions in script:{" "}
+                    {item.deltaTimeInSecondsIsSameForAllActions ? "Yes" : "No"}
                   </Text>
                 </View>
               </ButtonKvNoDefault>
             )}
             keyExtractor={(item) => item.scriptId.toString()}
+            // keyExtractor={(item) => item.id.toString()}
           />
           <View style={styles.vwBottomButtonContainer}>
             {/* <Text> Modify Delta Time </Text> */}

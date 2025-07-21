@@ -655,7 +655,7 @@ export default function ScriptingLive({ navigation }) {
     };
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/scripts/receive-actions-array`,
+      `${process.env.EXPO_PUBLIC_API_URL}/scripts/scripting-live-screen/receive-actions-array`,
       {
         method: "POST",
         headers: {

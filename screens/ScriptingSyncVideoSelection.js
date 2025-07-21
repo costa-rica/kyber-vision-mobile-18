@@ -18,6 +18,7 @@ let reviewReducerOffline;
 
 export default function ScriptingSyncVideoSelection({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const [displayTribeList, setDisplayTribeList] = useState(false);
   const dispatch = useDispatch();
   const [videoArray, setVideoArray] = useState([]);

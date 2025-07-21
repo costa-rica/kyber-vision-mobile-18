@@ -31,6 +31,7 @@ import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo"
 export default function UploadVideoScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const uploadReducer = useSelector((state) => state.upload);
+  const teamReducer = useSelector((state) => state.team);
   const [displayTeamList, setDisplayTeamList] = useState(false);
   const dispatch = useDispatch();
   const [selectedVideosArray, setSelectedVideosArray] = useState([]);
