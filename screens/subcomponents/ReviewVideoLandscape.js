@@ -390,7 +390,8 @@ export default function ReviewVideoLandscape(props) {
             data={reviewReducer.reviewReducerActionsArray}
             renderItem={renderActionItem}
             keyExtractor={(item) =>
-              item.reviewVideoActionsArrayIndex.toString()
+              // item.reviewVideoActionsArrayIndex.toString()
+              item.reviewVideoActionsArrayIndex
             }
             horizontal={true}
             contentContainerStyle={stylesVwActionsFlatList}

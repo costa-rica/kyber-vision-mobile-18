@@ -23,6 +23,7 @@ import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 
 export default function ReviewSelectionScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const [displayTribeList, setDisplayTribeList] = useState(false);
   const dispatch = useDispatch();
   const [videoArray, setVideoArray] = useState([]);
@@ -131,10 +132,9 @@ export default function ReviewSelectionScreen({ navigation }) {
     }
   };
 
-  const handleVideoSelect = (videoObject) => {
+  const handleVideoSelect = async (videoObject) => {
     dispatch(updateReviewReducerVideoObject(videoObject));
-    // fetchActionsForMatch(videoObject.matchId);
-    fetchActionsForSession(videoObject.sessionId);
+    await fetchActionsForSession(videoObject.sessionId);
     navigation.navigate("ReviewVideo");
   };
 
@@ -152,7 +152,7 @@ export default function ReviewSelectionScreen({ navigation }) {
   const fetchVideoArrayOffline = () => {
     console.log("Fetched videos offline");
 
-    setVideoArray(reviewReducerOffline.videoArray);
+    setVideoArray(reviewReducerOffline.videosArray);
   };
 
   // fetch Actions for Match
@@ -167,8 +167,10 @@ export default function ReviewSelectionScreen({ navigation }) {
       console.log(` ** [online] Fetching actions for session: ${sessionId}`);
       try {
         const response = await fetch(
+          // ---- > HERE IS WHERE THE PROBLEM IS < --------
           // `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
-          `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
+          // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
+          `${process.env.EXPO_PUBLIC_API_URL}/sessions/review-selection-screen/get-actions/${sessionId}`,
           {
             method: "GET",
             headers: {
@@ -194,15 +196,19 @@ export default function ReviewSelectionScreen({ navigation }) {
       }
     }
 
-    // console.log("resJson: ", resJson);
-
+    console.log("----- resJson -------");
+    // console.log(JSON.stringify(resJson.actionsArray, null, 2));
     let tempCleanActionsArray = [];
+    let index = 0;
     for (const elem of resJson.actionsArray) {
+      index++;
+      // console.log("index: ", index);
+      // console.log("elem: ", elem);
       tempCleanActionsArray.push({
         actionsDbTableId: elem.id,
-        reviewVideoActionsArrayIndex: elem.reviewVideoActionsArrayIndex,
+        reviewVideoActionsArrayIndex: index,
         playerId: elem.playerId,
-        timestamp: elem.timestampFromStartOfVideo,
+        timestamp: elem.timestampFromStartOfVideo, // required for sync
         type: elem.type,
         subtype: elem.subtype,
         quality: elem.quality,
@@ -211,11 +217,19 @@ export default function ReviewSelectionScreen({ navigation }) {
         isPlaying: false,
       });
     }
-
     dispatch(createReviewActionsArray(tempCleanActionsArray));
+    console.log("----- populated ok tempCleanActionsArray -------");
+    // console.log(JSON.stringify(tempCleanActionsArray, null, 2));
 
     let tempPlayerDbObjectsArray = [];
+    // TEST Data
+    // const reviewReducerOffline = require("../offlineData/reviewReducer.json");
+    // const player_DbObjectsArray = reviewReducerOffline.playerDbObjectsArray;
+    // console.log("----- player_DbObjectsArray -------");
+    // console.log(JSON.stringify(player_DbObjectsArray, null, 2));
+
     for (const elem of resJson.playerDbObjectsArray) {
+      // for (const elem of player_DbObjectsArray) {
       tempPlayerDbObjectsArray.push({
         ...elem,
         isDisplayed: true,
@@ -227,6 +241,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       })
     );
   };
+  console.log("----- populated ok tempPlayerDbObjectsArray -------");
 
   const renderVideoItem = ({ item: video }) => (
     <TouchableOpacity

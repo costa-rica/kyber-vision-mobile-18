@@ -57,7 +57,7 @@ export default function LoginScreen({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      console.log(resJson);
+      // console.log(resJson);
       dispatch(
         loginUser({
           email: resJson.email,

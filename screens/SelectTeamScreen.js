@@ -62,8 +62,8 @@ export default function SelectTeamScreen({ navigation }) {
   };
 
   const fetchTeamsOffline = () => {
-    const tribesOffline = require("../offlineData/userReducer.json");
-    dispatch(updateTeamsArray(tribesOffline.teamsArray));
+    const teamReducerOffline = require("../offlineData/teamReducer.json");
+    dispatch(updateTeamsArray(teamReducerOffline.teamsArray));
   };
 
   useEffect(() => {

@@ -27,6 +27,14 @@ export default function ReviewVideo({ navigation, route }) {
   const reviewReducer = useSelector((state) => state.review);
   const userReducer = useSelector((state) => state.user);
 
+  // useEffect(() => {
+  //   console.log("in ReviewVideo useEffect");
+  //   // console.log(reviewReducer.reviewReducerVideoObject);
+  //   console.log(
+  //     JSON.stringify(reviewReducer.reviewReducerActionsArray[0], null, 2)
+  //   );
+  // }, []);
+
   // -------------
   // Orientation Stuff
   // -------------

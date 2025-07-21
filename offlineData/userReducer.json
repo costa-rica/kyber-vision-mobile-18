@@ -4,16 +4,6 @@
     "username": "guestUserOffline",
     "email": "guest@kybervision.app"
   },
-  "teamsArray": [
-    {
-      "city": "Venelles",
-      "coachName": "FILIPPO SCHIAVO",
-      "id": 2,
-      "practiceMatch": null,
-      "selected": false,
-      "teamName": "PAVVB"
-    }
-  ],
   "portraitHeight": 800,
   "portraitWidth": 400,
   "video": {
