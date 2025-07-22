@@ -99,9 +99,11 @@ export const scriptSlice = createSlice({
       // state.tokenWithUserId = null;
       state.sessionActionsArray = [];
     },
-    replaceScriptSessionActionsArray: (state, action) => {
-      state.sessionActionsArray = action.payload.sessionActionsArray;
-      // state.scriptId = action.payload?.scriptId;
+    updateScriptSessionActionsArray: (state, action) => {
+      console.log("--> updateScriptSessionActionsArray");
+
+      // state.sessionActionsArray = action.payload.sessionActionsArray;
+      state.sessionActionsArray = action.payload;
     },
     updateScriptingPlayerCount: (state, action) => {
       state.scriptingPlayerCount = action.payload;
@@ -227,7 +229,7 @@ export const {
   // newScript,
   // deleteScript,
   emptySessionActionsArray,
-  replaceScriptSessionActionsArray,
+  updateScriptSessionActionsArray,
   updateScriptingPlayerCount,
   updateQualityPropertyInObjectOfSessionActionsArray,
   updateTypePropertyInObjectOfSessionActionsArray,

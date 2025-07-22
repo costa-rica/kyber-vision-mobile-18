@@ -16,7 +16,7 @@ import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   // replaceScriptMatchActionsArray,
-  replaceScriptSessionActionsArray,
+  updateScriptSessionActionsArray,
   updatePlayersArray,
   setScriptingForPlayerObject,
   // updateScriptId,
@@ -634,7 +634,8 @@ export default function ScriptingLive({ navigation }) {
     let tempArray = [...scriptReducer.sessionActionsArray, newActionObj];
     tempArray.sort((a, b) => a.timestamp - b.timestamp);
     dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: tempArray })
+      // updateScriptSessionActionsArray({ sessionActionsArray: tempArray })
+      updateScriptSessionActionsArray(tempArray)
     );
   };
 
@@ -670,7 +671,8 @@ export default function ScriptingLive({ navigation }) {
 
     if (response.ok && resJson) {
       // dispatch(updateScriptId(resJson.scriptId));
-      disp;
+      // dispatch(emptySessionActionsArray());
+      dispatch(updateScriptSessionActionsArray([]));
       alert(
         `${scriptReducer.sessionActionsArray.length} actions sent to server successfully`
       );
@@ -701,9 +703,7 @@ export default function ScriptingLive({ navigation }) {
         : action
     );
 
-    dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
-    );
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
   const handleModifyPosition = (position) => {
     console.log(`lastActionPosition: ${position}`);
@@ -720,9 +720,7 @@ export default function ScriptingLive({ navigation }) {
         : action
     );
 
-    dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
-    );
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
   const handleModifyPlayer = (playerObj) => {
@@ -754,9 +752,7 @@ export default function ScriptingLive({ navigation }) {
         : action
     );
 
-    dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
-    );
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
   const handleModifyType = (type) => {
@@ -774,9 +770,7 @@ export default function ScriptingLive({ navigation }) {
         : action
     );
 
-    dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
-    );
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
   const handleModifySubtype = (subtype) => {
@@ -796,9 +790,7 @@ export default function ScriptingLive({ navigation }) {
         : action
     );
 
-    dispatch(
-      replaceScriptSessionActionsArray({ sessionActionsArray: updatedArray })
-    );
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
   // -----------------
