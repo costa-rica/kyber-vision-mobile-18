@@ -57,19 +57,13 @@ export default function ScriptingSyncVideo({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      // const tempArray = resJson.formattedScriptsArray.map((item) => {
-      //   return {
-      //     ...item,
-      //     selected: false,
-      //   };
-      // });
       const tempArray = resJson.actionsArrayByScript.map((item) => {
         return {
           ...item,
           selected: false,
         };
       });
-      console.log(`Count of scripts: ${tempArray.length}`);
+      // console.log(`Count of scripts: ${tempArray.length}`);
       // console.log(`tempArray: ${JSON.stringify(tempArray, null, 2)}`);
       setScriptsArray(tempArray);
     } else {
@@ -189,12 +183,8 @@ export default function ScriptingSyncVideo({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      console.log(`response ok`);
-      console.log(resJson);
       const tempArray = scriptsArray.map((item) => {
-        if (
-          item.contractScriptVideoId === selectedScript.contractScriptVideoId
-        ) {
+        if (item.scriptId === selectedScript.scriptId) {
           return {
             ...item,
             deltaTimeInSeconds: currentTime,
@@ -203,6 +193,7 @@ export default function ScriptingSyncVideo({ navigation }) {
           return item;
         }
       });
+
       setScriptsArray(tempArray);
       alert("Script delta time modified successfully");
     } else {
