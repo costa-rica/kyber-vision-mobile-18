@@ -8,6 +8,7 @@ import {
   Pressable,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
@@ -136,10 +137,15 @@ export default function CreateTeamScreen({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      alert("Team created successfully");
       let tempArray = [...teamReducer.teamsArray];
       tempArray.push(resJson.teamNew);
       dispatch(updateTeamsArray(tempArray));
+      Alert.alert("Team created successfully", "", [
+        {
+          text: "OK",
+          onPress: () => navigation.goBack(),
+        },
+      ]);
     } else {
       const errorMessage =
         resJson?.error ||
@@ -183,15 +189,8 @@ export default function CreateTeamScreen({ navigation }) {
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
-      // onBackPress={() => dispatch(clearTeamReducer())}
       onBackPress={() => dispatch(clearTeamReducer())}
-      // modalComponentAndSetterObject={{
-      //   modalComponent: <ModalAddPlayer addPlayerToTeam={addPlayerToTeam} />,
-      //   useState: isVisibleModalAddPlayer,
-      //   useStateSetter: setIsVisibleModalAddPlayer,
-      // }}
       modalComponentAndSetterObject={whichModalToDisplay()}
-      //   topHeight={"20%"}
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
