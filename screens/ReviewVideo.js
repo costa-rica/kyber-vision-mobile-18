@@ -161,6 +161,9 @@ export default function ReviewVideo({ navigation, route }) {
   // --------- YouTube / Video Related ---------
 
   const handleSelectedAction = (action) => {
+    if (!playing) {
+      togglePlaying();
+    }
     playerRef.current.seekTo(action.timestamp - 1, true);
   };
 
