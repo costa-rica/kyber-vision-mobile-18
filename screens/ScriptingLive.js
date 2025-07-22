@@ -19,7 +19,7 @@ import {
   replaceScriptSessionActionsArray,
   updatePlayersArray,
   setScriptingForPlayerObject,
-  updateScriptId,
+  // updateScriptId,
 } from "../reducers/script";
 import SwipePad from "./subcomponents/swipePads/SwipePad";
 
@@ -43,14 +43,7 @@ export default function ScriptingLive({ navigation }) {
     teamAnalyzed: 0,
     teamOpponent: 0,
   });
-  // Last Action
-  // const [lastActionQuality, setLastActionQuality] = useState("?");
-  // const [lastActionPosition, setLastActionPosition] = useState("?");
-  // const [lastActionPlayer, setLastActionPlayer] = useState(
-  //   scriptReducer.playersArray.find((p) => p.selected)
-  // );
-  // const [lastActionType, setLastActionType] = useState("?");
-  // const [lastActionSubtype, setLastActionSubtype] = useState("?");
+
   // Dropdowns Visibility
   const [
     lastActionDropDownIsVisibleQuality,
@@ -651,7 +644,7 @@ export default function ScriptingLive({ navigation }) {
     const bodyObj = {
       actionsArray: scriptReducer.sessionActionsArray,
       sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
-      scriptId: scriptReducer.scriptId,
+      // scriptId: scriptReducer.scriptId,
     };
 
     const response = await fetch(
@@ -676,7 +669,8 @@ export default function ScriptingLive({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      dispatch(updateScriptId(resJson.scriptId));
+      // dispatch(updateScriptId(resJson.scriptId));
+      disp;
       alert(
         `${scriptReducer.sessionActionsArray.length} actions sent to server successfully`
       );
@@ -691,24 +685,6 @@ export default function ScriptingLive({ navigation }) {
   // -----------------
   //  Last Action - Modify
   // -----------------
-  // const handleLastActionPlayerPress = (player) => {
-  //   console.log(`- selected player: ${player.firstName}`);
-  //   // const handleSelectPlayer = () => {
-  //   const tempArray = scriptReducer.playersArray.map((player) => {
-  //     if (player.id === player.id) {
-  //       // setDisplayWarning(false);
-  //       return {
-  //         ...player,
-  //         selected: !player.selected,
-  //       };
-  //     }
-  //     return { ...player, selected: false };
-  //   });
-  //   dispatch(updatePlayersArray(tempArray));
-  //   dispatch(setScriptingForPlayerObject(player));
-  //   console.log(`- selected player [2]: ${player.firstName}`);
-  //   // setLastActionPlayer(player);
-  // };
 
   const handleModifyQuality = (quality) => {
     console.log(`lastActionQuality: ${quality}`);

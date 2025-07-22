@@ -214,9 +214,9 @@ export const scriptSlice = createSlice({
     updatePlayersArray: (state, action) => {
       state.playersArray = action.payload;
     },
-    updateScriptId: (state, action) => {
-      state.scriptId = action.payload;
-    },
+    // updateScriptId: (state, action) => {
+    //   state.scriptId = action.payload;
+    // },
     updateSessionsArray: (state, action) => {
       state.sessionsArray = action.payload;
     },
@@ -241,7 +241,7 @@ export const {
   // NEW for Version 15
   updateScriptLivePortraitVwVolleyballCourtCoords,
   updatePlayersArray,
-  updateScriptId,
+  // updateScriptId,
   updateSessionsArray,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

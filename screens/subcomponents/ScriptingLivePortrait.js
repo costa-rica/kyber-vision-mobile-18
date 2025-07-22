@@ -582,41 +582,6 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
-      {/* ------------ FLATLIST Container ------------ */}
-      {/* <View style={styles.containerFlatListActions}>
-        <FlatList
-          data={scriptReducer.sessionActionsArray}
-          renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
-              <Text>
-                scriptId: {scriptReducer.scriptId}, type: {item.type}, quality:{" "}
-                {item.quality}, subtype: {item.subtype}, position: {item.zone},
-                player: {item.playerId}
-              </Text>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-        <Text>
-          scriptingForPlayerObject:
-          {scriptReducer.scriptingForPlayerObject.firstName},
-          {scriptReducer.scriptingForPlayerObject.id}
-        </Text>
-        <Text>
-          sessionActionsArray:
-          {
-            scriptReducer.sessionActionsArray.find(
-              (action) => action.selected === true
-            )?.firstName
-          }
-          ,
-          {
-            scriptReducer.sessionActionsArray[
-              scriptReducer.sessionActionsArray.length - 1
-            ]?.playerId
-          }
-        </Text>
-      </View> */}
     </View>
   );
 }
