@@ -60,11 +60,13 @@ export default function LoginScreen({ navigation }) {
       // console.log(resJson);
       dispatch(
         loginUser({
-          email: resJson.email,
+          email: resJson.user.email,
           token: resJson.token,
           username: resJson.user.username,
+          contractTeamUserArray: resJson.user.ContractTeamUsers,
         })
       );
+
       // console.log("after dispatch");
       navigation.navigate("SelectTeamScreen");
     } else {

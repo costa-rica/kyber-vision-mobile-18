@@ -90,6 +90,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchSessionsArray();
+    console.log(JSON.stringify(userReducer.contractTeamUserArray));
   }, []);
 
   const fetchSessionsArray = async () => {
@@ -131,6 +132,19 @@ export default function HomeScreen({ navigation }) {
     dispatch(updateSessionsArray(tempArray));
   };
 
+  const createAdminButtonText = () => {
+    const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0].id;
+    const teamName = teamReducer.teamsArray.filter((team) => team.selected)[0]
+      .teamName;
+    const userTeamIsAdmin = userReducer.contractTeamUserArray.filter(
+      (team) => team.id === teamId
+    )[0].isAdmin;
+    const adminButtonText = userTeamIsAdmin
+      ? `Administrate ${teamName}`
+      : `${teamName} Settings`;
+    return adminButtonText;
+  };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -165,6 +179,13 @@ export default function HomeScreen({ navigation }) {
               styleText={styles.txtHomeNavigationUploadVideo}
             >
               Sync Video
+            </ButtonKvNoDefaultTextOnly>
+            <ButtonKvNoDefaultTextOnly
+              onPress={() => console.log("Admin")}
+              styleView={styles.btnHomeNavigationUploadVideo}
+              styleText={styles.txtHomeNavigationUploadVideo}
+            >
+              {createAdminButtonText()}
             </ButtonKvNoDefaultTextOnly>
           </View>
         </View>

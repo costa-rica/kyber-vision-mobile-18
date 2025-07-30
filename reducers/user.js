@@ -6,14 +6,9 @@ const initialState = {
     username: null,
     email: null,
   },
-  // tribeArray: [],
-  // teamsArray: [],
-  // playersArray: [],
+  contractTeamUserArray: [],
   portraitHeight: null,
   portraitWidth: null,
-  // profile: null,
-  //video: {}, //list received from API GET /videos
-  // videosDownloadedStatusObj: {},
   circleRadiusOuter: 70,
   circleRadiusMiddle: 50,
   circleRadiusInner: 20,
@@ -98,11 +93,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action) => {
-      // console.log(`- dans Redux: loginUser 🔔`);
       state.token = action.payload.token;
-      // state.profile = action.payload.profile;
       state.user.username = action.payload.username;
       state.user.email = action.payload.email;
+      state.contractTeamUserArray = action.payload.contractTeamUserArray;
     },
 
     reducerSetScreenDimensions: (state, action) => {
@@ -123,6 +117,7 @@ export const userSlice = createSlice({
       state.token = null;
       state.user.username = null;
       state.user.email = null;
+      state.contractTeamUserArray = [];
     },
   },
 });
