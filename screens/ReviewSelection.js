@@ -133,8 +133,10 @@ export default function ReviewSelectionScreen({ navigation }) {
   };
 
   const handleVideoSelect = async (videoObject) => {
+    console.log("in handleVideoSelect for videoObject: ");
     dispatch(updateReviewReducerVideoObject(videoObject));
-    await fetchActionsForSession(videoObject.sessionId);
+    // console.log(JSON.stringify(videoObject, null, 2));
+    await fetchActionsForSession(videoObject);
     navigation.navigate("ReviewVideo");
   };
 
@@ -155,28 +157,32 @@ export default function ReviewSelectionScreen({ navigation }) {
     setVideoArray(reviewReducerOffline.videosArray);
   };
 
-  // fetch Actions for Match
-  // const fetchActionsForMatch = async (matchId) => {
-  const fetchActionsForSession = async (sessionId) => {
-    console.log("in fetchActionsForSession for sessionId: ", sessionId);
+  // const fetchActionsForSession = async (sessionId) => {
+  const fetchActionsForSession = async (videoObject) => {
+    console.log(
+      "in fetchActionsForSession for sessionId: ",
+      videoObject.session.id,
+      " and videoId: ",
+      videoObject.id
+    );
     let resJson;
     if (userReducer.token === "offline") {
       console.log(" ** [offline] Fetching actions for session");
       resJson = reviewReducerOffline;
     } else {
-      console.log(` ** [online] Fetching actions for session: ${sessionId}`);
       try {
         const response = await fetch(
-          // ---- > HERE IS WHERE THE PROBLEM IS < --------
-          // `${process.env.EXPO_PUBLIC_API_URL}/matches/${matchId}/actions`,
-          // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${sessionId}/actions`,
-          `${process.env.EXPO_PUBLIC_API_URL}/sessions/review-selection-screen/get-actions/${sessionId}`,
+          `${process.env.EXPO_PUBLIC_API_URL}/sessions/review-selection-screen/get-actions`,
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${userReducer.token}`,
             },
+            body: JSON.stringify({
+              sessionId: videoObject.session.id,
+              videoId: videoObject.id,
+            }),
           }
         );
         if (response.status !== 200) {
@@ -196,14 +202,10 @@ export default function ReviewSelectionScreen({ navigation }) {
       }
     }
 
-    console.log("----- resJson -------");
-    // console.log(JSON.stringify(resJson.actionsArray, null, 2));
     let tempCleanActionsArray = [];
     let index = 0;
     for (const elem of resJson.actionsArray) {
       index++;
-      // console.log("index: ", index);
-      // console.log("elem: ", elem);
       tempCleanActionsArray.push({
         actionsDbTableId: elem.id,
         reviewVideoActionsArrayIndex: index,
@@ -218,7 +220,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       });
     }
     dispatch(createReviewActionsArray(tempCleanActionsArray));
-    console.log("----- populated ok tempCleanActionsArray -------");
+    // console.log("----- populated ok tempCleanActionsArray -------");
     // console.log(JSON.stringify(tempCleanActionsArray, null, 2));
 
     let tempPlayerDbObjectsArray = [];
@@ -251,6 +253,10 @@ export default function ReviewSelectionScreen({ navigation }) {
     >
       <View style={styles.vwVideoName}>
         <Text style={styles.txtVideoName}>{video.session.teamName}</Text>
+      </View>
+      <View style={styles.vwVideoName}>
+        <Text style={{ fontSize: 13 }}>Session ID: {video.session.id}</Text>
+        <Text style={{ fontSize: 12 }}>(Video ID: {video.id})</Text>
       </View>
       <View style={styles.vwVideoDate}>
         <Text style={styles.txtVideoDate}>
