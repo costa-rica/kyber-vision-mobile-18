@@ -71,66 +71,67 @@ export const reviewSlice = createSlice({
       // Step 2:
     },
 
-    updateReviewReducerIsPlayingforActionsArrayV5: (state, action) => {
-      const currentTime = action.payload;
-      // const threshold = 0.25; // Define a tolerance range in seconds
+    // OBE - replaced by V6 above ^
+    // updateReviewReducerIsPlayingforActionsArrayV5: (state, action) => {
+    //   const currentTime = action.payload;
+    //   // const threshold = 0.25; // Define a tolerance range in seconds
 
-      // Filter only actions where isDisplayed is true
-      const displayedActions = state.reviewReducerActionsArray.filter(
-        (action) => action.isDisplayed
-      );
+    //   // Filter only actions where isDisplayed is true
+    //   const displayedActions = state.reviewReducerActionsArray.filter(
+    //     (action) => action.isDisplayed
+    //   );
 
-      // Removed a check here for displayedActions.length === 0; I don't think its needed
-      let newPlayingAction = null;
+    //   // Removed a check here for displayedActions.length === 0; I don't think its needed
+    //   let newPlayingAction = null;
 
-      // 🔹 Step 1: If a manual action is selected, keep it active until its timestamp is passed
-      if (
-        state.selectedActionObject &&
-        currentTime < state.selectedActionObject.timestamp
-      ) {
-        newPlayingAction = state.selectedActionObject;
-      } else {
-        state.selectedActionObject = null;
+    //   // 🔹 Step 1: If a manual action is selected, keep it active until its timestamp is passed
+    //   if (
+    //     state.selectedActionObject &&
+    //     currentTime < state.selectedActionObject.timestamp
+    //   ) {
+    //     newPlayingAction = state.selectedActionObject;
+    //   } else {
+    //     state.selectedActionObject = null;
 
-        // 🔹 Step 2: Find the closest action, but ensure it's after the current time
-        let futureActions = displayedActions.filter(
-          // (action) => action.timestamp >= currentTime
-          (action) => action.timestamp >= currentTime - 2
-        );
+    //     // 🔹 Step 2: Find the closest action, but ensure it's after the current time
+    //     let futureActions = displayedActions.filter(
+    //       // (action) => action.timestamp >= currentTime
+    //       (action) => action.timestamp >= currentTime - 2
+    //     );
 
-        // 🔹 Step 2.1: Find the closest action, but ensure it's after the current time
-        if (futureActions.length > 0) {
-          // ------- New method of getting closeest action (Nick's method ;) ) -------
-          if (
-            currentTime - 1 < futureActions[0].timestamp &&
-            currentTime + 2 > futureActions[0].timestamp
-          ) {
-            newPlayingAction = futureActions[0];
-          }
-          // ----- Old ChatGPT method of getting closeest action -----
-          // newPlayingAction = futureActions.reduce((prev, curr) => {
-          //   return Math.abs(curr.timestamp - currentTime) <
-          //     Math.abs(prev.timestamp - currentTime)
-          //     ? curr
-          //     : prev;
-          // });
-        } else {
-          // If no future actions exist, just keep the last available action
-          newPlayingAction = displayedActions[displayedActions.length - 1];
-        }
-      }
+    //     // 🔹 Step 2.1: Find the closest action, but ensure it's after the current time
+    //     if (futureActions.length > 0) {
+    //       // ------- New method of getting closeest action (Nick's method ;) ) -------
+    //       if (
+    //         currentTime - 1 < futureActions[0].timestamp &&
+    //         currentTime + 2 > futureActions[0].timestamp
+    //       ) {
+    //         newPlayingAction = futureActions[0];
+    //       }
+    //       // ----- Old ChatGPT method of getting closeest action -----
+    //       // newPlayingAction = futureActions.reduce((prev, curr) => {
+    //       //   return Math.abs(curr.timestamp - currentTime) <
+    //       //     Math.abs(prev.timestamp - currentTime)
+    //       //     ? curr
+    //       //     : prev;
+    //       // });
+    //     } else {
+    //       // If no future actions exist, just keep the last available action
+    //       newPlayingAction = displayedActions[displayedActions.length - 1];
+    //     }
+    //   }
 
-      // 🔹 Step 3: Update the state
-      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
-        (action) => ({
-          ...action,
-          isPlaying:
-            action.isDisplayed &&
-            action.reviewVideoActionsArrayIndex ===
-              newPlayingAction.reviewVideoActionsArrayIndex,
-        })
-      );
-    },
+    //   // 🔹 Step 3: Update the state
+    //   state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+    //     (action) => ({
+    //       ...action,
+    //       isPlaying:
+    //         action.isDisplayed &&
+    //         action.reviewVideoActionsArrayIndex ===
+    //           newPlayingAction.reviewVideoActionsArrayIndex,
+    //     })
+    //   );
+    // },
 
     pressedActionInReviewReducerActionArray: (state, action) => {
       state.selectedActionObject = action.payload;
@@ -259,7 +260,7 @@ export const {
   toggleReviewReducerActionIsFavorite,
   filterReviewReducerActionsArrayOnIsFavorite,
   filterReviewReducerActionsArrayShowAll,
-  updateReviewReducerIsPlayingforActionsArrayV5,
+  // updateReviewReducerIsPlayingforActionsArrayV5,
   pressedActionInReviewReducerActionArray,
   // updateReviewReducerSelectedVideoObject,
   updateReviewReducerIsPlayingForActionsArrayV6,

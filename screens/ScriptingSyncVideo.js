@@ -96,7 +96,7 @@ export default function ScriptingSyncVideo({ navigation }) {
     const interval = setInterval(async () => {
       // console.log("playing: ", playingRef.current);
       if (playerRef.current && playingRef.current) {
-        console.log("--> in interval");
+        // console.log("--> in interval");
         const time = await playerRef.current.getCurrentTime();
         setCurrentTime(time);
       }
@@ -287,6 +287,13 @@ export default function ScriptingSyncVideo({ navigation }) {
         </View>
         <View style={styles.containerBottom}>
           <Text>Scripts Linked to Session</Text>
+          <View style={styles.vwInstructions}>
+            <Text style={{ fontSize: 12 }}>
+              <Text style={{ fontWeight: "bold" }}>Instructions:</Text> Sync
+              each script by advancing the video to the first action of each
+              script and update that script’s timestampReferenceFirstAction.
+            </Text>
+          </View>
           <FlatList
             data={scriptsArray}
             renderItem={({ item }) => (
@@ -311,12 +318,12 @@ export default function ScriptingSyncVideo({ navigation }) {
                     Delta Time In Seconds: {item.deltaTimeInSeconds.toFixed(1)}
                   </Text>
                 </View>
-                <View style={styles.vwScriptDeltaTimeRow}>
+                {/* <View style={styles.vwScriptDeltaTimeRow}>
                   <Text style={styles.scriptText}>
                     Same delta for all actions in script:{" "}
                     {item.deltaTimeInSecondsIsSameForAllActions ? "Yes" : "No"}
                   </Text>
-                </View>
+                </View> */}
               </ButtonKvNoDefault>
             )}
             keyExtractor={(item) => item.scriptId.toString()}
@@ -430,6 +437,12 @@ const styles = StyleSheet.create({
     // borderColor: "gray",
     // borderStyle: "dashed",
   },
+  vwInstructions: {
+    padding: 10,
+    backgroundColor: "#E8E8E8",
+    borderRadius: 10,
+    width: Dimensions.get("window").width * 0.9,
+  },
   vwScriptRow: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -441,6 +454,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#806181",
     borderWidth: 1,
+    marginVertical: 3,
   },
   vwScriptRowSelected: {
     flexDirection: "row",
@@ -453,6 +467,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#806181",
     borderWidth: 10,
+    marginVertical: 3,
   },
   vwScriptDetailsRow: {
     flexDirection: "row",

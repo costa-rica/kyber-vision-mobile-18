@@ -19,7 +19,7 @@ import ReviewVideoPortrait from "./subcomponents/ReviewVideoPortrait";
 import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 import {
   filterReviewReducerActionsArrayOnPlayer,
-  updateReviewReducerIsPlayingforActionsArrayV5,
+  // updateReviewReducerIsPlayingforActionsArrayV5,
   updateReviewReducerIsPlayingForActionsArrayV6,
 } from "../reducers/review";
 
