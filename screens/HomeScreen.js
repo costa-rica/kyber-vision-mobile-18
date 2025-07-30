@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/team";
 import { updateSessionsArray } from "../reducers/script";
+import { logoutUser } from "../reducers/user";
 
 export default function HomeScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -167,6 +168,17 @@ export default function HomeScreen({ navigation }) {
             </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
+        <View style={styles.containerBottom}>
+          <ButtonKvStd
+            onPress={() => {
+              dispatch(logoutUser());
+              navigation.navigate("SplashScreen");
+            }}
+            style={styles.btnHomeNavigation}
+          >
+            Logout
+          </ButtonKvStd>
+        </View>
       </View>
     </TemplateViewWithTopChildren>
   );
@@ -256,9 +268,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
   vwInputGroup: {
     width: "90%",

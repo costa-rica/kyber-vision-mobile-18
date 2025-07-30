@@ -3,7 +3,7 @@ import TemplateView from "./subcomponents/TemplateView";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 // import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../reducers/user";
 import guestUserData from "../offlineData/userReducer.json";
@@ -25,13 +25,19 @@ export default function SplashScreen({ navigation }) {
     );
     navigation.navigate("SelectTeamScreen");
   };
+
+  useEffect(() => {
+    if (userReducer.token) {
+      navigation.navigate("SelectTeamScreen");
+    }
+  }, [userReducer.token]);
+
   return (
     <TemplateView>
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
-          <Text>token: {userReducer.token}</Text>
-          <Text>teams: {teamReducer.teamsArray.length}</Text>
+          {/* <Text>token: {userReducer.token}</Text> */}
           <View style={styles.vwEmailButtons}>
             <ButtonKvStd
               title="Register"

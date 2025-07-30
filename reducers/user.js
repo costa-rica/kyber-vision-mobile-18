@@ -104,10 +104,7 @@ export const userSlice = createSlice({
       state.user.username = action.payload.username;
       state.user.email = action.payload.email;
     },
-    // storeVideoDetailsInRedux: (state, action) => {
-    //   console.log(`- dans Redux: storeVideoDetailsInRedux 🔔`);
-    //   state.video = action.payload.video;
-    // },
+
     reducerSetScreenDimensions: (state, action) => {
       console.log(`- dans Redux: reducerSetScreenDimensions 🔔`);
       state.portraitHeight = action.payload.portraitHeight;
@@ -122,26 +119,20 @@ export const userSlice = createSlice({
       console.log("switchPositionGuides");
       state.scriptPositionGuides = !state.scriptPositionGuides;
     },
-    // updateTribeArray: (state, action) => {
-    // updateTeamsArray: (state, action) => {
-    //   // console.log(" 🟢 updateTribeArray");
-    //   state.teamsArray = action.payload;
-    // },
-    // updatePlayersArray: (state, action) => {
-    //   state.playersArray = action.payload;
-    // },
+    logoutUser: (state) => {
+      state.token = null;
+      state.user.username = null;
+      state.user.email = null;
+    },
   },
 });
 
 export const {
   loginUser,
-  // storeVideoDetailsInRedux,
   reducerSetScreenDimensions,
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
-  // updateTribeArray,
-  // updateTeamsArray,
-  // updatePlayersArray,
+  logoutUser,
 } = userSlice.actions;
 export default userSlice.reducer;
 
