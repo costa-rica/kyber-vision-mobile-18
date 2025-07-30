@@ -7,11 +7,12 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../reducers/user";
 import guestUserData from "../offlineData/userReducer.json";
-
+import { useSelector } from "react-redux";
 export default function SplashScreen({ navigation }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
-
+  const userReducer = useSelector((state) => state.user);
+  const teamReducer = useSelector((state) => state.team);
   const handleLoginGuestOffline = () => {
     console.log("Guest login");
 
@@ -29,6 +30,8 @@ export default function SplashScreen({ navigation }) {
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
+          <Text>token: {userReducer.token}</Text>
+          <Text>teams: {teamReducer.teamsArray.length}</Text>
           <View style={styles.vwEmailButtons}>
             <ButtonKvStd
               title="Register"

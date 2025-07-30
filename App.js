@@ -17,7 +17,9 @@ import ScriptingSyncVideoSelection from "./screens/ScriptingSyncVideoSelection";
 import ScriptingSyncVideo from "./screens/ScriptingSyncVideo";
 
 import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistStore, persistReducer } from "redux-persist";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
 import review from "./reducers/review";
 import script from "./reducers/script";
@@ -25,53 +27,95 @@ import upload from "./reducers/upload";
 import sync from "./reducers/sync";
 import team from "./reducers/team";
 
-const store = configureStore({
-  reducer: { user, script, review, upload, sync, team },
+// Persistence
+import { PersistGate } from "redux-persist/integration/react";
+
+// 1. Persist config for user only
+const userPersistConfig = {
+  key: "user",
+  storage: AsyncStorage,
+};
+
+// 2. Wrap only user reducer with persistReducer
+const rootReducer = combineReducers({
+  user: persistReducer(userPersistConfig, user), // persisted
+  script, // not persisted
+  review,
+  upload,
+  sync,
+  team,
 });
+
+// 3. Create store using rootReducer
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
+});
+
+// const reducers = combineReducers({ user, script, review, upload, sync, team });
+
+// const persistConfig = { key: "applicationName", storage: AsyncStorage };
+
+// const store = configureStore({
+//   reducer: persistReducer(persistConfig, reducers),
+//   middleware: (getDefaultMiddleware) =>
+//     getDefaultMiddleware({ serializableCheck: false }),
+// });
+
+const persistor = persistStore(store);
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="SplashScreen" component={SplashScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="SelectTeamScreen" component={SelectTeamScreen} />
-          {/* <Stack.Screen
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="SplashScreen" component={SplashScreen} />
+            <Stack.Screen name="LoginScreen" component={LoginScreen} />
+            <Stack.Screen
+              name="SelectTeamScreen"
+              component={SelectTeamScreen}
+            />
+            {/* <Stack.Screen
             name="CreateTribeScreen"
             component={CreateTribeScreen}
           /> */}
-          <Stack.Screen name="CreateTeamScreen" component={CreateTeamScreen} />
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          <Stack.Screen name="ScriptingLive" component={ScriptingLive} />
-          <Stack.Screen
-            name="ScriptingLiveSelectPlayers"
-            component={ScriptingLiveSelectPlayers}
-          />
-          <Stack.Screen
-            name="ReviewSelectionScreen"
-            component={ReviewSelectionScreen}
-          />
-          <Stack.Screen name="ReviewVideo" component={ReviewVideo} />
-          <Stack.Screen
-            name="ScriptingLiveSelectSession"
-            component={ScriptingLiveSelectSession}
-          />
-          <Stack.Screen
-            name="UploadVideoScreen"
-            component={UploadVideoScreen}
-          />
-          <Stack.Screen
-            name="ScriptingSyncVideoSelection"
-            component={ScriptingSyncVideoSelection}
-          />
-          <Stack.Screen
-            name="ScriptingSyncVideo"
-            component={ScriptingSyncVideo}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            <Stack.Screen
+              name="CreateTeamScreen"
+              component={CreateTeamScreen}
+            />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="ScriptingLive" component={ScriptingLive} />
+            <Stack.Screen
+              name="ScriptingLiveSelectPlayers"
+              component={ScriptingLiveSelectPlayers}
+            />
+            <Stack.Screen
+              name="ReviewSelectionScreen"
+              component={ReviewSelectionScreen}
+            />
+            <Stack.Screen name="ReviewVideo" component={ReviewVideo} />
+            <Stack.Screen
+              name="ScriptingLiveSelectSession"
+              component={ScriptingLiveSelectSession}
+            />
+            <Stack.Screen
+              name="UploadVideoScreen"
+              component={UploadVideoScreen}
+            />
+            <Stack.Screen
+              name="ScriptingSyncVideoSelection"
+              component={ScriptingSyncVideoSelection}
+            />
+            <Stack.Screen
+              name="ScriptingSyncVideo"
+              component={ScriptingSyncVideo}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
