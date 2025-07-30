@@ -6,7 +6,7 @@ const initialState = {
   reviewReducerListOfPlayerDbObjects: [],
   isFavoriteToggle: false,
   selectedActionObject: null, // New property to track user-selected action
-  // selectedVideoObject: null,
+  selectedVideoObjectTimeEnd: null,
 };
 
 // --- Elements of reviewActionsArray:
@@ -42,6 +42,33 @@ export const reviewSlice = createSlice({
     createReviewActionsArrayUniquePlayersNamesAndObjects: (state, action) => {
       state.reviewReducerListOfPlayerDbObjects =
         action.payload.playerDbObjectsArray;
+    },
+
+    updateReviewReducerIsPlayingForActionsArrayV6: (state, action) => {
+      // Step 1: user current time to update the isPlaying property of the action
+      // --- > only one action can display isPlaying = true
+      const currentTime = action.payload;
+
+      const allowNewActionBool = (action) => {
+        if (action.timestamp >= currentTime - 1) {
+          if (action.timestamp <= currentTime + 2) {
+            return true;
+          }
+        } else {
+          return false;
+        }
+      };
+
+      state.reviewReducerActionsArray = state.reviewReducerActionsArray.map(
+        (action) => {
+          if (allowNewActionBool(action)) {
+            return { ...action, isPlaying: true };
+          } else {
+            return { ...action, isPlaying: false };
+          }
+        }
+      );
+      // Step 2:
     },
 
     updateReviewReducerIsPlayingforActionsArrayV5: (state, action) => {
@@ -235,6 +262,7 @@ export const {
   updateReviewReducerIsPlayingforActionsArrayV5,
   pressedActionInReviewReducerActionArray,
   // updateReviewReducerSelectedVideoObject,
+  updateReviewReducerIsPlayingForActionsArrayV6,
 } = reviewSlice.actions;
 
 export default reviewSlice.reducer;

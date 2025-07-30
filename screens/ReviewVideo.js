@@ -20,6 +20,7 @@ import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 import {
   filterReviewReducerActionsArrayOnPlayer,
   updateReviewReducerIsPlayingforActionsArrayV5,
+  updateReviewReducerIsPlayingForActionsArrayV6,
 } from "../reducers/review";
 
 export default function ReviewVideo({ navigation, route }) {
@@ -122,10 +123,15 @@ export default function ReviewVideo({ navigation, route }) {
     // -- >uses `const playingRef = useRef(playing);`
     const interval = setInterval(async () => {
       if (playerRef.current && playing) {
-        const time = await playerRef.current.getCurrentTime();
-        setCurrentTime(time);
+        // const time = await playerRef.current.getCurrentTime();
+        const currentPlayTime = await playerRef.current.getCurrentTime();
+        // setCurrentTime(time);
+        setCurrentTime(currentPlayTime);
 
-        dispatch(updateReviewReducerIsPlayingforActionsArrayV5(time));
+        // dispatch(updateReviewReducerIsPlayingforActionsArrayV5(time));
+        dispatch(
+          updateReviewReducerIsPlayingForActionsArrayV6(currentPlayTime)
+        );
       }
     }, 1000);
 
