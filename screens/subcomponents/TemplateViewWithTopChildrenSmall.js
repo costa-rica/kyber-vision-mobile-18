@@ -15,7 +15,7 @@ export default function TemplateViewWithTopChildrenSmall({
   children,
   navigation,
   topChildren,
-  sizeOfLogo = 30,
+  sizeOfLogo = 40,
   topHeight = "15%",
   screenName,
   // isVisibleModal = false,
@@ -52,8 +52,10 @@ export default function TemplateViewWithTopChildrenSmall({
             </ButtonKvImage>
           </View>
         )}
-        <View style={styles.vwLogoAndTopChildren}>
+        <View style={styles.vwLogoTopRight}>
           <KyberVisionLogoCrystal width={sizeOfLogo} height={sizeOfLogo} />
+        </View>
+        <View style={styles.vwTopChildren}>
           {screenName && <Text style={{ color: "white" }}>{screenName}</Text>}
           {topChildren}
         </View>
@@ -104,8 +106,13 @@ const styles = StyleSheet.create({
     top: 50,
     left: 10,
   },
-
-  vwLogoAndTopChildren: {
+  vwLogoTopRight: {
+    position: "absolute",
+    top: 30,
+    right: 10,
+    // backgroundColor: "red",
+  },
+  vwTopChildren: {
     position: "absolute",
     bottom: 0,
     alignItems: "center",
