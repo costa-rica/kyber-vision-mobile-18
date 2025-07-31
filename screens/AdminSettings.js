@@ -456,36 +456,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "dashed",
   },
-  // ------------
-  // Modal
-  // ------------
 
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-
-  modalContainer: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 10,
-  },
-  // ---- Player Row styles ----
+  // ---- Player Table styles ----
   vwPlayerRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
-    // borderBottomWidth: 1,
-    // borderBottomColor: "gray",
+    gap: 5,
   },
   vwPlayerShirtNumber: {
     width: 40,
@@ -523,5 +500,29 @@ const styles = StyleSheet.create({
   txtPlayerPosition: {
     fontSize: 14,
     color: "gray",
+  },
+
+  // ------------
+  // Modal
+  // ------------
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+
+  modalContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
 });

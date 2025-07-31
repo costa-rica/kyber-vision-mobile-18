@@ -103,6 +103,7 @@ export default function SelectTeamScreen({ navigation }) {
             }
           });
           dispatch(updateTeamsArray(tempArray));
+          navigation.navigate("HomeScreen");
         }}
         style={[styles.vwTeamRow, isSelected && styles.vwTeamRowSelected]}
       >
@@ -148,7 +149,7 @@ export default function SelectTeamScreen({ navigation }) {
               Create Team
             </ButtonKvNoDefaultTextOnly>
           </View>
-          <View style={styles.vwInputGroup}>
+          {/* <View style={styles.vwInputGroup}>
             <ButtonKvNoDefaultTextOnly
               active={
                 teamReducer.teamsArray.filter((tribe) => tribe.selected)
@@ -174,7 +175,7 @@ export default function SelectTeamScreen({ navigation }) {
             >
               Select Tribe
             </ButtonKvNoDefaultTextOnly>
-          </View>
+          </View> */}
         </View>
       </View>
     </TemplateViewWithTopChildren>
