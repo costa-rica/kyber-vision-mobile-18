@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
-
+import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
 import { updateTeamsArray } from "../reducers/team";
 // import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
 import {
@@ -37,6 +37,7 @@ export default function AdminSettings({ navigation }) {
   const teamReducer = useSelector((state) => state.team);
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
   const dispatch = useDispatch();
+  const [playersArray, setPlayersArray] = useState([]);
 
   const topChildren = (
     <Text>
@@ -45,7 +46,9 @@ export default function AdminSettings({ navigation }) {
     </Text>
   );
 
-  //   useEffect(() => {}, [teamReducer.teamsArray]);
+  useEffect(() => {
+    fetchPlayers();
+  }, []);
 
   const updateTeamVisibility = async (visibility) => {
     // console.log(`---> update Team Visibility status: ${visibility}`);
@@ -84,13 +87,55 @@ export default function AdminSettings({ navigation }) {
     }
   };
 
+  const fetchPlayers = async () => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
+        teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
+
+    console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok`);
+      // const tempArray = resJson.players.map((item) => {
+      //   return {
+      //     ...item,
+      //     selected: false,
+      //   };
+      // });
+      // console.log(tempArray);
+      // dispatch(updatePlayersArray(tempArray));
+      setPlayersArray(resJson.players);
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
       screenName={"AdminSettings"}
       //   modalComponentAndSetterObject={whichModalToDisplay()}
-      topHeight={"20%"}
+      topHeight={"15%"}
     >
       <View style={styles.container}>
         {/* -------- 
@@ -189,7 +234,34 @@ export default function AdminSettings({ navigation }) {
             
             ----- */}
         <View style={styles.containerBottom}>
-          <Text>Team Roster</Text>
+          <View style={styles.vwPlayersTableHeading}>
+            <View style={styles.vwPlayersTableHeadingLeft}>
+              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                Team Roster
+              </Text>
+              <Text> ({playersArray.length})</Text>
+            </View>
+            <View style={styles.vwPlayersTableHeadingRight}>
+              <ButtonKvNoDefault
+                onPress={() => {
+                  console.log("Search");
+                }}
+                styleView={styles.btnSearch}
+              >
+                <IconMagnifingGlass />
+              </ButtonKvNoDefault>
+              <ButtonKvNoDefaultTextOnly
+                onPress={() => {
+                  console.log("Add");
+                }}
+                styleView={styles.btnAddPlayer}
+                styleText={styles.txtBtnAddPlayer}
+              >
+                +
+              </ButtonKvNoDefaultTextOnly>
+            </View>
+          </View>
+          <View style={styles.vwPlayersTable}></View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -231,7 +303,6 @@ const styles = StyleSheet.create({
   vwTeamDescription: {
     borderBottomColor: "gray",
     borderBottomWidth: 1,
-    // width: "100%",
     marginBottom: 10,
   },
   txtTeamDescriptionTitle: {
@@ -302,7 +373,63 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: "dashed",
   },
-
+  vwPlayersTableHeading: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+  },
+  vwPlayersTableHeadingLeft: {
+    flexDirection: "row",
+    // gap: 5,
+    alignItems: "center",
+  },
+  vwPlayersTableHeadingRight: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+  },
+  btnSearch: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "#E8E8E8",
+    borderColor: "#806181",
+    borderWidth: 1,
+    // marginVertical: 3,
+  },
+  btnAddPlayer: {
+    // width: Dimensions.get("window").width * 0.2,
+    // height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    color: "white",
+    backgroundColor: "#E8E8E8",
+    borderColor: "#806181",
+    borderWidth: 2,
+  },
+  txtBtnAddPlayer: {
+    fontSize: 24,
+    color: "#806181",
+    // backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    // height: 15,
+    // margin: 0,
+    // lineHeight: 1,
+  },
+  vwPlayersTable: {
+    height: 200,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+  },
   // ------------
   // Modal
   // ------------
