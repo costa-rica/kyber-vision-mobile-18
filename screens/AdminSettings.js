@@ -261,7 +261,33 @@ export default function AdminSettings({ navigation }) {
               </ButtonKvNoDefaultTextOnly>
             </View>
           </View>
-          <View style={styles.vwPlayersTable}></View>
+          <View style={styles.vwPlayersTable}>
+            <FlatList
+              data={playersArray}
+              keyExtractor={(item, index) =>
+                item.id?.toString() || index.toString()
+              }
+              renderItem={({ item }) => (
+                <View style={styles.vwPlayerRow}>
+                  <View style={styles.vwPlayerShirtNumber}>
+                    <Text style={styles.txtPlayerShirtNumber}>
+                      {item?.shirtNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.vwPlayerName}>
+                    <Text style={styles.txtPlayerName}>
+                      {item.firstName} {item.lastName}
+                    </Text>
+                  </View>
+                  <View style={styles.vwPlayerPosition}>
+                    <Text style={styles.txtPlayerPosition}>
+                      {item?.positionAbbreviation}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            />
+          </View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -452,5 +478,50 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
+  },
+  // ---- Player Row styles ----
+  vwPlayerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    // borderBottomWidth: 1,
+    // borderBottomColor: "gray",
+  },
+  vwPlayerShirtNumber: {
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  txtPlayerShirtNumber: {
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  vwPlayerName: {
+    flex: 1,
+    paddingLeft: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  txtPlayerName: {
+    fontSize: 16,
+  },
+  vwPlayerPosition: {
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  txtPlayerPosition: {
+    fontSize: 14,
+    color: "gray",
   },
 });
