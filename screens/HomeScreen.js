@@ -181,7 +181,7 @@ export default function HomeScreen({ navigation }) {
               Sync Video
             </ButtonKvNoDefaultTextOnly>
             <ButtonKvNoDefaultTextOnly
-              onPress={() => console.log("Admin")}
+              onPress={() => navigation.navigate("AdminSettings")}
               styleView={styles.btnHomeNavigationUploadVideo}
               styleText={styles.txtHomeNavigationUploadVideo}
             >

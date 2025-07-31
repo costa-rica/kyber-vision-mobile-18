@@ -15,6 +15,7 @@ import ScriptingLiveSelectSession from "./screens/ScriptingLiveSelectSession";
 import UploadVideoScreen from "./screens/UploadVideoScreen";
 import ScriptingSyncVideoSelection from "./screens/ScriptingSyncVideoSelection";
 import ScriptingSyncVideo from "./screens/ScriptingSyncVideo";
+import AdminSettings from "./screens/AdminSettings";
 
 import { Provider } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -113,6 +114,7 @@ export default function App() {
               name="ScriptingSyncVideo"
               component={ScriptingSyncVideo}
             />
+            <Stack.Screen name="AdminSettings" component={AdminSettings} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
