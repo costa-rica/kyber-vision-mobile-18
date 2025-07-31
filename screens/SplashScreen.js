@@ -53,7 +53,11 @@ export default function SplashScreen({ navigation }) {
               title="Login"
               onPress={() => {
                 // console.log("Register");
-                navigation.navigate("LoginScreen");
+                if (userReducer.token) {
+                  navigation.navigate("SelectTeamScreen");
+                } else {
+                  navigation.navigate("LoginScreen");
+                }
               }}
               style={styles.btnEmailLogin}
             >
@@ -93,7 +97,7 @@ export default function SplashScreen({ navigation }) {
             continue without login
           </ButtonKvStd>
           <Text style={{ position: "absolute", bottom: 20, right: 30 }}>
-            Version 0.17.0
+            Version 0.17.2
           </Text>
         </View>
       </View>

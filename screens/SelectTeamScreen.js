@@ -120,13 +120,7 @@ export default function SelectTeamScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <Tribe />
-          {/* {teamReducer.teamsArray.map((item) => {
-            return (
-              <View style={styles.vwTeamRow} key={item.id}>
-                <Text>{item.teamName}</Text>
-              </View>
-            );
-          })} */}
+
           {/* <FlatList
             data={teamReducer.teamsArray}
             renderItem={createTribeRow}
