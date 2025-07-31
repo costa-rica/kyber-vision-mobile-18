@@ -25,7 +25,7 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 // import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
 // import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
 import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
-import ModalTeamYesNo from "./subcomponents/modals/ModalTeamYesNo";
+import ModalAdminSettingsDeletePlayerYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerYesNo";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -176,14 +176,18 @@ export default function AdminSettings({ navigation }) {
 
     if (isVisibleRemovePlayerModal) {
       return {
-        modalComponent: <ModalTeamYesNo onPressYes={handleRemovePlayer} />,
+        modalComponent: (
+          <ModalAdminSettingsDeletePlayerYesNo
+            onPressYes={handleRemovePlayer}
+          />
+        ),
         useState: isVisibleRemovePlayerModal,
         useStateSetter: setIsVisibleRemovePlayerModal,
       };
     }
   };
 
-  const addPlayerToTeam = (playerObject) => {
+  const addPlayerToTeam = async (playerObject) => {
     const filteredPlayers = teamReducer.playersArray.filter(
       (item) => item.name !== "Add Player"
     );
@@ -196,8 +200,88 @@ export default function AdminSettings({ navigation }) {
       position: "",
     });
 
-    dispatch(updatePlayersArray(updatedArray));
+    // dispatch(updatePlayersArray(updatedArray));
+    // setIsVisibleModalAddPlayer(false);
+    console.log("--- added Player ----");
+    console.log(JSON.stringify(playerObject));
+
+    const bodyObj = {
+      teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
+      firstName: playerObject.firstName,
+      lastName: playerObject.lastName,
+      shirtNumber: playerObject.shirtNumber,
+      position: playerObject.position,
+      positionAbbreviation: playerObject.positionAbbreviation,
+    };
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/teams/add-player`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      // const updatedTeams = teamReducer.teamsArray.map((team) =>
+      //   team.selected ? { ...team, visibility } : team
+      // );
+      // dispatch(updateTeamsArray(updatedTeams));
+      fetchPlayers();
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
     setIsVisibleModalAddPlayer(false);
+  };
+
+  const handleRemovePlayer = async (playerObject) => {
+    const bodyObj = {
+      teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
+      playerId: playerObject.id,
+    };
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/teams/remove-player`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      // const updatedTeams = teamReducer.teamsArray.map((team) =>
+      //   team.selected ? { ...team, visibility } : team
+      // );
+      // dispatch(updateTeamsArray(updatedTeams));
+      fetchPlayers();
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
+    setIsVisibleRemovePlayerModal(false);
   };
 
   return (
@@ -343,6 +427,7 @@ export default function AdminSettings({ navigation }) {
                 <ButtonKvNoDefaultTextOnly
                   onPress={() => {
                     console.log("Add");
+                    setIsVisibleModalAddPlayer(true);
                   }}
                   styleView={styles.btnAddElement}
                   styleText={styles.txtBtnAddElement}
