@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
 
-import { updateTeamsArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/team";
 // import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
 import {
   updateUploadReducerSelectedVideoObject,
@@ -36,6 +36,7 @@ export default function AdminSettings({ navigation }) {
   const uploadReducer = useSelector((state) => state.upload);
   const teamReducer = useSelector((state) => state.team);
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
+  const dispatch = useDispatch();
 
   const topChildren = (
     <Text>
@@ -44,10 +45,10 @@ export default function AdminSettings({ navigation }) {
     </Text>
   );
 
-  useEffect(() => {}, [teamReducer.teamsArray]);
+  //   useEffect(() => {}, [teamReducer.teamsArray]);
 
   const updateTeamVisibility = async (visibility) => {
-    console.log(`---> update Team Visibility status: ${visibility}`);
+    // console.log(`---> update Team Visibility status: ${visibility}`);
 
     const bodyObj = {
       teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
@@ -71,9 +72,10 @@ export default function AdminSettings({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      let tempArray = [...teamReducer.teamsArray];
-      tempArray.filter((team) => team.selected)[0].visibility = visibility;
-      dispatch(updateTeamsArray(tempArray));
+      const updatedTeams = teamReducer.teamsArray.map((team) =>
+        team.selected ? { ...team, visibility } : team
+      );
+      dispatch(updateTeamsArray(updatedTeams));
     } else {
       const errorMessage =
         resJson?.error ||
@@ -250,11 +252,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 12,
-    // paddingVertical: 6,
-    // borderWidth: 1,
-    // borderColor: "gray",
-    // borderRadius: 20,
-    // backgroundColor: "#f5f5f5",
     marginTop: 5,
   },
   txtVisibilityCapsule: {
