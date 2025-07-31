@@ -19,17 +19,13 @@ import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
 import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
 import { updateTeamsArray } from "../reducers/team";
-// import { updateReviewReducerSelectedVideoObject } from "../reducers/review";
-import {
-  updateUploadReducerSelectedVideoObject,
-  updateUploadReducerLoading,
-  updateUploadReducerDeleteVideoObject,
-} from "../reducers/upload";
-import * as ImagePicker from "expo-image-picker";
+
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
-import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
-import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
+// import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
+// import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
+import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
+import ModalTeamYesNo from "./subcomponents/modals/ModalTeamYesNo";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -38,6 +34,10 @@ export default function AdminSettings({ navigation }) {
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
   const dispatch = useDispatch();
   const [playersArray, setPlayersArray] = useState([]);
+  const [squadMembersArray, setSquadMembersArray] = useState([]);
+  const [isVisibleModalAddPlayer, setIsVisibleModalAddPlayer] = useState(false);
+  const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] =
+    useState(false);
 
   const topChildren = (
     <Text>
@@ -48,7 +48,77 @@ export default function AdminSettings({ navigation }) {
 
   useEffect(() => {
     fetchPlayers();
+    fetchSquadMembers();
   }, []);
+
+  const fetchPlayers = async () => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
+        teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
+
+    console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok`);
+      setPlayersArray(resJson.players);
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+  };
+
+  const fetchSquadMembers = async () => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/${
+        teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
+
+    console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      console.log(`response ok - squadMembersArray`);
+      console.log(resJson);
+      setSquadMembersArray(resJson.squadArray);
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+  };
 
   const updateTeamVisibility = async (visibility) => {
     // console.log(`---> update Team Visibility status: ${visibility}`);
@@ -87,46 +157,47 @@ export default function AdminSettings({ navigation }) {
     }
   };
 
-  const fetchPlayers = async () => {
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
-        teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
-      }`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userReducer.token}`,
-        },
-      }
+  const handleSelectVisibility = (visibility) => {
+    updateTeamVisibility(visibility); // Trigger your function
+    setShowVisibilityOptions(false); // Close dropdown
+    if (visibility === "On invitation") {
+      alert("On invitation");
+    }
+  };
+
+  const whichModalToDisplay = () => {
+    if (isVisibleModalAddPlayer) {
+      return {
+        modalComponent: <ModalAddPlayer addPlayerToTeam={addPlayerToTeam} />,
+        useState: isVisibleModalAddPlayer,
+        useStateSetter: setIsVisibleModalAddPlayer,
+      };
+    }
+
+    if (isVisibleRemovePlayerModal) {
+      return {
+        modalComponent: <ModalTeamYesNo onPressYes={handleRemovePlayer} />,
+        useState: isVisibleRemovePlayerModal,
+        useStateSetter: setIsVisibleRemovePlayerModal,
+      };
+    }
+  };
+
+  const addPlayerToTeam = (playerObject) => {
+    const filteredPlayers = teamReducer.playersArray.filter(
+      (item) => item.name !== "Add Player"
     );
 
-    console.log("Received response:", response.status);
+    const updatedArray = [...filteredPlayers, playerObject];
 
-    let resJson = null;
-    const contentType = response.headers.get("Content-Type");
+    updatedArray.push({
+      name: "Add Player",
+      shirtNumber: 9999,
+      position: "",
+    });
 
-    if (contentType?.includes("application/json")) {
-      resJson = await response.json();
-    }
-
-    if (response.ok && resJson) {
-      console.log(`response ok`);
-      // const tempArray = resJson.players.map((item) => {
-      //   return {
-      //     ...item,
-      //     selected: false,
-      //   };
-      // });
-      // console.log(tempArray);
-      // dispatch(updatePlayersArray(tempArray));
-      setPlayersArray(resJson.players);
-    } else {
-      const errorMessage =
-        resJson?.error ||
-        `There was a server error (and no resJson): ${response.status}`;
-      alert(errorMessage);
-    }
+    dispatch(updatePlayersArray(updatedArray));
+    setIsVisibleModalAddPlayer(false);
   };
 
   return (
@@ -134,16 +205,13 @@ export default function AdminSettings({ navigation }) {
       navigation={navigation}
       topChildren={topChildren}
       screenName={"AdminSettings"}
-      //   modalComponentAndSetterObject={whichModalToDisplay()}
+      modalComponentAndSetterObject={whichModalToDisplay()}
       topHeight={"15%"}
     >
       <View style={styles.container}>
         {/* -------- 
-            
             TOP 
-            
             ----- */}
-
         <View style={styles.containerTop}>
           <View style={styles.vwContainerTopInner}>
             <View style={styles.vwTeamName}>
@@ -166,25 +234,49 @@ export default function AdminSettings({ navigation }) {
             </View>
             <View style={styles.vwTeamVisibility}>
               <Text style={styles.txtTeamVisibilityTitle}>Visibility</Text>
-              <TouchableOpacity
+              <View
                 style={[
                   styles.touchableOpacityVisibilityCapsule,
                   styles.vwDropdownOptionCapsule,
                 ]}
                 onPress={() => setShowVisibilityOptions(!showVisibilityOptions)}
               >
-                <Text style={styles.txtVisibilityCapsule}>
-                  {
-                    teamReducer.teamsArray.filter((team) => team.selected)[0]
-                      .visibility
-                  }
-                </Text>
-                {showVisibilityOptions ? (
-                  <BtnVisibilityUp />
+                {teamReducer.teamsArray.filter((team) => team.selected)[0]
+                  .visibility === "On invitation" ? (
+                  <TouchableOpacity onPress={() => alert("On invitation")}>
+                    <Text style={styles.txtVisibilityCapsule}>
+                      {
+                        teamReducer.teamsArray.filter(
+                          (team) => team.selected
+                        )[0].visibility
+                      }
+                    </Text>
+                  </TouchableOpacity>
                 ) : (
-                  <BtnVisibilityDown />
+                  <Text style={styles.txtVisibilityCapsule}>
+                    {
+                      teamReducer.teamsArray.filter((team) => team.selected)[0]
+                        .visibility
+                    }
+                  </Text>
                 )}
-              </TouchableOpacity>
+
+                {showVisibilityOptions ? (
+                  <TouchableOpacity
+                    onPress={() => setShowVisibilityOptions(false)}
+                    style={{ padding: 5 }}
+                  >
+                    <BtnVisibilityUp />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => setShowVisibilityOptions(true)}
+                    style={{ padding: 5 }}
+                  >
+                    <BtnVisibilityDown />
+                  </TouchableOpacity>
+                )}
+              </View>
               {showVisibilityOptions && (
                 <View style={styles.vwVisibilityDropdown}>
                   {[
@@ -207,8 +299,7 @@ export default function AdminSettings({ navigation }) {
                         key={option.type}
                         style={styles.touchableOpacityDropdownOption}
                         onPress={() => {
-                          updateTeamVisibility(option.type); // Trigger your function
-                          setShowVisibilityOptions(false); // Close dropdown
+                          handleSelectVisibility(option.type);
                         }}
                       >
                         {/* <View style={styles.vwDropdownOption}> */}
@@ -229,64 +320,135 @@ export default function AdminSettings({ navigation }) {
           </View>
         </View>
         {/* -------- 
-            
             BOTTOM 
-            
             ----- */}
         <View style={styles.containerBottom}>
-          <View style={styles.vwPlayersTableHeading}>
-            <View style={styles.vwPlayersTableHeadingLeft}>
-              <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                Team Roster
-              </Text>
-              <Text> ({playersArray.length})</Text>
+          <View style={styles.vwPlayersGroup}>
+            <View style={styles.vwTableHeading}>
+              <View style={styles.vwTableHeadingLeft}>
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  Team Roster
+                </Text>
+                <Text> ({playersArray.length})</Text>
+              </View>
+              <View style={styles.vwTableHeadingRight}>
+                <ButtonKvNoDefault
+                  onPress={() => {
+                    console.log("Search");
+                  }}
+                  styleView={styles.btnSearch}
+                >
+                  <IconMagnifingGlass />
+                </ButtonKvNoDefault>
+                <ButtonKvNoDefaultTextOnly
+                  onPress={() => {
+                    console.log("Add");
+                  }}
+                  styleView={styles.btnAddElement}
+                  styleText={styles.txtBtnAddElement}
+                >
+                  +
+                </ButtonKvNoDefaultTextOnly>
+              </View>
             </View>
-            <View style={styles.vwPlayersTableHeadingRight}>
-              <ButtonKvNoDefault
-                onPress={() => {
-                  console.log("Search");
-                }}
-                styleView={styles.btnSearch}
-              >
-                <IconMagnifingGlass />
-              </ButtonKvNoDefault>
-              <ButtonKvNoDefaultTextOnly
-                onPress={() => {
-                  console.log("Add");
-                }}
-                styleView={styles.btnAddPlayer}
-                styleText={styles.txtBtnAddPlayer}
-              >
-                +
-              </ButtonKvNoDefaultTextOnly>
+            <View style={styles.vwPlayersTable}>
+              <FlatList
+                data={playersArray}
+                keyExtractor={(item, index) =>
+                  item.id?.toString() || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log(item);
+                    }}
+                    style={styles.vwPlayerRow}
+                  >
+                    <View style={styles.vwPlayerShirtNumber}>
+                      <Text style={styles.txtPlayerShirtNumber}>
+                        {item?.shirtNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerName}>
+                      <Text style={styles.txtPlayerName}>
+                        {item.firstName} {item.lastName}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerPosition}>
+                      <Text style={styles.txtPlayerPosition}>
+                        {item?.positionAbbreviation}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
             </View>
           </View>
-          <View style={styles.vwPlayersTable}>
-            <FlatList
-              data={playersArray}
-              keyExtractor={(item, index) =>
-                item.id?.toString() || index.toString()
-              }
-              renderItem={({ item }) => (
-                <View style={styles.vwPlayerRow}>
-                  <View style={styles.vwPlayerShirtNumber}>
-                    <Text style={styles.txtPlayerShirtNumber}>
-                      {item?.shirtNumber}
-                    </Text>
-                  </View>
-                  <View style={styles.vwPlayerName}>
-                    <Text style={styles.txtPlayerName}>
-                      {item.firstName} {item.lastName}
-                    </Text>
-                  </View>
-                  <View style={styles.vwPlayerPosition}>
-                    <Text style={styles.txtPlayerPosition}>
-                      {item?.positionAbbreviation}
-                    </Text>
-                  </View>
-                </View>
-              )}
-            />
+          <View style={styles.vwSquadMembersGroup}>
+            <View style={styles.vwTableHeading}>
+              <View style={styles.vwTableHeadingLeft}>
+                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                  Squad Members
+                </Text>
+                <Text> ({squadMembersArray?.length})</Text>
+              </View>
+              <View style={styles.vwTableHeadingRight}>
+                <ButtonKvNoDefault
+                  onPress={() => {
+                    console.log("Search");
+                  }}
+                  styleView={styles.btnSearch}
+                >
+                  <IconMagnifingGlass />
+                </ButtonKvNoDefault>
+                <ButtonKvNoDefaultTextOnly
+                  onPress={() => {
+                    console.log("Add");
+                  }}
+                  styleView={styles.btnAddElement}
+                  styleText={styles.txtBtnAddElement}
+                >
+                  +
+                </ButtonKvNoDefaultTextOnly>
+              </View>
+            </View>
+            <View style={styles.vwSquadMembersTable}>
+              <FlatList
+                data={squadMembersArray}
+                keyExtractor={(item, index) =>
+                  item.id?.toString() || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log(item);
+                    }}
+                    style={styles.vwSquadMembersRow}
+                  >
+                    <View style={styles.vwSquadMembersUserName}>
+                      <Text style={styles.txtSquadMembersUserName}>
+                        {item?.username}
+                      </Text>
+                    </View>
+                    {item?.isPlayer && (
+                      <View style={styles.vwSquadMembersPlayer}>
+                        <Text style={styles.txtSquadMembersPlayer}>Player</Text>
+                      </View>
+                    )}
+                    {item?.isCoach && (
+                      <View style={styles.vwSquadMembersCoach}>
+                        <Text style={styles.txtSquadMembersCoach}>Coach</Text>
+                      </View>
+                    )}
+                    {item?.isAdmin && (
+                      <View style={styles.vwSquadMembersAdmin}>
+                        <Text style={styles.txtSquadMembersAdmin}>Admin</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -298,6 +460,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    // backgroundColor: "gray",
   },
   // ------------
   // Top
@@ -305,9 +468,9 @@ const styles = StyleSheet.create({
   containerTop: {
     // flex: 1,
     width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
   vwContainerTopInner: {
     padding: 20,
@@ -339,8 +502,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   vwTeamVisibility: {
-    // borderBottomColor: "gray",
-    // borderBottomWidth: 1,
     width: "50%",
     marginBottom: 10,
   },
@@ -395,22 +556,22 @@ const styles = StyleSheet.create({
   // ------------
   containerBottom: {
     flex: 1,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
-  vwPlayersTableHeading: {
+  vwTableHeading: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     padding: 10,
   },
-  vwPlayersTableHeadingLeft: {
+  vwTableHeadingLeft: {
     flexDirection: "row",
-    // gap: 5,
     alignItems: "center",
+    marginTop: 20,
   },
-  vwPlayersTableHeadingRight: {
+  vwTableHeadingRight: {
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
@@ -427,7 +588,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // marginVertical: 3,
   },
-  btnAddPlayer: {
+  btnAddElement: {
     // width: Dimensions.get("window").width * 0.2,
     // height: 50,
     justifyContent: "center",
@@ -440,7 +601,7 @@ const styles = StyleSheet.create({
     borderColor: "#806181",
     borderWidth: 2,
   },
-  txtBtnAddPlayer: {
+  txtBtnAddElement: {
     fontSize: 24,
     color: "#806181",
     // backgroundColor: "red",
@@ -450,21 +611,40 @@ const styles = StyleSheet.create({
     // margin: 0,
     // lineHeight: 1,
   },
-  vwPlayersTable: {
-    height: 200,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
+  vwPlayersGroup: {
+    width: "100%",
+    // backgroundColor: "red",
+    flex: 1,
+  },
+  vwSquadMembersGroup: {
+    width: "100%",
+    // backgroundColor: "blue",
+    flex: 1,
+    paddingBottom: Dimensions.get("window").height * 0.1,
   },
 
   // ---- Player Table styles ----
+  vwPlayersTable: {
+    // height: 200,
+    flex: 1,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderRadius: 20,
+    marginHorizontal: 5,
+    padding: 5,
+  },
   vwPlayerRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
     gap: 5,
+    height: 50,
+    // backgroundColor: "green",
   },
   vwPlayerShirtNumber: {
+    // flex: 1,
+    height: "100%",
     width: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -478,17 +658,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   vwPlayerName: {
+    height: "100%",
     flex: 1,
     paddingLeft: 10,
     borderWidth: 1,
     borderColor: "gray",
     borderRadius: 20,
     backgroundColor: "#f5f5f5",
+    justifyContent: "center",
   },
   txtPlayerName: {
     fontSize: 16,
   },
   vwPlayerPosition: {
+    height: "100%",
     width: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -500,6 +683,98 @@ const styles = StyleSheet.create({
   txtPlayerPosition: {
     fontSize: 14,
     color: "gray",
+  },
+
+  // ---- Squad Members Table styles ----
+  vwSquadMembersTable: {
+    // height: 200,
+    flex: 1,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderRadius: 20,
+    marginHorizontal: 5,
+    padding: 5,
+  },
+  vwSquadMembersRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    gap: 5,
+    height: 50,
+    // backgroundColor: "green",
+  },
+  vwSquadMembersUserName: {
+    // flex: 1,
+    height: "100%",
+    // width: 40,
+    flex: 1,
+    justifyContent: "center",
+    // alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+    paddingLeft: 10,
+  },
+  txtSquadMembersUserName: {
+    // fontWeight: "bold",
+    fontSize: 16,
+  },
+  vwSquadMembersName: {
+    height: "100%",
+    flex: 1,
+    paddingLeft: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+  },
+  txtSquadMembersName: {
+    fontSize: 16,
+  },
+  vwSquadMembersPlayer: {
+    height: "100%",
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    // backgroundColor: "#f5f5f5",
+  },
+  vwSquadMembersCoach: {
+    height: "100%",
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    // backgroundColor: "#f5f5f5",
+  },
+  txtSquadMembersPlayer: {
+    fontSize: 14,
+    color: "gray",
+  },
+  txtSquadMembersCoach: {
+    fontSize: 14,
+    color: "gray",
+  },
+  vwSquadMembersAdmin: {
+    height: "100%",
+    width: 60,
+    justifyContent: "center",
+    borderRadius: 20,
+    backgroundColor: "#806181",
+    paddingLeft: 5,
+  },
+  txtSquadMembersAdmin: {
+    fontSize: 14,
+    color: "white",
+    lineHeight: 20,
+    width: "100%",
   },
 
   // ------------
