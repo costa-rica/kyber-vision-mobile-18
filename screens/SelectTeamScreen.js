@@ -83,7 +83,7 @@ export default function SelectTeamScreen({ navigation }) {
     </View>
   );
 
-  const createTribeRow = ({ item }) => {
+  const selectTeamRow = ({ item }) => {
     const isSelected = item.selected;
 
     return (
@@ -93,7 +93,7 @@ export default function SelectTeamScreen({ navigation }) {
             if (team.id === item.id) {
               return {
                 ...team,
-                selected: !team.selected,
+                selected: true,
               };
             } else {
               return {
@@ -122,16 +122,10 @@ export default function SelectTeamScreen({ navigation }) {
         <View style={styles.containerTop}>
           <Tribe />
 
-          {/* <FlatList
-            data={teamReducer.teamsArray}
-            renderItem={createTribeRow}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatListTeamNames}
-          /> */}
           {teamReducer.teamsArray?.length > 0 ? (
             <FlatList
               data={teamReducer.teamsArray}
-              renderItem={createTribeRow}
+              renderItem={selectTeamRow}
               keyExtractor={(item) => item.id.toString()}
               style={styles.flatListTeamNames}
             />
