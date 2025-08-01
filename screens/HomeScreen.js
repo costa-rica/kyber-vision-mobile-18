@@ -90,13 +90,11 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchSessionsArray();
-    console.log(JSON.stringify(userReducer.contractTeamUserArray));
   }, []);
 
   const fetchSessionsArray = async () => {
-    console.log(" -- fetchSessionsArray ---");
+    // console.log("fetchSessionsArray ---");
 
-    console.log(teamReducer.teamsArray.filter((team) => team.selected)[0].id);
     const response = await fetch(
       // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
       `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
@@ -112,7 +110,7 @@ export default function HomeScreen({ navigation }) {
       }
     );
 
-    console.log("Received response:", response.status);
+    // console.log("Received response:", response.status);
 
     let resJson = null;
     const contentType = response.headers.get("Content-Type");

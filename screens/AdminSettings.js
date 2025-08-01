@@ -27,6 +27,7 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
 import ModalAdminSettingsDeletePlayerYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerYesNo";
 import { updateSelectedPlayerObject } from "../reducers/team";
+import ModalAdminSettingsInviteToSquad from "./subcomponents/modals/ModalAdminSettingsInviteToSquad";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -38,6 +39,8 @@ export default function AdminSettings({ navigation }) {
   const [squadMembersArray, setSquadMembersArray] = useState([]);
   const [isVisibleModalAddPlayer, setIsVisibleModalAddPlayer] = useState(false);
   const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] =
+    useState(false);
+  const [isVisibleInviteToSquadModal, setIsVisibleInviteToSquadModal] =
     useState(false);
 
   const topChildren = (
@@ -162,7 +165,9 @@ export default function AdminSettings({ navigation }) {
     updateTeamVisibility(visibility); // Trigger your function
     setShowVisibilityOptions(false); // Close dropdown
     if (visibility === "On invitation") {
-      alert("On invitation");
+      // alert("On invitation");
+      console.log("----> On invitation");
+      setIsVisibleInviteToSquadModal(true);
     }
   };
 
@@ -186,6 +191,15 @@ export default function AdminSettings({ navigation }) {
         useStateSetter: setIsVisibleRemovePlayerModal,
       };
     }
+    if (isVisibleInviteToSquadModal) {
+      return {
+        modalComponent: (
+          <ModalAdminSettingsInviteToSquad onPressYes={handleInviteToSquad} />
+        ),
+        useState: isVisibleInviteToSquadModal,
+        useStateSetter: setIsVisibleInviteToSquadModal,
+      };
+    }
   };
 
   const addPlayerToTeam = async (playerObject) => {
@@ -200,11 +214,6 @@ export default function AdminSettings({ navigation }) {
       shirtNumber: 9999,
       position: "",
     });
-
-    // dispatch(updatePlayersArray(updatedArray));
-    // setIsVisibleModalAddPlayer(false);
-    console.log("--- added Player ----");
-    console.log(JSON.stringify(playerObject));
 
     const bodyObj = {
       teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
@@ -232,10 +241,6 @@ export default function AdminSettings({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      // const updatedTeams = teamReducer.teamsArray.map((team) =>
-      //   team.selected ? { ...team, visibility } : team
-      // );
-      // dispatch(updateTeamsArray(updatedTeams));
       fetchPlayers();
     } else {
       const errorMessage =
@@ -286,6 +291,43 @@ export default function AdminSettings({ navigation }) {
     setIsVisibleRemovePlayerModal(false);
   };
 
+  const handleInviteToSquad = async (emailString) => {
+    console.log("----> handleInviteToSquad");
+
+    const bodyObj = {
+      teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
+      email: emailString,
+    };
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/add-squad-member`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      // fetchPlayers();
+      fetchSquadMembers();
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
+    setIsVisibleInviteToSquadModal(false);
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -329,7 +371,9 @@ export default function AdminSettings({ navigation }) {
               >
                 {teamReducer.teamsArray.filter((team) => team.selected)[0]
                   .visibility === "On invitation" ? (
-                  <TouchableOpacity onPress={() => alert("On invitation")}>
+                  <TouchableOpacity
+                    onPress={() => handleSelectVisibility("On invitation")}
+                  >
                     <Text style={styles.txtVisibilityCapsule}>
                       {
                         teamReducer.teamsArray.filter(
