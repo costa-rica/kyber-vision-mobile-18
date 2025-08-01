@@ -26,6 +26,7 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 // import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
 import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
 import ModalAdminSettingsDeletePlayerYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerYesNo";
+import { updateSelectedPlayerObject } from "../reducers/team";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -110,7 +111,7 @@ export default function AdminSettings({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok - squadMembersArray`);
-      console.log(resJson);
+      // console.log(resJson);
       setSquadMembersArray(resJson.squadArray);
     } else {
       const errorMessage =
@@ -247,14 +248,18 @@ export default function AdminSettings({ navigation }) {
   };
 
   const handleRemovePlayer = async (playerObject) => {
+    console.log("--- removed Player ----");
+    console.log(JSON.stringify(playerObject));
     const bodyObj = {
       teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
       playerId: playerObject.id,
     };
+    console.log("--- removed Player ----");
+    console.log(JSON.stringify(bodyObj));
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/remove-player`,
+      `${process.env.EXPO_PUBLIC_API_URL}/teams/player`,
       {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userReducer.token}`,
@@ -269,10 +274,7 @@ export default function AdminSettings({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      // const updatedTeams = teamReducer.teamsArray.map((team) =>
-      //   team.selected ? { ...team, visibility } : team
-      // );
-      // dispatch(updateTeamsArray(updatedTeams));
+      Alert.alert("Player removed successfully");
       fetchPlayers();
     } else {
       const errorMessage =
@@ -444,6 +446,48 @@ export default function AdminSettings({ navigation }) {
                 }
                 renderItem={({ item }) => (
                   <TouchableOpacity
+                    style={styles.vwPlayerRow}
+                    onPress={() => {
+                      // Navigate to AdminSettingsPlayerCard
+                      navigation.navigate("AdminSettingsPlayerCard", {
+                        player: item,
+                      });
+                    }}
+                    onLongPress={() => {
+                      // Show the delete confirmation modal
+                      setIsVisibleRemovePlayerModal(true);
+                      // Optionally store which player is being removed
+                      // setSelectedPlayer(item);
+                      dispatch(updateSelectedPlayerObject(item));
+                    }}
+                    delayLongPress={500} // optional: control long press timing
+                  >
+                    <View style={styles.vwPlayerShirtNumber}>
+                      <Text style={styles.txtPlayerShirtNumber}>
+                        {item.shirtNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerName}>
+                      <Text style={styles.txtPlayerName}>
+                        {item.firstName} {item.lastName}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerPosition}>
+                      <Text style={styles.txtPlayerPosition}>
+                        {item.positionAbbreviation}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+
+              {/* <FlatList
+                data={playersArray}
+                keyExtractor={(item, index) =>
+                  item.id?.toString() || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
                     onPress={() => {
                       console.log(item);
                     }}
@@ -466,7 +510,7 @@ export default function AdminSettings({ navigation }) {
                     </View>
                   </TouchableOpacity>
                 )}
-              />
+              /> */}
             </View>
           </View>
           <View style={styles.vwSquadMembersGroup}>
