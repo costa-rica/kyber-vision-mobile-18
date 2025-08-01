@@ -18,6 +18,9 @@ import { useDispatch } from "react-redux";
 import { loginUser, reducerSetScreenDimensions } from "../reducers/user";
 import { useSelector } from "react-redux";
 import TemplateView from "./subcomponents/TemplateView";
+import { FontAwesome } from "@expo/vector-icons";
+import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
+import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 
 export default function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -26,13 +29,15 @@ export default function RegisterScreen({ navigation }) {
     portraitHeight: Dimensions.get("window").height,
     portraitWidth: Dimensions.get("window").width,
   });
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordRepeat, setShowPasswordRepeat] = useState(false);
 
   const handleClickRegister = async () => {
     if (password !== passwordRepeat) {
@@ -46,7 +51,7 @@ export default function RegisterScreen({ navigation }) {
     );
     console.log("- handleClickRegister  👀");
 
-    const bodyObj = { email, password, username };
+    const bodyObj = { email, password, firstName, lastName };
     console.log(`email: ${email}, ${password}`);
 
     const response = await fetch(
@@ -119,16 +124,137 @@ export default function RegisterScreen({ navigation }) {
       <View style={styles.container}>
         {/* -------- TOP ----- */}
         <View style={styles.containerTop}>
-          {/* <View style={styles.vwLogo}>
-            <Image
-              style={styles.image}
-              source={require("../assets/images/KyberV2Shiny.png")}
-              alt="logo"
-              resizeMode="contain"
-            />
+          <View style={styles.vwInputGroup}>
+            <Text style={styles.txtInputGroupLabel}>First Name</Text>
+            <View style={styles.vwInputWrapper}>
+              <FontAwesome
+                name="user"
+                size={20}
+                color="gray"
+                style={styles.faIcon}
+              />
+              <TextInput
+                placeholder="First Name"
+                placeholderTextColor="gray"
+                value={firstName}
+                onChangeText={(text) => setFirstName(text)}
+                style={styles.txtInputWithIcon}
+              />
+            </View>
+          </View>
+          <View style={styles.vwInputGroup}>
+            <Text style={styles.txtInputGroupLabel}>Last Name</Text>
+            <View style={styles.vwInputWrapper}>
+              <FontAwesome
+                name="user"
+                size={20}
+                color="gray"
+                style={styles.faIcon}
+              />
+              <TextInput
+                placeholder="Last Name"
+                placeholderTextColor="gray"
+                value={lastName}
+                onChangeText={(text) => setLastName(text)}
+                style={styles.txtInputWithIcon}
+              />
+            </View>
+          </View>
+          <View style={styles.vwInputGroup}>
+            <Text style={styles.txtInputGroupLabel}>E-mail</Text>
+            <View style={styles.vwInputWrapper}>
+              <FontAwesome
+                name="envelope"
+                size={20}
+                color="gray"
+                style={styles.faIcon}
+              />
+              <TextInput
+                placeholder="your.email@volleyball.com"
+                placeholderTextColor="gray"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                style={styles.txtInputWithIcon}
+              />
+            </View>
+          </View>
+          <View style={styles.vwInputGroup}>
+            <Text style={styles.txtInputGroupLabel}>Password</Text>
+            <View style={styles.vwInputWrapper}>
+              <ButtonKvImage
+                onPress={() => setShowPassword((prev) => !prev)}
+                style={styles.vwIconButton}
+              >
+                <FontAwesome
+                  name={showPassword ? "unlock" : "lock"}
+                  size={20}
+                  color="gray"
+                  style={styles.faIcon}
+                />
+              </ButtonKvImage>
+              <TextInput
+                placeholder="••••••••••"
+                placeholderTextColor="gray"
+                secureTextEntry={!showPassword}
+                value={password}
+                onChangeText={(text) => setPassword(text)}
+                style={styles.txtInputWithIcon}
+              />
+            </View>
+          </View>
+          <View style={styles.vwInputGroup}>
+            <Text style={styles.txtInputGroupLabel}>Confirm Password</Text>
+            <View style={styles.vwInputWrapper}>
+              <ButtonKvImage
+                onPress={() => setShowPasswordRepeat((prev) => !prev)}
+                style={styles.vwIconButton}
+              >
+                <FontAwesome
+                  name={showPasswordRepeat ? "unlock" : "lock"}
+                  size={20}
+                  color="gray"
+                  style={styles.faIcon}
+                />
+              </ButtonKvImage>
+              <TextInput
+                placeholder="••••••••••"
+                placeholderTextColor="gray"
+                secureTextEntry={!showPasswordRepeat}
+                value={passwordRepeat}
+                onChangeText={(text) => setPasswordRepeat(text)}
+                style={styles.txtInputWithIcon}
+              />
+            </View>
+          </View>
+
+          {/* <View style={styles.vwInputGroupForgotPassword}>
+            <ButtonKvStd
+              onPress={() => console.log("ResetPasswordRequest")}
+              style={styles.btnForgotPassword}
+            >
+              Forgot password ?
+            </ButtonKvStd>
+          </View> */}
+          <View style={styles.vwInputGroupLogin}>
+            <ButtonKvStd
+              onPress={() => handleClickRegister()}
+              style={styles.btnLogin}
+            >
+              Register
+            </ButtonKvStd>
+          </View>
+
+          {/* <View style={styles.vwInputGroupCreateAccount}>
+            <ButtonKvStd
+              onPress={() => console.log("Register")}
+              style={styles.btnCreateAccount}
+            >
+              Create an account
+            </ButtonKvStd>
           </View> */}
         </View>
-        <View style={styles.containerMiddle}>
+
+        {/* <View style={styles.containerMiddle}>
           <View style={styles.vwInputWhiteLabel}>
             <TextInput
               placeholder={"Username"}
@@ -156,13 +282,13 @@ export default function RegisterScreen({ navigation }) {
                 secureTextEntry={!showPassword}
               />
             </View>
-            {/* <View style={styles.vwSwitchHidePassword}>
+            <View style={styles.vwSwitchHidePassword}>
                   <Text>Show Password</Text>
                   <Switch
                     value={showPassword}
                     onValueChange={(value) => setShowPassword(value)}
                   />
-                </View> */}
+                </View> 
           </View>
           <View style={styles.vwInputWhiteLabel}>
             <TextInput
@@ -177,10 +303,9 @@ export default function RegisterScreen({ navigation }) {
               secureTextEntry={!showPassword}
             />
           </View>
-        </View>
-        {/* container Middle */}
-        <View style={styles.containerBottom}>
-          {/* <View style={styles.vwButtons}> */}
+        </View> */}
+
+        {/* <View style={styles.containerBottom}>
           <TouchableOpacity
             style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
             onPress={() => {
@@ -191,8 +316,7 @@ export default function RegisterScreen({ navigation }) {
             <Text style={styles.txtButton}>Validate</Text>
           </TouchableOpacity>
           <Text style={styles.txtMessage}> {message}</Text>
-          {/* </View> */}
-        </View>
+        </View> */}
       </View>
       {/* </KeyboardAwareScrollView>
       </TouchableWithoutFeedback> */}
@@ -201,14 +325,14 @@ export default function RegisterScreen({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    backgroundColor: "#F2EBF2",
-    // width: "100%",
+    flex: 1,
+    backgroundColor: "#FDFDFD",
+    width: "100%",
   },
 
   // ----- Top Container -----
   containerTop: {
-    flex: 1,
+    // flex: 1,
     // borderWidth: 2, // Adjust thickness as needed
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
@@ -217,98 +341,143 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 
-  vwLogo: {
-    height: 50,
-    width: "100%",
-    // backgroundColor: "green",
-    display: "flex",
+  vwInputGroup: {
+    width: "90%",
+    alignItems: "flex-start",
+    marginTop: 10,
+  },
+  vwInputGroupForgotPassword: {
+    width: "90%",
+    alignItems: "flex-start",
+    marginTop: 5,
+    paddingLeft: 15,
+  },
+  vwInputGroupCreateAccount: {
+    width: "90%",
     alignItems: "center",
+    marginTop: 20,
+    backgroundColor: "transparent",
   },
-  // ---- MIDDLE  ------
-  containerMiddle: {
-    // flex: 1,
-    // height: 500,
-    // minHeight: 500,
-    paddingTop: 50,
-    paddingBottom: 50,
-    justifyContent: "space-around",
-    gap: 20,
-    // justifyContent: "space-around",
-    // borderWidth: 2, // Adjust thickness as needed
-    // borderColor: "gray", // Change color as desired
-    // borderStyle: "dashed",
+  vwInputGroupLogin: {
+    width: "90%",
+    alignItems: "center",
+    paddingTop: 30,
   },
-
-  vwInputWhiteLabel: {
-    backgroundColor: "white",
-    width: Dimensions.get("window").width,
-    padding: 10,
+  vwInputWrapper: {
     flexDirection: "row",
-    gap: 10,
-  },
-  inputEmail: {
-    borderColor: "#806181",
+    alignItems: "center",
     borderWidth: 1,
-    borderRadius: 12,
+    borderColor: "gray",
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    backgroundColor: "#fff",
+  },
+  faIcon: {
+    marginRight: 8,
+  },
+  txtInputWithIcon: {
     flex: 1,
-    padding: 3,
-    paddingLeft: 6,
-    fontSize: 20,
-  },
-  vwSwitchHidePassword: {
-    padding: 10,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingRight: 30,
-    gap: 20,
-    alignItems: "center",
+    paddingVertical: 10,
+    color: "black",
   },
 
-  // -------- BOTTOM -------------
+  txtInputGroupLabel: {
+    fontSize: 14,
+    color: "#5B5B5B",
+    paddingLeft: 15,
+  },
+  vwIconButton: {
+    padding: 5,
+    marginRight: 8,
+    borderRadius: 20,
+    backgroundColor: "transparent",
+  },
+  // // ---- MIDDLE, BOTTOM, OBE  ------
+  // containerMiddle: {
+  //   // flex: 1,
+  //   // height: 500,
+  //   // minHeight: 500,
+  //   paddingTop: 50,
+  //   paddingBottom: 50,
+  //   justifyContent: "space-around",
+  //   gap: 20,
+  //   // justifyContent: "space-around",
+  //   // borderWidth: 2, // Adjust thickness as needed
+  //   // borderColor: "gray", // Change color as desired
+  //   // borderStyle: "dashed",
+  // },
 
-  containerBottom: {
-    // flex: 1,
-    // height: 200,
-    // backgroundColor: "gray",
-    // borderWidth: 2, // Adjust thickness as needed
-    // borderColor: "gray", // Change color as desired
-    // borderStyle: "dashed",
-    // alignItems: "center",
-    // width: "100%",
-    // flexDirection: "column",
-    // flexDirection:"column"
-    // justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
-    // padding: 50,
-    paddingBottom: 10,
-  },
+  // vwInputWhiteLabel: {
+  //   backgroundColor: "white",
+  //   width: Dimensions.get("window").width,
+  //   padding: 10,
+  //   flexDirection: "row",
+  //   gap: 10,
+  // },
+  // inputEmail: {
+  //   borderColor: "#806181",
+  //   borderWidth: 1,
+  //   borderRadius: 12,
+  //   flex: 1,
+  //   padding: 3,
+  //   paddingLeft: 6,
+  //   fontSize: 20,
+  // },
+  // vwSwitchHidePassword: {
+  //   padding: 10,
+  //   flexDirection: "row",
+  //   justifyContent: "flex-end",
+  //   paddingRight: 30,
+  //   gap: 20,
+  //   alignItems: "center",
+  // },
 
-  touchOpButton: {
-    // backgroundColor: "#A3A3A3",
-    // marginTop: 10,
-    borderRadius: 35,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "60%",
-    padding: 15,
-    // display: "flex",
-    // alignItems: "center",
-    // padding: 25,
-  },
-  txtButton: {
-    color: "white",
-    fontSize: 20,
-    fontFamily: "ApfelGrotezk",
-    // flexWrap: "wrap",
-    textAlign: "center",
-  },
-  txtMessage: {
-    color: "#970F9A",
-    fontSize: 20,
-    fontFamily: "ApfelGrotezk",
-    // flexWrap: "wrap",
-    textAlign: "center",
-    // backgroundColor: "green",
-  },
+  // // -------- BOTTOM -------------
+
+  // //
+  // containerBottom: {
+  //   // flex: 1,
+  //   // height: 200,
+  //   // backgroundColor: "gray",
+  //   // borderWidth: 2, // Adjust thickness as needed
+  //   // borderColor: "gray", // Change color as desired
+  //   // borderStyle: "dashed",
+  //   // alignItems: "center",
+  //   // width: "100%",
+  //   // flexDirection: "column",
+  //   // flexDirection:"column"
+  //   // justifyContent: "center",
+  //   alignItems: "center",
+  //   gap: 20,
+  //   // padding: 50,
+  //   paddingBottom: 10,
+  // },
+
+  // touchOpButton: {
+  //   // backgroundColor: "#A3A3A3",
+  //   // marginTop: 10,
+  //   borderRadius: 35,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   width: "60%",
+  //   padding: 15,
+  //   // display: "flex",
+  //   // alignItems: "center",
+  //   // padding: 25,
+  // },
+  // txtButton: {
+  //   color: "white",
+  //   fontSize: 20,
+  //   fontFamily: "ApfelGrotezk",
+  //   // flexWrap: "wrap",
+  //   textAlign: "center",
+  // },
+  // txtMessage: {
+  //   color: "#970F9A",
+  //   fontSize: 20,
+  //   fontFamily: "ApfelGrotezk",
+  //   // flexWrap: "wrap",
+  //   textAlign: "center",
+  //   // backgroundColor: "green",
+  // },
 });
