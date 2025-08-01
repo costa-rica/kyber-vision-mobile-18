@@ -119,6 +119,9 @@ export const userSlice = createSlice({
       state.user.email = null;
       state.contractTeamUserArray = [];
     },
+    updateContractTeamUserArray: (state, action) => {
+      state.contractTeamUserArray = action.payload;
+    },
   },
 });
 
@@ -128,6 +131,7 @@ export const {
   reducerSetUserSwipePadWheel,
   switchPositionGuides,
   logoutUser,
+  updateContractTeamUserArray,
 } = userSlice.actions;
 export default userSlice.reducer;
 

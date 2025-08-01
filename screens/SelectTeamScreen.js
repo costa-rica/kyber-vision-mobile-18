@@ -14,6 +14,7 @@ import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/team";
+import { updateContractTeamUserArray } from "../reducers/user";
 
 export default function SelectTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -42,8 +43,9 @@ export default function SelectTeamScreen({ navigation }) {
       resJson = await response.json();
     }
 
-    if (response.ok && resJson) {
+    if (response.ok && resJson.teamsArray && resJson.contractTeamUserArray) {
       console.log(`response ok`);
+      console.log(JSON.stringify(resJson));
       const tempArray = resJson.teamsArray.map((item) => {
         return {
           ...item,
@@ -53,6 +55,10 @@ export default function SelectTeamScreen({ navigation }) {
       // console.log(" --- here is tempArray (teamsArray) --");
       // console.log(tempArray);
       dispatch(updateTeamsArray(tempArray));
+      dispatch(updateContractTeamUserArray(resJson.contractTeamUserArray));
+      console.log(
+        "-----> Both teams and user's team arrays updated successfully"
+      );
     } else {
       const errorMessage =
         resJson?.error ||

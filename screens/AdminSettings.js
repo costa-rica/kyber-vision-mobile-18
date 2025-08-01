@@ -318,6 +318,7 @@ export default function AdminSettings({ navigation }) {
     if (response.ok && resJson) {
       // fetchPlayers();
       fetchSquadMembers();
+      Alert.alert("Squad member added successfully");
     } else {
       const errorMessage =
         resJson?.error ||

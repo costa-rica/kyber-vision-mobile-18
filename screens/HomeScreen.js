@@ -90,6 +90,7 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     fetchSessionsArray();
+    console.log(JSON.stringify(userReducer.contractTeamUserArray));
   }, []);
 
   const fetchSessionsArray = async () => {
@@ -134,9 +135,10 @@ export default function HomeScreen({ navigation }) {
     const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0].id;
     const teamName = teamReducer.teamsArray.filter((team) => team.selected)[0]
       .teamName;
-    const userTeamIsAdmin =
-      userReducer.contractTeamUserArray.filter((team) => team.id === teamId)[0]
-        ?.isAdmin || false;
+    const userTeamIsAdmin = false;
+    // const userTeamIsAdmin =
+    //   userReducer.contractTeamUserArray.filter((team) => team.id === teamId)[0]
+    //     ?.isAdmin || false;
     const adminButtonText = userTeamIsAdmin
       ? `Administrate ${teamName}`
       : `${teamName} Settings`;

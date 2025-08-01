@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import TemplateView from "./subcomponents/TemplateView";
 import { useState } from "react";
-import { FontAwesome } from "@expo/vector-icons"; // near top of file
+import { FontAwesome } from "@expo/vector-icons";
 import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useDispatch } from "react-redux";

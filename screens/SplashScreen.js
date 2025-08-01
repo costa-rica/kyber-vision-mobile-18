@@ -5,7 +5,7 @@ import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 // import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../reducers/user";
+import { loginUser, logoutUser } from "../reducers/user";
 import guestUserData from "../offlineData/userReducer.json";
 import { useSelector } from "react-redux";
 export default function SplashScreen({ navigation }) {
@@ -61,8 +61,19 @@ export default function SplashScreen({ navigation }) {
               }}
               style={styles.btnEmailLogin}
             >
-              Email Login
+              {userReducer.token ? "Select Squad" : "Email Login"}
             </ButtonKvStd>
+            {userReducer.token && (
+              <ButtonKvStd
+                title="Logout"
+                onPress={() => {
+                  dispatch(logoutUser());
+                }}
+                style={styles.btnEmailLogin}
+              >
+                Logout
+              </ButtonKvStd>
+            )}
           </View>
           <View style={styles.vwLineContainer}>
             <View style={styles.vwLine} />

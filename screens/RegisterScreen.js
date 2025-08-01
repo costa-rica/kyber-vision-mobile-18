@@ -11,8 +11,9 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
-// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // Import library
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // Import library
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { loginUser, reducerSetScreenDimensions } from "../reducers/user";
@@ -41,7 +42,18 @@ export default function RegisterScreen({ navigation }) {
 
   const handleClickRegister = async () => {
     if (password !== passwordRepeat) {
-      setMessage("Passwords do not match");
+      // setMessage("Passwords do not match");
+      Alert.alert("Passwords do not match");
+      return;
+    }
+    if (!firstName || !lastName || !email || !password || !passwordRepeat) {
+      // setMessage("All fields are required");
+      Alert.alert("All fields are required");
+      return;
+    }
+    if (!email.includes("@")) {
+      // setMessage("Invalid email");
+      Alert.alert("Invalid email");
       return;
     }
 
@@ -77,13 +89,15 @@ export default function RegisterScreen({ navigation }) {
       resJson.email = email;
       dispatch(
         loginUser({
-          email: resJson.email,
+          email: resJson.user.email,
           token: resJson.token,
+          username: resJson.user.username,
+          contractTeamUserArray: resJson.user.ContractTeamUsers,
         })
       );
       setMessage("Successfully registered");
       console.log("after dispatch");
-      navigation.navigate("Home");
+      navigation.navigate("SelectTeamScreen");
     } else if (resJson?.error) {
       setMessage(resJson.error);
     } else {
@@ -91,16 +105,16 @@ export default function RegisterScreen({ navigation }) {
     }
   };
 
-  const handlePasswordMatching = (text) => {
-    setPassword(text);
-    if (text !== passwordRepeat) {
-      // setMessage("Passwords do not match");
-      setPasswordsMatch(false);
-    } else {
-      setMessage(""); // Clear message when passwords match
-      setPasswordsMatch(true);
-    }
-  };
+  // const handlePasswordMatching = (text) => {
+  //   setPassword(text);
+  //   if (text !== passwordRepeat) {
+  //     // setMessage("Passwords do not match");
+  //     setPasswordsMatch(false);
+  //   } else {
+  //     setMessage(""); // Clear message when passwords match
+  //     setPasswordsMatch(true);
+  //   }
+  // };
   const handlePasswordRepeatMatching = (text) => {
     setPasswordRepeat(text);
     if (password !== text) {
@@ -113,121 +127,126 @@ export default function RegisterScreen({ navigation }) {
   };
   return (
     <TemplateView navigation={navigation} hideSettings={true} noGrayBand={true}>
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAwareScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           enableOnAndroid={true} // Ensures it works on Android
           extraScrollHeight={Platform.OS === "android" ? 80 : 0} // Pushes up slightly when keyboard opens
           enableAutomaticScroll={true} // Ensures inputs are visible when keyboard is open
           keyboardShouldPersistTaps="handled" // Allows tapping outside to dismiss keyboard
-        > */}
-      <View style={styles.container}>
-        {/* -------- TOP ----- */}
-        <View style={styles.containerTop}>
-          <View style={styles.vwInputGroup}>
-            <Text style={styles.txtInputGroupLabel}>First Name</Text>
-            <View style={styles.vwInputWrapper}>
-              <FontAwesome
-                name="user"
-                size={20}
-                color="gray"
-                style={styles.faIcon}
-              />
-              <TextInput
-                placeholder="First Name"
-                placeholderTextColor="gray"
-                value={firstName}
-                onChangeText={(text) => setFirstName(text)}
-                style={styles.txtInputWithIcon}
-              />
-            </View>
-          </View>
-          <View style={styles.vwInputGroup}>
-            <Text style={styles.txtInputGroupLabel}>Last Name</Text>
-            <View style={styles.vwInputWrapper}>
-              <FontAwesome
-                name="user"
-                size={20}
-                color="gray"
-                style={styles.faIcon}
-              />
-              <TextInput
-                placeholder="Last Name"
-                placeholderTextColor="gray"
-                value={lastName}
-                onChangeText={(text) => setLastName(text)}
-                style={styles.txtInputWithIcon}
-              />
-            </View>
-          </View>
-          <View style={styles.vwInputGroup}>
-            <Text style={styles.txtInputGroupLabel}>E-mail</Text>
-            <View style={styles.vwInputWrapper}>
-              <FontAwesome
-                name="envelope"
-                size={20}
-                color="gray"
-                style={styles.faIcon}
-              />
-              <TextInput
-                placeholder="your.email@volleyball.com"
-                placeholderTextColor="gray"
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                style={styles.txtInputWithIcon}
-              />
-            </View>
-          </View>
-          <View style={styles.vwInputGroup}>
-            <Text style={styles.txtInputGroupLabel}>Password</Text>
-            <View style={styles.vwInputWrapper}>
-              <ButtonKvImage
-                onPress={() => setShowPassword((prev) => !prev)}
-                style={styles.vwIconButton}
-              >
-                <FontAwesome
-                  name={showPassword ? "unlock" : "lock"}
-                  size={20}
-                  color="gray"
-                  style={styles.faIcon}
-                />
-              </ButtonKvImage>
-              <TextInput
-                placeholder="••••••••••"
-                placeholderTextColor="gray"
-                secureTextEntry={!showPassword}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                style={styles.txtInputWithIcon}
-              />
-            </View>
-          </View>
-          <View style={styles.vwInputGroup}>
-            <Text style={styles.txtInputGroupLabel}>Confirm Password</Text>
-            <View style={styles.vwInputWrapper}>
-              <ButtonKvImage
-                onPress={() => setShowPasswordRepeat((prev) => !prev)}
-                style={styles.vwIconButton}
-              >
-                <FontAwesome
-                  name={showPasswordRepeat ? "unlock" : "lock"}
-                  size={20}
-                  color="gray"
-                  style={styles.faIcon}
-                />
-              </ButtonKvImage>
-              <TextInput
-                placeholder="••••••••••"
-                placeholderTextColor="gray"
-                secureTextEntry={!showPasswordRepeat}
-                value={passwordRepeat}
-                onChangeText={(text) => setPasswordRepeat(text)}
-                style={styles.txtInputWithIcon}
-              />
-            </View>
-          </View>
+        >
+          <View style={styles.container}>
+            {/* -------- TOP ----- */}
+            <View style={styles.containerTop}>
+              <View style={styles.vwInputGroup}>
+                <Text style={styles.txtInputGroupLabel}>First Name</Text>
+                <View style={styles.vwInputWrapper}>
+                  <FontAwesome
+                    name="user"
+                    size={20}
+                    color="gray"
+                    style={styles.faIcon}
+                  />
+                  <TextInput
+                    placeholder="First Name"
+                    placeholderTextColor="gray"
+                    value={firstName}
+                    onChangeText={(text) => setFirstName(text)}
+                    style={styles.txtInputWithIcon}
+                  />
+                </View>
+              </View>
+              <View style={styles.vwInputGroup}>
+                <Text style={styles.txtInputGroupLabel}>Last Name</Text>
+                <View style={styles.vwInputWrapper}>
+                  <FontAwesome
+                    name="user"
+                    size={20}
+                    color="gray"
+                    style={styles.faIcon}
+                  />
+                  <TextInput
+                    placeholder="Last Name"
+                    placeholderTextColor="gray"
+                    value={lastName}
+                    onChangeText={(text) => setLastName(text)}
+                    style={styles.txtInputWithIcon}
+                  />
+                </View>
+              </View>
+              <View style={styles.vwInputGroup}>
+                <Text style={styles.txtInputGroupLabel}>E-mail</Text>
+                <View style={styles.vwInputWrapper}>
+                  <FontAwesome
+                    name="envelope"
+                    size={20}
+                    color="gray"
+                    style={styles.faIcon}
+                  />
+                  <TextInput
+                    placeholder="your.email@volleyball.com"
+                    placeholderTextColor="gray"
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}
+                    style={styles.txtInputWithIcon}
+                  />
+                </View>
+              </View>
+              <View style={styles.vwInputGroup}>
+                <Text style={styles.txtInputGroupLabel}>Password</Text>
+                <View style={styles.vwInputWrapper}>
+                  <ButtonKvImage
+                    onPress={() => setShowPassword((prev) => !prev)}
+                    style={styles.vwIconButton}
+                  >
+                    <FontAwesome
+                      name={showPassword ? "unlock" : "lock"}
+                      size={20}
+                      color="gray"
+                      style={styles.faIcon}
+                    />
+                  </ButtonKvImage>
+                  <TextInput
+                    placeholder="••••••••••"
+                    placeholderTextColor="gray"
+                    secureTextEntry={!showPassword}
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}
+                    style={styles.txtInputWithIcon}
+                  />
+                </View>
+              </View>
+              <View style={[styles.vwInputGroup]}>
+                <Text style={styles.txtInputGroupLabel}>Confirm Password</Text>
+                <View
+                  style={[
+                    styles.vwInputWrapper,
+                    { borderColor: passwordsMatch ? "#806181" : "red" },
+                  ]}
+                >
+                  <ButtonKvImage
+                    onPress={() => setShowPasswordRepeat((prev) => !prev)}
+                    style={styles.vwIconButton}
+                  >
+                    <FontAwesome
+                      name={showPasswordRepeat ? "unlock" : "lock"}
+                      size={20}
+                      color="gray"
+                      style={styles.faIcon}
+                    />
+                  </ButtonKvImage>
+                  <TextInput
+                    placeholder="••••••••••"
+                    placeholderTextColor="gray"
+                    secureTextEntry={!showPasswordRepeat}
+                    value={passwordRepeat}
+                    onChangeText={(text) => handlePasswordRepeatMatching(text)}
+                    style={styles.txtInputWithIcon}
+                  />
+                </View>
+              </View>
 
-          {/* <View style={styles.vwInputGroupForgotPassword}>
+              {/* <View style={styles.vwInputGroupForgotPassword}>
             <ButtonKvStd
               onPress={() => console.log("ResetPasswordRequest")}
               style={styles.btnForgotPassword}
@@ -235,16 +254,16 @@ export default function RegisterScreen({ navigation }) {
               Forgot password ?
             </ButtonKvStd>
           </View> */}
-          <View style={styles.vwInputGroupLogin}>
-            <ButtonKvStd
-              onPress={() => handleClickRegister()}
-              style={styles.btnLogin}
-            >
-              Register
-            </ButtonKvStd>
-          </View>
+              <View style={styles.vwInputGroupLogin}>
+                <ButtonKvStd
+                  onPress={() => handleClickRegister()}
+                  style={styles.btnRegister}
+                >
+                  Register
+                </ButtonKvStd>
+              </View>
 
-          {/* <View style={styles.vwInputGroupCreateAccount}>
+              {/* <View style={styles.vwInputGroupCreateAccount}>
             <ButtonKvStd
               onPress={() => console.log("Register")}
               style={styles.btnCreateAccount}
@@ -252,9 +271,9 @@ export default function RegisterScreen({ navigation }) {
               Create an account
             </ButtonKvStd>
           </View> */}
-        </View>
+            </View>
 
-        {/* <View style={styles.containerMiddle}>
+            {/* <View style={styles.containerMiddle}>
           <View style={styles.vwInputWhiteLabel}>
             <TextInput
               placeholder={"Username"}
@@ -305,7 +324,7 @@ export default function RegisterScreen({ navigation }) {
           </View>
         </View> */}
 
-        {/* <View style={styles.containerBottom}>
+            {/* <View style={styles.containerBottom}>
           <TouchableOpacity
             style={[styles.touchOpButton, { backgroundColor: "#970F9A" }]}
             onPress={() => {
@@ -317,9 +336,9 @@ export default function RegisterScreen({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.txtMessage}> {message}</Text>
         </View> */}
-      </View>
-      {/* </KeyboardAwareScrollView>
-      </TouchableWithoutFeedback> */}
+          </View>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
     </TemplateView>
   );
 }
@@ -327,7 +346,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FDFDFD",
-    width: "100%",
+    width: Dimensions.get("window").width,
   },
 
   // ----- Top Container -----
@@ -391,6 +410,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderRadius: 20,
     backgroundColor: "transparent",
+  },
+  btnRegister: {
+    width: Dimensions.get("window").width * 0.6,
+    height: 50,
+    justifyContent: "center",
+    fontSize: 24,
+    color: "#fff",
+    backgroundColor: "#806181",
   },
   // // ---- MIDDLE, BOTTOM, OBE  ------
   // containerMiddle: {
