@@ -454,10 +454,7 @@ export default function AdminSettings({ navigation }) {
                       });
                     }}
                     onLongPress={() => {
-                      // Show the delete confirmation modal
                       setIsVisibleRemovePlayerModal(true);
-                      // Optionally store which player is being removed
-                      // setSelectedPlayer(item);
                       dispatch(updateSelectedPlayerObject(item));
                     }}
                     delayLongPress={500} // optional: control long press timing
@@ -480,37 +477,6 @@ export default function AdminSettings({ navigation }) {
                   </TouchableOpacity>
                 )}
               />
-
-              {/* <FlatList
-                data={playersArray}
-                keyExtractor={(item, index) =>
-                  item.id?.toString() || index.toString()
-                }
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log(item);
-                    }}
-                    style={styles.vwPlayerRow}
-                  >
-                    <View style={styles.vwPlayerShirtNumber}>
-                      <Text style={styles.txtPlayerShirtNumber}>
-                        {item?.shirtNumber}
-                      </Text>
-                    </View>
-                    <View style={styles.vwPlayerName}>
-                      <Text style={styles.txtPlayerName}>
-                        {item.firstName} {item.lastName}
-                      </Text>
-                    </View>
-                    <View style={styles.vwPlayerPosition}>
-                      <Text style={styles.txtPlayerPosition}>
-                        {item?.positionAbbreviation}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              /> */}
             </View>
           </View>
           <View style={styles.vwSquadMembersGroup}>
@@ -552,6 +518,12 @@ export default function AdminSettings({ navigation }) {
                     onPress={() => {
                       console.log(item);
                     }}
+                    onLongPress={() => {
+                      Alert.alert("Long Press -- > remove member");
+                      // setIsVisibleRemovePlayerModal(true);
+                      // dispatch(updateSelectedPlayerObject(item));
+                    }}
+                    delayLongPress={500} // optional: control long press timing
                     style={styles.vwSquadMembersRow}
                   >
                     <View style={styles.vwSquadMembersUserName}>

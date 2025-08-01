@@ -24,7 +24,8 @@ import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 // import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
 
-export default function AdminSettingsPlayerCard({ navigation }) {
+export default function AdminSettingsPlayerCard({ navigation, route }) {
+  const player = route.params.player;
   const userReducer = useSelector((state) => state.user);
   const uploadReducer = useSelector((state) => state.upload);
   const teamReducer = useSelector((state) => state.team);
@@ -46,6 +47,8 @@ export default function AdminSettingsPlayerCard({ navigation }) {
     >
       <View style={styles.container}>
         <Text>Player Card</Text>
+        <Text>{player.firstName}</Text>
+        <Text>{player.lastName}</Text>
       </View>
     </TemplateViewWithTopChildrenSmall>
   );
