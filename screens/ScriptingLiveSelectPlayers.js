@@ -64,7 +64,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      const tempArray = resJson.players.map((item) => {
+      const tempArray = resJson.playersArray.map((item) => {
         return {
           ...item,
           selected: false,

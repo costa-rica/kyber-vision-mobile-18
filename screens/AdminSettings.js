@@ -64,6 +64,11 @@ export default function AdminSettings({ navigation }) {
     fetchSquadMembers();
   }, []);
 
+  useEffect(() => {
+    //   // fetchPlayers();
+    //   fetchSquadMembers();
+  }, [teamReducer.squadMembersArray]);
+
   const fetchPlayers = async () => {
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
@@ -89,7 +94,7 @@ export default function AdminSettings({ navigation }) {
 
     if (response.ok && resJson) {
       console.log(`response ok`);
-      setPlayersArray(resJson.players);
+      setPlayersArray(resJson.playersArray);
     } else {
       const errorMessage =
         resJson?.error ||
@@ -517,8 +522,7 @@ export default function AdminSettings({ navigation }) {
                     onPress={() => {
                       // Navigate to AdminSettingsPlayerCard
                       navigation.navigate("AdminSettingsPlayerCard", {
-                        player: item,
-                        // squadMembersArray: squadMembersArray,
+                        playerObject: item,
                       });
                     }}
                     onLongPress={() => {
@@ -915,14 +919,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   vwSquadMembersPlayer: {
-    height: "100%",
-    width: 40,
-    justifyContent: "center",
-    alignItems: "center",
     borderWidth: 1,
     borderColor: "gray",
-    borderRadius: 20,
-    // backgroundColor: "#f5f5f5",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    padding: 5,
   },
   vwSquadMembersCoach: {
     height: "100%",
@@ -935,26 +937,29 @@ const styles = StyleSheet.create({
     // backgroundColor: "#f5f5f5",
   },
   txtSquadMembersPlayer: {
-    fontSize: 14,
     color: "gray",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   txtSquadMembersCoach: {
     fontSize: 14,
     color: "gray",
   },
+
   vwSquadMembersAdmin: {
-    height: "100%",
-    width: 60,
+    // height: 40,
+    // width: 80,
     justifyContent: "center",
-    borderRadius: 20,
+    alignItems: "center",
+    borderRadius: 30,
     backgroundColor: "#806181",
-    paddingLeft: 5,
+    padding: 5,
   },
   txtSquadMembersAdmin: {
-    fontSize: 14,
+    fontSize: 16,
     color: "white",
-    lineHeight: 20,
-    width: "100%",
+    // lineHeight: 20,
+    fontWeight: "bold",
   },
 
   // ------------

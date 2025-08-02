@@ -10,20 +10,25 @@ import {
 } from "react-native";
 import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
+import { updateSquadMembersArray } from "../../../reducers/team";
 
 export default function ModalAdminSettingsPlayerCardLinkUser({
-  player,
+  playerObject,
   setIsVisibleLinkUserModal,
+  setPlayerObject,
 }) {
   const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
   const [searchTerm, setSearchTerm] = useState("");
-  const [userObject, setUserObject] = useState(null);
+  const dispatch = useDispatch();
+  // const [userObject, setUserObject] = useState(null);
+  const [userObject, setUserObject] = useState(playerObject);
   const [filteredUsersArray, setFilteredUsersArray] = useState(
     teamReducer.squadMembersArray
   );
+  const [isAlreadyLinked, setIsAlreadyLinked] = useState(playerObject.isUser);
 
   const filterUsers = (searchTerm) => {
     const filteredUsers = teamReducer.squadMembersArray.filter((user) =>
@@ -32,21 +37,34 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
     setFilteredUsersArray(filteredUsers);
   };
 
-  const handleLinkUser = async () => {
-    console.log("Linking user with email:", userObject.email);
+  const handleLinkUser = () => {
+    if (isAlreadyLinked) {
+      Alert.alert(
+        "Confirm Link User",
+        `Are you sure you want to link ${userObject.username} to ${playerObject.firstName} ${playerObject.lastName}?`,
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Link",
+            onPress: () => sendLinkUserRequest(),
+          },
+        ]
+      );
+    } else {
+      sendLinkUserRequest();
+    }
+  };
 
-    // const updateTeamVisibility = async (visibility) => {
-    //     // console.log(`---> update Team Visibility status: ${visibility}`);
-
+  const sendLinkUserRequest = async () => {
     const bodyObj = {
-      playerId: player.id,
-      userId: userObject.id,
+      playerId: playerObject.id,
+      userId: userObject.userId,
     };
-    // console.log("bodyObj:", bodyObj);
-    // console.log(
-    //   `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`
-    // );
-    // console.log(`Bearer ${userReducer.token}`);
+
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`,
       {
@@ -68,9 +86,35 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
 
     if (response.ok && resJson) {
       // Make alert close the modal
-      Alert.alert("User linked successfully", () => {
-        setIsVisibleLinkUserModal(false);
-      });
+      Alert.alert(
+        "User linked successfully",
+        "", // optional message
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              const tempObject = {
+                ...playerObject,
+                username: userObject.username,
+                userId: userObject.userId,
+              };
+              setPlayerObject(tempObject);
+              const tempSquadMembersArray = teamReducer.squadMembersArray.map(
+                (user) => {
+                  if (user.id === userObject.id) {
+                    return userObject;
+                  }
+                  return user;
+                }
+              );
+
+              dispatch(updateSquadMembersArray(tempSquadMembersArray));
+
+              setIsVisibleLinkUserModal(false);
+            },
+          },
+        ]
+      );
     } else {
       const errorMessage =
         resJson?.error ||
@@ -86,7 +130,7 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
         <Text style={styles.txtModalTitle}>
           Link{" "}
           <Text style={styles.txtModalTitleTeamName}>
-            {player.firstName} {player.lastName}
+            {playerObject.firstName} {playerObject.lastName}
           </Text>{" "}
           to:
         </Text>
@@ -120,8 +164,9 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
           styleView={styles.btnLinkUser}
           styleText={styles.txtBtnLinkUser}
         >
-          Link
+          {isAlreadyLinked ? "Re-link" : "Link"}
         </ButtonKvNoDefaultTextOnly>
+        <Text style={{ fontSize: 10 }}>{JSON.stringify(userObject)}</Text>
       </View>
       <View style={styles.vwUsersFlatListContainer}>
         <FlatList
@@ -130,7 +175,7 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
             <TouchableOpacity
               style={[
                 styles.touchableOpacityUserRow,
-                userObject?.id === item.id &&
+                userObject?.userId === item.userId &&
                   styles.touchableOpacityUserRowSelected,
               ]}
               onPress={() => setUserObject(item)}
@@ -138,12 +183,13 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
               <Text
                 style={[
                   styles.txtUserItem,
-                  userObject?.id === item.id && styles.txtUserItemSelected,
+                  userObject?.userId === item.userId &&
+                    styles.txtUserItemSelected,
                 ]}
               >
                 {item.username}
               </Text>
-              <Text style={styles.txtUserId}>user id: {item.id}</Text>
+              <Text style={styles.txtUserId}>user id: {item.userId}</Text>
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
@@ -222,10 +268,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 5,
   },
-  // btnYesSelected: {
-  //   borderColor: "#FF6666",
-  //   borderWidth: 4,
-  // },
   txtBtnLinkUser: {
     fontSize: 24,
     color: "#806181",

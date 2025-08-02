@@ -4,6 +4,7 @@ import {
   Image,
   Text,
   TouchableWithoutFeedback,
+  Alert,
 } from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";

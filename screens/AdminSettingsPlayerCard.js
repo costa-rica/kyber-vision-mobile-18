@@ -28,7 +28,7 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
 
 export default function AdminSettingsPlayerCard({ navigation, route }) {
-  const player = route.params.player;
+  const [playerObject, setPlayerObject] = useState(route.params.playerObject);
   const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
   const [localImageUri, setLocalImageUri] = useState(null);
@@ -49,10 +49,10 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     try {
       const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
       await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
-      const fileUri = `${localDir}${player.image}`;
+      const fileUri = `${localDir}${playerObject.image}`;
 
       const downloadResumable = await FileSystem.downloadAsync(
-        `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${player.image}`,
+        `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${playerObject.image}`,
         fileUri,
         {
           headers: {
@@ -76,9 +76,9 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
 
   useEffect(() => {
     const checkAndLoadImage = async () => {
-      if (!player.image) return;
+      if (!playerObject.image) return;
       const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
-      const fileUri = `${localDir}${player.image}`;
+      const fileUri = `${localDir}${playerObject.image}`;
       const fileInfo = await FileSystem.getInfoAsync(fileUri);
       if (fileInfo.exists) {
         setLocalImageUri(fileUri);
@@ -87,7 +87,7 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
       }
     };
     checkAndLoadImage();
-  }, [player.image]);
+  }, [playerObject.image]);
 
   const whichModalToDisplay = () => {
     if (isVisibleLinkUserModal) {
@@ -95,7 +95,9 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
         modalComponent: (
           <ModalAdminSettingsPlayerCardLinkUser
             // onPressYes={handleLinkUser}
-            player={player}
+            playerObject={playerObject}
+            setIsVisibleLinkUserModal={setIsVisibleLinkUserModal}
+            setPlayerObject={setPlayerObject}
           />
         ),
         useState: isVisibleLinkUserModal,
@@ -123,13 +125,13 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
             <View style={styles.vwPlayerLeft}>
               <Text style={styles.txtShirtNumber}>
                 {/* {props.lastActionPlayer.shirtNumber} */}
-                {player.shirtNumber}
+                {playerObject.shirtNumber}
               </Text>
             </View>
             <View style={styles.vwPlayerRight}>
-              <Text style={styles.txtPlayerName}>{player.firstName}</Text>
+              <Text style={styles.txtPlayerName}>{playerObject.firstName}</Text>
               <Text style={styles.txtPlayerName}>
-                {player.lastName.toUpperCase()}
+                {playerObject.lastName.toUpperCase()}
               </Text>
             </View>
           </View>
@@ -148,14 +150,20 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
             <Text style={styles.txtPlayerLabel}>Player</Text>
           </View>
           <View style={styles.vwPlayerLabel}>
-            <Text style={styles.txtPlayerLabel}>{player.position}</Text>
+            <Text style={styles.txtPlayerLabel}>{playerObject.position}</Text>
           </View>
         </ImageBackground>
         <View style={styles.containerBottom}>
           <View style={styles.vwTeamName}>
             <Text style={styles.txtLabel}>Squad member account linked</Text>
             <View style={styles.vwLinkeAccountInput}>
-              <Text style={styles.txtTeamNameValue}> No account linked</Text>
+              {playerObject.isUser ? (
+                <Text style={styles.txtTeamNameValue}>
+                  {playerObject.username}
+                </Text>
+              ) : (
+                <Text style={styles.txtTeamNameValue}> No account linked</Text>
+              )}
               {isAdminOfThisTeam && (
                 <ButtonKvNoDefault
                   onPress={() => {
@@ -316,7 +324,7 @@ const styles = StyleSheet.create({
   vwLinkeAccountInput: {
     flexDirection: "row",
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "space-between",
     gap: 10,
   },
   btnSearch: {
