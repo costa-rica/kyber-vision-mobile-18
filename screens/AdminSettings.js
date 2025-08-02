@@ -31,6 +31,8 @@ import {
   updateSquadMembersArray,
 } from "../reducers/team";
 import ModalAdminSettingsInviteToSquad from "./subcomponents/modals/ModalAdminSettingsInviteToSquad";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -59,15 +61,23 @@ export default function AdminSettings({ navigation }) {
     </Text>
   );
 
-  useEffect(() => {
-    fetchPlayers();
-    fetchSquadMembers();
-  }, []);
+  // useEffect(() => {
+  //   fetchPlayers();
+  //   fetchSquadMembers();
+  // }, []);
 
-  useEffect(() => {
-    //   // fetchPlayers();
-    //   fetchSquadMembers();
-  }, [teamReducer.squadMembersArray]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchPlayers();
+      // Trigger fetchSquadMembers when screen is focused
+      fetchSquadMembers();
+
+      // // Optional: return cleanup if needed
+      // return () => {
+      //   // cleanup when screen loses focus (not required here)
+      // };
+    }, [])
+  );
 
   const fetchPlayers = async () => {
     const response = await fetch(

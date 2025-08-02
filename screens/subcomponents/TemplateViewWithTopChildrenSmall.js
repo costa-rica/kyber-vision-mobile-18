@@ -19,9 +19,6 @@ export default function TemplateViewWithTopChildrenSmall({
   sizeOfLogo = 40,
   topHeight = "15%",
   screenName,
-  // isVisibleModal = false,
-  // setDisplayModal = () => {},
-  // modalComponent = null,
   modalComponentAndSetterObject = {
     modalComponent: null,
     useState: false,
