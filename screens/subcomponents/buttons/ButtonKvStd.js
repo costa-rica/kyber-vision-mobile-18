@@ -64,7 +64,7 @@ export default function ButtonKvStd({ onPress, style, children }) {
     fontSize: mergedStyle.fontSize,
     color: mergedStyle.color,
     // textAlign: "center",
-    fontFamily: "ApfelGrotezk",
+    // fontFamily: "ApfelGrotezk",
     // backgroundColor: "green",
     // padding: mergedStyle.borderWidth * 2,
   };

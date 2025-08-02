@@ -30,6 +30,9 @@ import upload from "./reducers/upload";
 import sync from "./reducers/sync";
 import team from "./reducers/team";
 
+import * as Font from "expo-font";
+import { useState, useEffect } from "react";
+
 // Persistence
 import { PersistGate } from "redux-persist/integration/react";
 
@@ -70,6 +73,27 @@ const persistor = persistStore(store);
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        ApfelGrotezk: require("./assets/fonts/ApfelGrotezk-Regular.otf"),
+        ApfelGrotezkSemiBold: require("./assets/fonts/ApfelGrotezk-Mittel.otf"),
+        ApfelGrotezkBold: require("./assets/fonts/ApfelGrotezk-Fett.otf"),
+        ApfelGrotezkSuperBold: require("./assets/fonts/ApfelGrotezk-Satt.otf"),
+        Caveat: require("./assets/fonts/Caveat-VariableFont_wght.ttf"),
+      });
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    console.log("--- font NOT loaded");
+  } else {
+    console.log("--- font loaded");
+  }
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
