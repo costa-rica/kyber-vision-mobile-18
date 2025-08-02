@@ -13,8 +13,13 @@ import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
-export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
+export default function ModalAdminSettingsPlayerCardLinkUser({
+  player,
+  setIsVisibleLinkUserModal,
+}) {
+  const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
+  const [searchTerm, setSearchTerm] = useState("");
   const [userObject, setUserObject] = useState(null);
   const [filteredUsersArray, setFilteredUsersArray] = useState(
     teamReducer.squadMembersArray
@@ -26,30 +31,64 @@ export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
     );
     setFilteredUsersArray(filteredUsers);
   };
-  // const filterUsers = () => {
-  //   const filteredUsers = teamReducer.squadMembersArray.filter((user) => {
-  //     return user.username
-  //       .toLowerCase()
-  //       .includes(userObject?.username.toLowerCase());
-  //   });
-  //   setFilteredUsersArray(filteredUsers);
-  // };
+
+  const handleLinkUser = async () => {
+    console.log("Linking user with email:", userObject.email);
+
+    // const updateTeamVisibility = async (visibility) => {
+    //     // console.log(`---> update Team Visibility status: ${visibility}`);
+
+    const bodyObj = {
+      playerId: player.id,
+      userId: userObject.id,
+    };
+    // console.log("bodyObj:", bodyObj);
+    // console.log(
+    //   `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`
+    // );
+    // console.log(`Bearer ${userReducer.token}`);
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+
+    console.log("Received response:", response.status);
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      // Make alert close the modal
+      Alert.alert("User linked successfully", () => {
+        setIsVisibleLinkUserModal(false);
+      });
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+    // };
+  };
 
   return (
     <View style={styles.modalContent}>
       <View style={styles.vwModalTitle}>
         <Text style={styles.txtModalTitle}>
-          Link user to player{" "}
+          Link{" "}
           <Text style={styles.txtModalTitleTeamName}>
-            {teamReducer.teamsArray
-              .filter((team) => team.selected)
-              .map((team) => team.teamName)}{" "}
-            (team id:
-            {teamReducer.teamsArray
-              .filter((team) => team.selected)
-              .map((team) => team.id)}
-            )
+            {player.firstName} {player.lastName}
           </Text>{" "}
+          to:
         </Text>
       </View>
 
@@ -60,38 +99,25 @@ export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
             <TextInput
               placeholder="volleyballer01"
               style={styles.txtInputSearchTerm}
-              value={userObject?.username}
-              onChangeText={(username) => {
-                setUserObject({ ...userObject, username });
-                filterUsers(username);
+              value={searchTerm}
+              onChangeText={(searchTerm) => {
+                setSearchTerm(searchTerm);
+                filterUsers(searchTerm);
               }}
             />
-            {/* <TextInput
-              placeholder="volleyballer01"
-              style={styles.txtInputEmail}
-              value={userObject?.username}
-              onChangeText={(username) => {
-                setUserObject({ ...userObject, username });
-                filterUsers();
-              }}
-            /> */}
           </View>
         </View>
         <ButtonKvNoDefaultTextOnly
           onPress={() => {
             // console.log("Yes ....");
-            if (email) {
-              onPressYes(email);
+            if (userObject?.username) {
+              // onPressYes(userObject);
+              handleLinkUser();
             } else {
-              Alert.alert("Email is required");
+              Alert.alert("Username is required");
             }
           }}
           styleView={styles.btnLinkUser}
-          //   styleView={[
-          //     styles.btnYes,
-          //     playerName === teamReducer.selectedPlayerObject?.firstName &&
-          //       styles.btnYesSelected,
-          //   ]}
           styleText={styles.txtBtnLinkUser}
         >
           Link
@@ -101,9 +127,24 @@ export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
         <FlatList
           data={filteredUsersArray}
           renderItem={({ item }) => (
-            <View style={styles.vwUserItem}>
-              <Text style={styles.txtUserItem}>{item.username}</Text>
-            </View>
+            <TouchableOpacity
+              style={[
+                styles.touchableOpacityUserRow,
+                userObject?.id === item.id &&
+                  styles.touchableOpacityUserRowSelected,
+              ]}
+              onPress={() => setUserObject(item)}
+            >
+              <Text
+                style={[
+                  styles.txtUserItem,
+                  userObject?.id === item.id && styles.txtUserItemSelected,
+                ]}
+              >
+                {item.username}
+              </Text>
+              <Text style={styles.txtUserId}>user id: {item.id}</Text>
+            </TouchableOpacity>
           )}
           keyExtractor={(item) => item.id}
         />
@@ -114,16 +155,15 @@ export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
 
 const styles = StyleSheet.create({
   modalContent: {
-    // width: "80%",
     width: Dimensions.get("window").width * 0.8,
-    height: Dimensions.get("window").height * 0.6,
+    height: Dimensions.get("window").height * 0.5,
     backgroundColor: "white",
     borderRadius: 20,
     alignItems: "center",
     // justifyContent: "center",
     padding: 10,
     backgroundColor: "#D9CDD9",
-    zIndex: 4,
+    zIndex: 1,
   },
   // Make the title inline
   vwModalTitle: {
@@ -193,29 +233,46 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   vwUsersFlatListContainer: {
+    flex: 1,
     width: "100%",
     marginTop: 10,
     // alignItems: "center",
-    backgroundColor: "gray",
+    backgroundColor: "white",
     padding: 5,
     borderRadius: 10,
-    height: 200,
+    // height: 200,
   },
-  // flatList: {
-  //   width: "100%",
-  //   height: "100%",
-  // },
-  vwUserItem: {
+
+  touchableOpacityUserRow: {
     width: "100%",
-    padding: 5,
-    // justifyContent: "center",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    flexDirection: "row",
+    // height: 40,
+    justifyContent: "space-between",
     // alignItems: "center",
-    // backgroundColor: "white",
+    // backgroundColor: "green",
     // borderBottomWidth: 1,
     // borderBottomColor: "#806181",
+  },
+  touchableOpacityUserRowSelected: {
+    backgroundColor: "lightgray",
+    borderRadius: 5,
   },
   txtUserItem: {
     fontSize: 16,
     color: "black",
+    // backgroundColor: "red",
+  },
+  txtUserItemSelected: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+  },
+  txtUserId: {
+    // fontSize: 16,
+    color: "gray",
+    fontStyle: "italic",
+    // backgroundColor: "red",
   },
 });

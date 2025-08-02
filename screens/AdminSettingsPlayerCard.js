@@ -93,7 +93,10 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     if (isVisibleLinkUserModal) {
       return {
         modalComponent: (
-          <ModalAdminSettingsPlayerCardLinkUser onPressYes={handleLinkUser} />
+          <ModalAdminSettingsPlayerCardLinkUser
+            // onPressYes={handleLinkUser}
+            player={player}
+          />
         ),
         useState: isVisibleLinkUserModal,
         useStateSetter: setIsVisibleLinkUserModal,
@@ -101,10 +104,10 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     }
   };
 
-  const handleLinkUser = (email) => {
-    console.log("Linking user with email:", email);
-    setIsVisibleLinkUserModal(false);
-  };
+  // const handleLinkUser = (userObject) => {
+  //   console.log("Linking user with email:", userObject.email);
+  //   setIsVisibleLinkUserModal(false);
+  // };
 
   return (
     <TemplateViewWithTopChildrenSmall
