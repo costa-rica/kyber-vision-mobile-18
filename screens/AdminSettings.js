@@ -61,21 +61,11 @@ export default function AdminSettings({ navigation }) {
     </Text>
   );
 
-  // useEffect(() => {
-  //   fetchPlayers();
-  //   fetchSquadMembers();
-  // }, []);
-
+  // Triggers whenever the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchPlayers();
-      // Trigger fetchSquadMembers when screen is focused
       fetchSquadMembers();
-
-      // // Optional: return cleanup if needed
-      // return () => {
-      //   // cleanup when screen loses focus (not required here)
-      // };
     }, [])
   );
 

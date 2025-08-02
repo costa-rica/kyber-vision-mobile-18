@@ -106,11 +106,6 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     }
   };
 
-  // const handleLinkUser = (userObject) => {
-  //   console.log("Linking user with email:", userObject.email);
-  //   setIsVisibleLinkUserModal(false);
-  // };
-
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}

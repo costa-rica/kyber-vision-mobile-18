@@ -54,6 +54,22 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
           },
         ]
       );
+    } else if (userObject?.isPlayer) {
+      Alert.alert(
+        "User is already linked",
+        `User ${userObject.username} is already linked to ${userObject.playerId}.`,
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "Re-link",
+            onPress: () => sendLinkUserRequest(),
+          },
+        ]
+      );
     } else {
       sendLinkUserRequest();
     }
@@ -98,6 +114,10 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
                 username: userObject.username,
                 userId: userObject.userId,
               };
+              console.log("------- !! -------");
+              console.log("---- > playerObject updated");
+              console.log("------- !! -------");
+
               setPlayerObject(tempObject);
               const tempSquadMembersArray = teamReducer.squadMembersArray.map(
                 (user) => {
