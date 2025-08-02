@@ -11,6 +11,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   Alert,
+  ImageBackground,
 } from "react-native";
 // import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
@@ -116,16 +117,17 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
             />
           </View>
         </View>
-        <View
-          style={styles.vwPlayerRoles}
-          backgroundImage={AdminSettingsPlayerCardWaveThing}
+        <ImageBackground
+          source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
+          style={styles.vwPlayerRolesWaveThing}
         >
-          <Text>Player Roles</Text>
-        </View>
-        {/* <Text>Player Card</Text>
-        <Text>{player.firstName}</Text>
-        <Text>{player.lastName}</Text>
-        <Text>{player.shirtNumber}</Text> */}
+          <View style={styles.vwPlayerLabel}>
+            <Text style={styles.txtPlayerLabel}>Player</Text>
+          </View>
+          <View style={styles.vwPlayerLabel}>
+            <Text style={styles.txtPlayerLabel}>{player.position}</Text>
+          </View>
+        </ImageBackground>
       </View>
     </TemplateViewWithTopChildrenSmall>
   );
@@ -145,10 +147,11 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
     // borderColor: "gray",
     // borderWidth: 1,
     // borderStyle: "dashed",
+    zIndex: 1,
   },
   vwPlayerTop: {
     flexDirection: "row",
@@ -157,11 +160,13 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: "#6E4C84",
     // borderRadius: 30,
-    backgroundColor: "white",
+    // backgroundColor: "blue",
     flexDirection: "row",
     gap: 10,
     padding: 5,
     width: Dimensions.get("window").width * 0.3,
+    marginTop: 20,
+    marginLeft: 20,
   },
   vwPlayerLeft: {
     justifyContent: "center",
@@ -196,10 +201,34 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     overflow: "hidden",
+    // backgroundColor: "green",
   },
   imgPlayer: {
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+  },
+  vwPlayerRolesWaveThing: {
+    // justifyContent: "center",
+    alignItems: "flex-start",
+    width: Dimensions.get("window").width,
+    height: 100,
+    marginTop: -50,
+    padding: 10,
+  },
+
+  vwPlayerLabel: {
+    // height: 40,
+    // width: 80,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    backgroundColor: "#806181",
+    padding: 5,
+  },
+  txtPlayerLabel: {
+    fontSize: 20,
+    color: "white",
+    lineHeight: 20,
   },
 });
