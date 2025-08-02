@@ -5,6 +5,7 @@ const initialState = {
   selectedPlayerObject: null,
   teamDetails: null,
   teamsArray: [],
+  squadMembersArray: [],
 };
 
 export const teamSlice = createSlice({
@@ -29,6 +30,9 @@ export const teamSlice = createSlice({
     updateTeamsArray: (state, action) => {
       state.teamsArray = action.payload;
     },
+    updateSquadMembersArray: (state, action) => {
+      state.squadMembersArray = action.payload;
+    },
   },
 });
 
@@ -38,6 +42,7 @@ export const {
   updateTeamDetails,
   clearTeamReducer,
   updateTeamsArray,
+  updateSquadMembersArray,
 } = teamSlice.actions;
 
 export default teamSlice.reducer;

@@ -26,12 +26,15 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 // import ModalUploadVideoYesNo from "./subcomponents/modals/ModalUploadVideoYesNo";
 import ModalAddPlayer from "./subcomponents/modals/ModalTeamAddPlayer";
 import ModalAdminSettingsDeletePlayerYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerYesNo";
-import { updateSelectedPlayerObject } from "../reducers/team";
+import {
+  updateSelectedPlayerObject,
+  updateSquadMembersArray,
+} from "../reducers/team";
 import ModalAdminSettingsInviteToSquad from "./subcomponents/modals/ModalAdminSettingsInviteToSquad";
 
 export default function AdminSettings({ navigation }) {
   const userReducer = useSelector((state) => state.user);
-  const uploadReducer = useSelector((state) => state.upload);
+  // const uploadReducer = useSelector((state) => state.upload);
   const teamReducer = useSelector((state) => state.team);
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
   const dispatch = useDispatch();
@@ -115,7 +118,8 @@ export default function AdminSettings({ navigation }) {
     if (response.ok && resJson) {
       console.log(`response ok - squadMembersArray`);
       // console.log(resJson);
-      setSquadMembersArray(resJson.squadArray);
+      // setSquadMembersArray(resJson.squadArray);
+      dispatch(updateSquadMembersArray(resJson.squadArray));
     } else {
       const errorMessage =
         resJson?.error ||
@@ -496,6 +500,7 @@ export default function AdminSettings({ navigation }) {
                       // Navigate to AdminSettingsPlayerCard
                       navigation.navigate("AdminSettingsPlayerCard", {
                         player: item,
+                        // squadMembersArray: squadMembersArray,
                       });
                     }}
                     onLongPress={() => {
@@ -530,7 +535,7 @@ export default function AdminSettings({ navigation }) {
                 <Text style={{ fontWeight: "bold", fontSize: 16 }}>
                   Squad Members
                 </Text>
-                <Text> ({squadMembersArray?.length})</Text>
+                <Text> ({teamReducer.squadMembersArray?.length})</Text>
               </View>
               <View style={styles.vwTableHeadingRight}>
                 <ButtonKvNoDefault
@@ -554,7 +559,7 @@ export default function AdminSettings({ navigation }) {
             </View>
             <View style={styles.vwSquadMembersTable}>
               <FlatList
-                data={squadMembersArray}
+                data={teamReducer.squadMembersArray}
                 keyExtractor={(item, index) =>
                   item.id?.toString() || index.toString()
                 }

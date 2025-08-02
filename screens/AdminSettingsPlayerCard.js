@@ -25,15 +25,14 @@ import AdminSettingsPlayerCardWaveThing from "../assets/images/AdminSettingsPlay
 
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
-// import ModalUploadVideo from "./subcomponents/modals/ModalUploadVideo";
+import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
 
 export default function AdminSettingsPlayerCard({ navigation, route }) {
   const player = route.params.player;
   const userReducer = useSelector((state) => state.user);
-  const uploadReducer = useSelector((state) => state.upload);
   const teamReducer = useSelector((state) => state.team);
-
   const [localImageUri, setLocalImageUri] = useState(null);
+  const [isVisibleLinkUserModal, setIsVisibleLinkUserModal] = useState(false);
 
   const topChildren = (
     <Text>
@@ -86,12 +85,29 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     checkAndLoadImage();
   }, [player.image]);
 
+  const whichModalToDisplay = () => {
+    if (isVisibleLinkUserModal) {
+      return {
+        modalComponent: (
+          <ModalAdminSettingsPlayerCardLinkUser onPressYes={handleLinkUser} />
+        ),
+        useState: isVisibleLinkUserModal,
+        useStateSetter: setIsVisibleLinkUserModal,
+      };
+    }
+  };
+
+  const handleLinkUser = (email) => {
+    console.log("Linking user with email:", email);
+    setIsVisibleLinkUserModal(false);
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
       screenName={"AdminSettingsPlayerCard"}
-      // modalComponentAndSetterObject={whichModalToDisplay()}
+      modalComponentAndSetterObject={whichModalToDisplay()}
       topHeight={"15%"}
     >
       <View style={styles.container}>
@@ -128,6 +144,35 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
             <Text style={styles.txtPlayerLabel}>{player.position}</Text>
           </View>
         </ImageBackground>
+        <View style={styles.containerBottom}>
+          <View style={styles.vwTeamName}>
+            <Text style={styles.txtLabel}>Squad member account linked</Text>
+            <View style={styles.vwLinkeAccountInput}>
+              <Text style={styles.txtTeamNameValue}> No account linked</Text>
+              <ButtonKvNoDefault
+                onPress={() => {
+                  console.log("Search");
+                  setIsVisibleLinkUserModal(true);
+                }}
+                styleView={styles.btnSearch}
+              >
+                <IconMagnifingGlass />
+              </ButtonKvNoDefault>
+            </View>
+          </View>
+          {/* {teamReducer.squadMembersArray.length > 0 ? (
+            teamReducer.squadMembersArray.map((member) => (
+              <View style={styles.vwTeamName}>
+                <Text>{member.id}</Text>
+                <Text>{member.username}</Text>
+              </View>
+            ))
+          ) : (
+            <View style={styles.vwTeamName}>
+              <Text>No account linked</Text>
+            </View>
+          )} */}
+        </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
   );
@@ -137,7 +182,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    // backgroundColor: "gray",
   },
   // ------------
   // Top
@@ -217,7 +261,6 @@ const styles = StyleSheet.create({
     marginTop: -50,
     padding: 10,
   },
-
   vwPlayerLabel: {
     // height: 40,
     // width: 80,
@@ -231,5 +274,52 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
     lineHeight: 20,
+  },
+
+  // ------------
+  // Bottom
+  // ------------
+  containerBottom: {
+    width: "100%",
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderStyle: "dashed",
+  },
+  vwTeamName: {
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
+    width: "100%",
+    marginBottom: 10,
+  },
+  txtTeamNameTitle: {
+    color: "gray",
+    marginBottom: 5,
+  },
+  txtLabel: {
+    // fontSize: 16,
+    color: "gray",
+  },
+  txtTeamNameValue: {
+    fontSize: 16,
+    fontStyle: "italic",
+  },
+  vwLinkeAccountInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    // justifyContent: "center",
+    gap: 10,
+  },
+  btnSearch: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: "#E8E8E8",
+    borderColor: "#806181",
+    borderWidth: 1,
+    // marginVertical: 3,
   },
 });
