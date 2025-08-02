@@ -34,7 +34,7 @@ export default function SelectTeamScreen({ navigation }) {
       }
     );
 
-    console.log("Received response:", response.status);
+    // console.log("Received response:", response.status);
 
     let resJson = null;
     const contentType = response.headers.get("Content-Type");
@@ -44,21 +44,16 @@ export default function SelectTeamScreen({ navigation }) {
     }
 
     if (response.ok && resJson.teamsArray && resJson.contractTeamUserArray) {
-      console.log(`response ok`);
-      console.log(JSON.stringify(resJson));
+      // console.log(`response ok`);
+      // console.log(JSON.stringify(resJson));
       const tempArray = resJson.teamsArray.map((item) => {
         return {
           ...item,
           selected: false,
         };
       });
-      // console.log(" --- here is tempArray (teamsArray) --");
-      // console.log(tempArray);
       dispatch(updateTeamsArray(tempArray));
       dispatch(updateContractTeamUserArray(resJson.contractTeamUserArray));
-      console.log(
-        "-----> Both teams and user's team arrays updated successfully"
-      );
     } else {
       const errorMessage =
         resJson?.error ||
@@ -149,33 +144,6 @@ export default function SelectTeamScreen({ navigation }) {
               Create Team
             </ButtonKvNoDefaultTextOnly>
           </View>
-          {/* <View style={styles.vwInputGroup}>
-            <ButtonKvNoDefaultTextOnly
-              active={
-                teamReducer.teamsArray.filter((tribe) => tribe.selected)
-                  .length > 0
-              }
-              onPress={() => {
-                if (
-                  teamReducer.teamsArray.filter((tribe) => tribe.selected)
-                    .length > 0
-                ) {
-                  navigation.navigate("HomeScreen");
-                } else {
-                  alert("Please select a tribe");
-                }
-              }}
-              styleView={styles.btnTribe}
-              styleText={
-                teamReducer.teamsArray.filter((tribe) => tribe.selected)
-                  .length > 0
-                  ? styles.btnTribeText
-                  : styles.btnTribeTextInactive
-              }
-            >
-              Select Tribe
-            </ButtonKvNoDefaultTextOnly>
-          </View> */}
         </View>
       </View>
     </TemplateViewWithTopChildren>

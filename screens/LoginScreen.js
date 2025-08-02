@@ -13,6 +13,7 @@ import ButtonKvImage from "./subcomponents/buttons/ButtonKvImage";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../reducers/user";
+// import { useEffect } from "react";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -26,6 +27,10 @@ export default function LoginScreen({ navigation }) {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  // useEffect(() => {
+  //   console.log("-- In LoginScreen useEffect --");
+  // }, []);
+
   const handleClickLogin = async () => {
     console.log(
       "Login ---> API URL:",
@@ -36,7 +41,7 @@ export default function LoginScreen({ navigation }) {
       email: credentials.email,
       password: credentials.password,
     };
-    console.log(`email: ${credentials.email}, ${credentials.password}`);
+    // console.log(`email: ${credentials.email}, ${credentials.password}`);
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
       {

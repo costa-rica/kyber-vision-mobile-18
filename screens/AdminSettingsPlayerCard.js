@@ -33,7 +33,11 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
   const teamReducer = useSelector((state) => state.team);
   const [localImageUri, setLocalImageUri] = useState(null);
   const [isVisibleLinkUserModal, setIsVisibleLinkUserModal] = useState(false);
-
+  const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
+    (team) =>
+      team.teamId ===
+      teamReducer.teamsArray.filter((team) => team.selected)[0].id
+  )[0].isAdmin;
   const topChildren = (
     <Text>
       {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
@@ -149,15 +153,17 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
             <Text style={styles.txtLabel}>Squad member account linked</Text>
             <View style={styles.vwLinkeAccountInput}>
               <Text style={styles.txtTeamNameValue}> No account linked</Text>
-              <ButtonKvNoDefault
-                onPress={() => {
-                  console.log("Search");
-                  setIsVisibleLinkUserModal(true);
-                }}
-                styleView={styles.btnSearch}
-              >
-                <IconMagnifingGlass />
-              </ButtonKvNoDefault>
+              {isAdminOfThisTeam && (
+                <ButtonKvNoDefault
+                  onPress={() => {
+                    console.log("Search");
+                    setIsVisibleLinkUserModal(true);
+                  }}
+                  styleView={styles.btnSearch}
+                >
+                  <IconMagnifingGlass />
+                </ButtonKvNoDefault>
+              )}
             </View>
           </View>
           {/* {teamReducer.squadMembersArray.length > 0 ? (

@@ -100,7 +100,6 @@ export default function ModalAdminSettingsPlayerCardLinkUser({ onPressYes }) {
       <View style={styles.vwUsersFlatListContainer}>
         <FlatList
           data={filteredUsersArray}
-          // style={styles.flatList}
           renderItem={({ item }) => (
             <View style={styles.vwUserItem}>
               <Text style={styles.txtUserItem}>{item.username}</Text>

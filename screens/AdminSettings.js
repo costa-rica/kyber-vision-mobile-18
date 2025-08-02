@@ -46,6 +46,12 @@ export default function AdminSettings({ navigation }) {
   const [isVisibleInviteToSquadModal, setIsVisibleInviteToSquadModal] =
     useState(false);
 
+  const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
+    (team) =>
+      team.teamId ===
+      teamReducer.teamsArray.filter((team) => team.selected)[0].id
+  )[0].isAdmin;
+
   const topChildren = (
     <Text>
       {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
@@ -333,6 +339,13 @@ export default function AdminSettings({ navigation }) {
     setIsVisibleInviteToSquadModal(false);
   };
 
+  // // -- Dynamic Sytle
+  // const vwPlayersTableStyle = {
+  //   marginBottom: isAdminOfThisTeam
+  //     ? 0
+  //     : Dimensions.get("window").height * 0.05,
+  // };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -365,20 +378,32 @@ export default function AdminSettings({ navigation }) {
                 }
               </Text>
             </View>
-            <View style={styles.vwTeamVisibility}>
-              <Text style={styles.txtTeamVisibilityTitle}>Visibility</Text>
-              <View
-                style={[
-                  styles.touchableOpacityVisibilityCapsule,
-                  styles.vwDropdownOptionCapsule,
-                ]}
-                onPress={() => setShowVisibilityOptions(!showVisibilityOptions)}
-              >
-                {teamReducer.teamsArray.filter((team) => team.selected)[0]
-                  .visibility === "On invitation" ? (
-                  <TouchableOpacity
-                    onPress={() => handleSelectVisibility("On invitation")}
-                  >
+            {isAdminOfThisTeam && (
+              <View style={styles.vwTeamVisibility}>
+                <Text style={styles.txtTeamVisibilityTitle}>Visibility</Text>
+                <View
+                  style={[
+                    styles.touchableOpacityVisibilityCapsule,
+                    styles.vwDropdownOptionCapsule,
+                  ]}
+                  onPress={() =>
+                    setShowVisibilityOptions(!showVisibilityOptions)
+                  }
+                >
+                  {teamReducer.teamsArray.filter((team) => team.selected)[0]
+                    .visibility === "On invitation" ? (
+                    <TouchableOpacity
+                      onPress={() => handleSelectVisibility("On invitation")}
+                    >
+                      <Text style={styles.txtVisibilityCapsule}>
+                        {
+                          teamReducer.teamsArray.filter(
+                            (team) => team.selected
+                          )[0].visibility
+                        }
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
                     <Text style={styles.txtVisibilityCapsule}>
                       {
                         teamReducer.teamsArray.filter(
@@ -386,72 +411,65 @@ export default function AdminSettings({ navigation }) {
                         )[0].visibility
                       }
                     </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <Text style={styles.txtVisibilityCapsule}>
-                    {
-                      teamReducer.teamsArray.filter((team) => team.selected)[0]
-                        .visibility
-                    }
-                  </Text>
-                )}
+                  )}
 
-                {showVisibilityOptions ? (
-                  <TouchableOpacity
-                    onPress={() => setShowVisibilityOptions(false)}
-                    style={{ padding: 5 }}
-                  >
-                    <BtnVisibilityUp />
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => setShowVisibilityOptions(true)}
-                    style={{ padding: 5 }}
-                  >
-                    <BtnVisibilityDown />
-                  </TouchableOpacity>
+                  {showVisibilityOptions ? (
+                    <TouchableOpacity
+                      onPress={() => setShowVisibilityOptions(false)}
+                      style={{ padding: 5 }}
+                    >
+                      <BtnVisibilityUp />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => setShowVisibilityOptions(true)}
+                      style={{ padding: 5 }}
+                    >
+                      <BtnVisibilityDown />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                {showVisibilityOptions && (
+                  <View style={styles.vwVisibilityDropdown}>
+                    {[
+                      { type: "Public", value: "Anyone can join" },
+                      {
+                        type: "On invitation",
+                        value: "Only people with link can join",
+                      },
+                      { type: "Private", value: "No one can join" },
+                    ]
+                      .filter(
+                        (option) =>
+                          option.type !==
+                          teamReducer.teamsArray.filter(
+                            (team) => team.selected
+                          )[0].visibility
+                      )
+                      .map((option) => (
+                        <TouchableOpacity
+                          key={option.type}
+                          style={styles.touchableOpacityDropdownOption}
+                          onPress={() => {
+                            handleSelectVisibility(option.type);
+                          }}
+                        >
+                          {/* <View style={styles.vwDropdownOption}> */}
+                          <View style={styles.vwDropdownOptionCapsule}>
+                            <Text style={styles.txtDropdownOption}>
+                              {option.type}
+                            </Text>
+                          </View>
+                          <Text style={styles.txtDropdownOptionValue}>
+                            {option.value}
+                          </Text>
+                          {/* </View> */}
+                        </TouchableOpacity>
+                      ))}
+                  </View>
                 )}
               </View>
-              {showVisibilityOptions && (
-                <View style={styles.vwVisibilityDropdown}>
-                  {[
-                    { type: "Public", value: "Anyone can join" },
-                    {
-                      type: "On invitation",
-                      value: "Only people with link can join",
-                    },
-                    { type: "Private", value: "No one can join" },
-                  ]
-                    .filter(
-                      (option) =>
-                        option.type !==
-                        teamReducer.teamsArray.filter(
-                          (team) => team.selected
-                        )[0].visibility
-                    )
-                    .map((option) => (
-                      <TouchableOpacity
-                        key={option.type}
-                        style={styles.touchableOpacityDropdownOption}
-                        onPress={() => {
-                          handleSelectVisibility(option.type);
-                        }}
-                      >
-                        {/* <View style={styles.vwDropdownOption}> */}
-                        <View style={styles.vwDropdownOptionCapsule}>
-                          <Text style={styles.txtDropdownOption}>
-                            {option.type}
-                          </Text>
-                        </View>
-                        <Text style={styles.txtDropdownOptionValue}>
-                          {option.value}
-                        </Text>
-                        {/* </View> */}
-                      </TouchableOpacity>
-                    ))}
-                </View>
-              )}
-            </View>
+            )}
           </View>
         </View>
         {/* -------- 
@@ -504,6 +522,9 @@ export default function AdminSettings({ navigation }) {
                       });
                     }}
                     onLongPress={() => {
+                      if (!isAdminOfThisTeam) {
+                        return;
+                      }
                       setIsVisibleRemovePlayerModal(true);
                       dispatch(updateSelectedPlayerObject(item));
                     }}
@@ -529,78 +550,82 @@ export default function AdminSettings({ navigation }) {
               />
             </View>
           </View>
-          <View style={styles.vwSquadMembersGroup}>
-            <View style={styles.vwTableHeading}>
-              <View style={styles.vwTableHeadingLeft}>
-                <Text style={{ fontWeight: "bold", fontSize: 16 }}>
-                  Squad Members
-                </Text>
-                <Text> ({teamReducer.squadMembersArray?.length})</Text>
-              </View>
-              <View style={styles.vwTableHeadingRight}>
-                <ButtonKvNoDefault
-                  onPress={() => {
-                    console.log("Search");
-                  }}
-                  styleView={styles.btnSearch}
-                >
-                  <IconMagnifingGlass />
-                </ButtonKvNoDefault>
-                <ButtonKvNoDefaultTextOnly
-                  onPress={() => {
-                    console.log("Add");
-                  }}
-                  styleView={styles.btnAddElement}
-                  styleText={styles.txtBtnAddElement}
-                >
-                  +
-                </ButtonKvNoDefaultTextOnly>
-              </View>
-            </View>
-            <View style={styles.vwSquadMembersTable}>
-              <FlatList
-                data={teamReducer.squadMembersArray}
-                keyExtractor={(item, index) =>
-                  item.id?.toString() || index.toString()
-                }
-                renderItem={({ item }) => (
-                  <TouchableOpacity
+          {isAdminOfThisTeam && (
+            <View style={styles.vwSquadMembersGroup}>
+              <View style={styles.vwTableHeading}>
+                <View style={styles.vwTableHeadingLeft}>
+                  <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+                    Squad Members
+                  </Text>
+                  <Text> ({teamReducer.squadMembersArray?.length})</Text>
+                </View>
+                <View style={styles.vwTableHeadingRight}>
+                  <ButtonKvNoDefault
                     onPress={() => {
-                      console.log(item);
+                      console.log("Search");
                     }}
-                    onLongPress={() => {
-                      Alert.alert("Long Press -- > remove member");
-                      // setIsVisibleRemovePlayerModal(true);
-                      // dispatch(updateSelectedPlayerObject(item));
-                    }}
-                    delayLongPress={500} // optional: control long press timing
-                    style={styles.vwSquadMembersRow}
+                    styleView={styles.btnSearch}
                   >
-                    <View style={styles.vwSquadMembersUserName}>
-                      <Text style={styles.txtSquadMembersUserName}>
-                        {item?.username}
-                      </Text>
-                    </View>
-                    {item?.isPlayer && (
-                      <View style={styles.vwSquadMembersPlayer}>
-                        <Text style={styles.txtSquadMembersPlayer}>Player</Text>
+                    <IconMagnifingGlass />
+                  </ButtonKvNoDefault>
+                  <ButtonKvNoDefaultTextOnly
+                    onPress={() => {
+                      console.log("Add");
+                    }}
+                    styleView={styles.btnAddElement}
+                    styleText={styles.txtBtnAddElement}
+                  >
+                    +
+                  </ButtonKvNoDefaultTextOnly>
+                </View>
+              </View>
+              <View style={styles.vwSquadMembersTable}>
+                <FlatList
+                  data={teamReducer.squadMembersArray}
+                  keyExtractor={(item, index) =>
+                    item.id?.toString() || index.toString()
+                  }
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        console.log(item);
+                      }}
+                      onLongPress={() => {
+                        Alert.alert("Long Press -- > remove member");
+                        // setIsVisibleRemovePlayerModal(true);
+                        // dispatch(updateSelectedPlayerObject(item));
+                      }}
+                      delayLongPress={500} // optional: control long press timing
+                      style={styles.vwSquadMembersRow}
+                    >
+                      <View style={styles.vwSquadMembersUserName}>
+                        <Text style={styles.txtSquadMembersUserName}>
+                          {item?.username}
+                        </Text>
                       </View>
-                    )}
-                    {item?.isCoach && (
-                      <View style={styles.vwSquadMembersCoach}>
-                        <Text style={styles.txtSquadMembersCoach}>Coach</Text>
-                      </View>
-                    )}
-                    {item?.isAdmin && (
-                      <View style={styles.vwSquadMembersAdmin}>
-                        <Text style={styles.txtSquadMembersAdmin}>Admin</Text>
-                      </View>
-                    )}
-                  </TouchableOpacity>
-                )}
-              />
+                      {item?.isPlayer && (
+                        <View style={styles.vwSquadMembersPlayer}>
+                          <Text style={styles.txtSquadMembersPlayer}>
+                            Player
+                          </Text>
+                        </View>
+                      )}
+                      {item?.isCoach && (
+                        <View style={styles.vwSquadMembersCoach}>
+                          <Text style={styles.txtSquadMembersCoach}>Coach</Text>
+                        </View>
+                      )}
+                      {item?.isAdmin && (
+                        <View style={styles.vwSquadMembersAdmin}>
+                          <Text style={styles.txtSquadMembersAdmin}>Admin</Text>
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
             </View>
-          </View>
+          )}
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -710,6 +735,7 @@ const styles = StyleSheet.create({
     // borderColor: "gray",
     // borderWidth: 1,
     // borderStyle: "dashed",
+    paddingBottom: Dimensions.get("window").height * 0.05,
   },
   vwTableHeading: {
     flexDirection: "row",
@@ -771,7 +797,7 @@ const styles = StyleSheet.create({
     width: "100%",
     // backgroundColor: "blue",
     flex: 1,
-    paddingBottom: Dimensions.get("window").height * 0.1,
+    // paddingBottom: Dimensions.get("window").height * 0.1,
   },
 
   // ---- Player Table styles ----
@@ -784,6 +810,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: 5,
     padding: 5,
+    // marginBottom: Dimensions.get("window").height * 0.05,
+    // backgroundColor: "green",
   },
   vwPlayerRow: {
     flexDirection: "row",
@@ -846,6 +874,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginHorizontal: 5,
     padding: 5,
+    // marginBottom: Dimensions.get("window").height * 0.05,
   },
   vwSquadMembersRow: {
     flexDirection: "row",

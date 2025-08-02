@@ -89,8 +89,10 @@ export default function HomeScreen({ navigation }) {
   );
 
   useEffect(() => {
+    console.log("-- In HomeScreen useEffect --");
     fetchSessionsArray();
-    console.log(JSON.stringify(userReducer.contractTeamUserArray));
+    console.log("------ teamReducer.teamsArray in useEffect -----");
+    console.log(JSON.stringify(teamReducer.teamsArray));
   }, []);
 
   const fetchSessionsArray = async () => {
@@ -132,9 +134,22 @@ export default function HomeScreen({ navigation }) {
   };
 
   const createAdminButtonText = () => {
-    const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0].id;
+    // console.log(
+    //   "--- what is going on with teamReducer.teamsArray in createAdminButtonText ---"
+    // );
+    // console.log(JSON.stringify(teamReducer.teamsArray));
+    // console.log("--------");
+    // console.log("--------");
+    // console.log(
+    //   "--- what is going on with teamReducer.teamsArray.filtered() ???? ---"
+    // );
+    // console.log(
+    //   JSON.stringify(teamReducer.teamsArray.filter((team) => team.selected))
+    // );
+    // const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0]
+    //   ?.id;
     const teamName = teamReducer.teamsArray.filter((team) => team.selected)[0]
-      .teamName;
+      ?.teamName;
     const userTeamIsAdmin = false;
     // const userTeamIsAdmin =
     //   userReducer.contractTeamUserArray.filter((team) => team.id === teamId)[0]
