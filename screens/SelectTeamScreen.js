@@ -6,20 +6,25 @@ import {
   Dimensions,
   FlatList,
   Pressable,
+  TextInput,
 } from "react-native";
 import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
+import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import Tribe from "../assets/images/navigationAndSmall/Tribe.svg";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/team";
 import { updateContractTeamUserArray } from "../reducers/user";
+import * as Clipboard from "expo-clipboard";
 
 export default function SelectTeamScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
+
+  const [inviteCode, setInviteCode] = useState("");
 
   const fetchTeams = async () => {
     // The id in the Tribe Array is the TEAM ID
@@ -133,7 +138,14 @@ export default function SelectTeamScreen({ navigation }) {
               style={styles.flatListTeamNames}
             />
           ) : (
-            <Text>No teams found</Text>
+            <View style={styles.vwNoTeamInfo}>
+              <Text style={styles.txtNoTeamInfo}>
+                You are not a member of any team yet
+              </Text>
+              <Text style={styles.txtNoTeamInfo}>
+                You can use one of the three options below
+              </Text>
+            </View>
           )}
         </View>
         <View style={styles.containerBottom}>
@@ -143,7 +155,61 @@ export default function SelectTeamScreen({ navigation }) {
               styleView={styles.btnTribe}
               styleText={styles.btnTribeText}
             >
-              Create Team
+              Create your team
+            </ButtonKvNoDefaultTextOnly>
+          </View>
+          <View style={styles.vwInputGroup}>
+            <ButtonKvNoDefaultTextOnly
+              onPress={() => console.log("Join a public squad")}
+              styleView={styles.btnTribe}
+              styleText={styles.btnTribeText}
+            >
+              Join a public squad
+            </ButtonKvNoDefaultTextOnly>
+          </View>
+          <View style={styles.vwInputAndButton}>
+            <ButtonKvNoDefault
+              styleView={styles.btnIconForLink}
+              onPress={async () => {
+                const clipboardContent = await Clipboard.getStringAsync();
+                if (clipboardContent) {
+                  setInviteCode(clipboardContent);
+                } else {
+                  Alert.alert("Clipboard is empty");
+                }
+              }}
+            >
+              <Image
+                source={require("../assets/images/iconLink.png")}
+                resizeMode="contain"
+                style={styles.imgIconForLink}
+              />
+            </ButtonKvNoDefault>
+
+            <View style={styles.vwInputWithLabel}>
+              <View style={styles.vwInputWithLabelForUnderline}>
+                {/* <Text style={styles.txtInputLabel}>email:</Text> */}
+                <TextInput
+                  placeholder="paste invite code here"
+                  style={styles.txtInputInvite}
+                  value={inviteCode}
+                  onChangeText={setInviteCode}
+                />
+              </View>
+            </View>
+            <ButtonKvNoDefaultTextOnly
+              onPress={() => {
+                // console.log("Yes ....");
+                if (inviteCode) {
+                  onPressYes(inviteCode);
+                } else {
+                  Alert.alert("Invite code is required");
+                }
+              }}
+              styleView={styles.btnGo}
+              styleText={styles.txtBtnGo}
+            >
+              go!
             </ButtonKvNoDefaultTextOnly>
           </View>
         </View>
@@ -168,6 +234,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
   },
+  // ------------
+  // Top
+  // ------------
   containerTop: {
     alignItems: "center",
     justifyContent: "center",
@@ -176,6 +245,41 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderStyle: "dashed",
   },
+
+  vwInputGroup: {
+    width: "90%",
+    alignItems: "center",
+    paddingTop: 30,
+  },
+
+  // ------------
+  // FlatList
+  // ------------
+
+  flatListTeamNames: {
+    width: "100%",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderRadius: 10,
+    padding: 5,
+  },
+  vwTeamRow: {
+    padding: 5,
+    marginVertical: 5,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 2.5,
+    width: "100%",
+    textAlign: "center",
+    // height: 50,
+  },
+  vwTeamRowSelected: {
+    backgroundColor: "#D3D3D3", // light gray
+  },
+
+  // ------------
+  // Bottom
+  // ------------
   containerBottom: {
     flex: 1,
     alignItems: "center",
@@ -184,11 +288,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderStyle: "dashed",
   },
-  vwInputGroup: {
-    width: "90%",
-    alignItems: "center",
-    paddingTop: 30,
-  },
+
   btnTribe: {
     width: Dimensions.get("window").width * 0.6,
     height: 50,
@@ -207,35 +307,71 @@ const styles = StyleSheet.create({
     color: "#AB8EAB",
     fontSize: 24,
   },
-
-  // ------------
-  // FlatList
-  // ------------
-
-  flatListTeamNames: {
+  vwInputAndButton: {
     width: "100%",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderRadius: 10,
+    gap: 10,
+    marginTop: 30,
+    alignItems: "center",
+    flexDirection: "row",
+    paddingRight: 10,
+    paddingLeft: 20,
+  },
+  btnIconForLink: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    color: "white",
+    // backgroundColor: "#E8E8E8",
+    backgroundColor: "transparent",
+    borderColor: "transparent",
+    borderWidth: 2,
+    padding: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  vwInputWithLabel: {
+    backgroundColor: "white",
+    padding: 5,
+    // width: "100%",
+    flex: 1,
+  },
+
+  vwInputWithLabelForUnderline: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#806181",
+    // marginBottom: 10,
+  },
+  txtInputLabel: {
+    // fontSize: 16,
+    // marginBottom: 5,
+    color: "gray",
+  },
+  txtInputInviteUrl: {
+    width: "100%",
+    height: 40,
+    borderRadius: 5,
+    backgroundColor: "white",
+    padding: 5,
+    fontStyle: "italic",
+    // fontSize: 10,
+  },
+  btnGo: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    color: "white",
+    // backgroundColor: "#E8E8E8",
+    backgroundColor: "#806181",
+    borderColor: "#806181",
+    borderWidth: 2,
     padding: 5,
   },
-
-  vwTeamRow: {
-    padding: 5,
-    marginVertical: 5,
-    backgroundColor: "#F0F0F0",
-    borderRadius: 2.5,
-    width: "100%",
-    textAlign: "center",
-    // height: 50,
+  txtBtnGo: {
+    fontSize: 24,
+    color: "white",
+    justifyContent: "center",
+    alignItems: "center",
   },
-
-  vwTeamRowSelected: {
-    backgroundColor: "#D3D3D3", // light gray
-  },
-
-  // ------------
-  // Bottom
-  // ------------
 });

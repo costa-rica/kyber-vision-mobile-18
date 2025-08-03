@@ -344,13 +344,6 @@ export default function AdminSettings({ navigation }) {
     setIsVisibleInviteToSquadModal(false);
   };
 
-  // // -- Dynamic Sytle
-  // const vwPlayersTableStyle = {
-  //   marginBottom: isAdminOfThisTeam
-  //     ? 0
-  //     : Dimensions.get("window").height * 0.05,
-  // };
-
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}

@@ -52,28 +52,6 @@ export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
         </ButtonKvNoDefaultTextOnly>
       </View>
 
-      {/* <Text style={styles.txtGenericInvite}>
-        {
-          teamReducer.teamsArray.filter((team) => team.selected)[0]
-            .joinUrlGeneric
-        }
-      </Text> */}
-      {/* <View style={styles.vwModalTitle}>
-        <Text style={styles.txtModalTitle}>
-          Invite user to team{" "}
-          <Text style={styles.txtModalTitleTeamName}>
-            {teamReducer.teamsArray
-              .filter((team) => team.selected)
-              .map((team) => team.teamName)}{" "}
-            (team id:
-            {teamReducer.teamsArray
-              .filter((team) => team.selected)
-              .map((team) => team.id)}
-            )
-          </Text>{" "}
-        </Text>
-      </View> */}
-
       <View style={styles.vwInputAndButton}>
         <View style={styles.vwInputWithLabel}>
           <View style={styles.vwInputWithLabelForUnderline}>
