@@ -11,14 +11,46 @@ import {
 import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
   const teamReducer = useSelector((state) => state.team);
   const [email, setEmail] = useState("");
+
   return (
     <View style={styles.modalContent}>
-      <View style={styles.vwModalTitle}>
+      <View style={styles.vwInputAndButton}>
+        <View style={styles.vwInputWithLabel}>
+          {/* <View style={styles.vwInputWithLabelForUnderline}> */}
+          {/* <Text style={styles.txtInputLabel}>email:</Text> */}
+          <TextInput
+            style={styles.txtInputInviteUrl}
+            value={
+              teamReducer.teamsArray.filter((team) => team.selected)[0]
+                .joinUrlGeneric
+            }
+            // onChangeText={setEmail}
+          />
+          {/* </View> */}
+        </View>
+        <ButtonKvNoDefaultTextOnly
+          onPress={() => {
+            console.log("Copy Invite");
+          }}
+          styleView={styles.btnCopyInvite}
+          styleText={styles.txtBtnCopyInvite}
+        >
+          Copy invitation link
+        </ButtonKvNoDefaultTextOnly>
+      </View>
+
+      {/* <Text style={styles.txtGenericInvite}>
+        {
+          teamReducer.teamsArray.filter((team) => team.selected)[0]
+            .joinUrlGeneric
+        }
+      </Text> */}
+      {/* <View style={styles.vwModalTitle}>
         <Text style={styles.txtModalTitle}>
           Invite user to team{" "}
           <Text style={styles.txtModalTitleTeamName}>
@@ -32,7 +64,7 @@ export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
             )
           </Text>{" "}
         </Text>
-      </View>
+      </View> */}
 
       <View style={styles.vwInputAndButton}>
         <View style={styles.vwInputWithLabel}>
@@ -56,11 +88,6 @@ export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
             }
           }}
           styleView={styles.btnYes}
-          //   styleView={[
-          //     styles.btnYes,
-          //     playerName === teamReducer.selectedPlayerObject?.firstName &&
-          //       styles.btnYesSelected,
-          //   ]}
           styleText={styles.txtBtnYes}
         >
           Invite
@@ -120,6 +147,14 @@ const styles = StyleSheet.create({
     // marginBottom: 5,
     color: "gray",
   },
+  txtInputInviteUrl: {
+    width: "100%",
+    height: 40,
+    borderRadius: 5,
+    backgroundColor: "white",
+    padding: 5,
+    fontStyle: "italic",
+  },
   txtInputEmail: {
     width: "100%",
     height: 40,
@@ -127,6 +162,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     // textDecorationLine: "underline",
+  },
+  btnCopyInvite: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 200,
+    borderRadius: 20,
+    color: "white",
+    backgroundColor: "#E8E8E8",
+    borderColor: "#806181",
+    borderWidth: 2,
+    padding: 5,
+  },
+  txtBtnCopyInvite: {
+    fontSize: 16,
+    color: "#806181",
+    justifyContent: "center",
+    alignItems: "center",
   },
   btnYes: {
     justifyContent: "center",

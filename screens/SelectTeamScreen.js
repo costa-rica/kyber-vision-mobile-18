@@ -52,6 +52,8 @@ export default function SelectTeamScreen({ navigation }) {
           selected: false,
         };
       });
+      // console.log("tempArray");
+      // console.log(JSON.stringify(tempArray, null, 2));
       dispatch(updateTeamsArray(tempArray));
       dispatch(updateContractTeamUserArray(resJson.contractTeamUserArray));
     } else {
