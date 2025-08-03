@@ -26,6 +26,7 @@ import AdminSettingsPlayerCardWaveThing from "../assets/images/AdminSettingsPlay
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
+import ModalAdminSettingsDeletePlayerUserLinkYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
 
 export default function AdminSettingsPlayerCard({ navigation, route }) {
   const [playerObject, setPlayerObject] = useState(route.params.playerObject);
@@ -33,6 +34,10 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
   const teamReducer = useSelector((state) => state.team);
   const [localImageUri, setLocalImageUri] = useState(null);
   const [isVisibleLinkUserModal, setIsVisibleLinkUserModal] = useState(false);
+  const [
+    isVisibleDeletePlayerUserLinkModal,
+    setIsVisibleDeletePlayerUserLinkModal,
+  ] = useState(false);
   const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
     (team) =>
       team.teamId ===
@@ -108,6 +113,22 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
         useStateSetter: setIsVisibleLinkUserModal,
       };
     }
+    if (isVisibleDeletePlayerUserLinkModal) {
+      return {
+        modalComponent: (
+          <ModalAdminSettingsDeletePlayerUserLinkYesNo
+            // onPressYes={handleLinkUser}
+            playerObject={playerObject}
+            setIsVisibleDeletePlayerUserLinkModal={
+              setIsVisibleDeletePlayerUserLinkModal
+            }
+            setPlayerObject={setPlayerObject}
+          />
+        ),
+        useState: isVisibleDeletePlayerUserLinkModal,
+        useStateSetter: setIsVisibleDeletePlayerUserLinkModal,
+      };
+    }
   };
 
   return (
@@ -161,16 +182,27 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
               ) : (
                 <Text style={styles.txtValue}> No account linked</Text>
               )}
-              {isAdminOfThisTeam && (
+              {isAdminOfThisTeam && !playerObject.isUser && (
                 <ButtonKvNoDefault
                   onPress={() => {
-                    console.log("Search");
                     setIsVisibleLinkUserModal(true);
                   }}
                   styleView={styles.btnSearch}
                 >
                   <IconMagnifingGlass />
                 </ButtonKvNoDefault>
+              )}
+              {isAdminOfThisTeam && playerObject.isUser && (
+                <ButtonKvNoDefaultTextOnly
+                  onPress={() => {
+                    console.log("Remove link");
+                    setIsVisibleDeletePlayerUserLinkModal(true);
+                  }}
+                  styleView={styles.btnSearch}
+                  styleText={{ fontSize: 20 }}
+                >
+                  X
+                </ButtonKvNoDefaultTextOnly>
               )}
             </View>
           </View>

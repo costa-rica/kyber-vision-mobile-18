@@ -82,7 +82,8 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
     };
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`,
+      // `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`,
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-player-user/link-user-to-player`,
       {
         method: "POST",
         headers: {
@@ -117,9 +118,6 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
                 // isUser: userObject.isUser,
                 // role: userObject.role,
               };
-              console.log("------- !! -------");
-              console.log("---- > playerObject updated");
-              console.log("------- !! -------");
 
               setPlayerObject(tempObject);
               const tempSquadMembersArray = teamReducer.squadMembersArray.map(
@@ -130,9 +128,7 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
                   return user;
                 }
               );
-
               dispatch(updateSquadMembersArray(tempSquadMembersArray));
-
               setIsVisibleLinkUserModal(false);
             },
           },
@@ -189,7 +185,7 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
         >
           {isAlreadyLinked ? "Re-link" : "Link"}
         </ButtonKvNoDefaultTextOnly>
-        <Text style={{ fontSize: 10 }}>{JSON.stringify(userObject)}</Text>
+        {/* <Text style={{ fontSize: 10 }}>{JSON.stringify(userObject)}</Text> */}
       </View>
       <View style={styles.vwUsersFlatListContainer}>
         <FlatList
