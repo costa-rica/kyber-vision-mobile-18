@@ -12,6 +12,7 @@ import ButtonKvStd from "../buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
+import * as Clipboard from "expo-clipboard";
 
 export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
   const teamReducer = useSelector((state) => state.team);
@@ -27,15 +28,22 @@ export default function ModalAdminSettingsInviteToSquad({ onPressYes }) {
             style={styles.txtInputInviteUrl}
             value={
               teamReducer.teamsArray.filter((team) => team.selected)[0]
-                .joinUrlGeneric
+                .genericJoinToken
             }
-            // onChangeText={setEmail}
+            editable={false}
           />
           {/* </View> */}
         </View>
         <ButtonKvNoDefaultTextOnly
           onPress={() => {
-            console.log("Copy Invite");
+            const inviteLink = teamReducer.teamsArray.filter(
+              (team) => team.selected
+            )[0].genericJoinToken;
+            Clipboard.setStringAsync(inviteLink);
+            Alert.alert(
+              "Copied to clipboard!",
+              "The invitation link has been copied."
+            );
           }}
           styleView={styles.btnCopyInvite}
           styleText={styles.txtBtnCopyInvite}
@@ -154,6 +162,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 5,
     fontStyle: "italic",
+    // fontSize: 10,
   },
   txtInputEmail: {
     width: "100%",

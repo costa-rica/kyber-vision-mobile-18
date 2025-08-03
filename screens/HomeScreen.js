@@ -89,10 +89,10 @@ export default function HomeScreen({ navigation }) {
   );
 
   useEffect(() => {
-    console.log("-- In HomeScreen useEffect --");
+    // console.log("-- In HomeScreen useEffect --");
     fetchSessionsArray();
-    console.log("------ teamReducer.teamsArray in useEffect -----");
-    console.log(JSON.stringify(teamReducer.teamsArray));
+    // console.log("------ teamReducer.teamsArray in useEffect -----");
+    // console.log(JSON.stringify(teamReducer.teamsArray));
   }, []);
 
   const fetchSessionsArray = async () => {
