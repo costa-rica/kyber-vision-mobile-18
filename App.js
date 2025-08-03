@@ -17,6 +17,7 @@ import ScriptingSyncVideoSelection from "./screens/ScriptingSyncVideoSelection";
 import ScriptingSyncVideo from "./screens/ScriptingSyncVideo";
 import AdminSettings from "./screens/AdminSettings";
 import AdminSettingsPlayerCard from "./screens/AdminSettingsPlayerCard";
+import AdminSettingsUserCard from "./screens/AdminSettingsUserCard";
 import RegisterScreen from "./screens/RegisterScreen";
 
 import { Provider } from "react-redux";
@@ -144,6 +145,10 @@ export default function App() {
             <Stack.Screen
               name="AdminSettingsPlayerCard"
               component={AdminSettingsPlayerCard}
+            />
+            <Stack.Screen
+              name="AdminSettingsUserCard"
+              component={AdminSettingsUserCard}
             />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           </Stack.Navigator>

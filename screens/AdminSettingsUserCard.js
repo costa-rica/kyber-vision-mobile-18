@@ -28,8 +28,8 @@ import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefault
 import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
 import ModalAdminSettingsDeletePlayerUserLinkYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
 
-export default function AdminSettingsPlayerCard({ navigation, route }) {
-  const [playerObject, setPlayerObject] = useState(route.params.playerObject);
+export default function AdminSettingsUserCard({ navigation, route }) {
+  const [userObject, setUserObject] = useState(route.params.userObject);
   const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
   const [localImageUri, setLocalImageUri] = useState(null);
@@ -50,54 +50,49 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     </Text>
   );
 
-  const fetchPlayerProfilePicture = async () => {
-    try {
-      const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
-      await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
-      const fileUri = `${localDir}${playerObject.image}`;
+  // const fetchPlayerProfilePicture = async () => {
+  //   try {
+  //     const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
+  //     await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
+  //     const fileUri = `${localDir}${playerObject.image}`;
 
-      const downloadResumable = await FileSystem.downloadAsync(
-        `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${playerObject.image}`,
-        fileUri,
-        {
-          headers: {
-            Authorization: `Bearer ${userReducer.token}`,
-          },
-        }
-      );
+  //     const downloadResumable = await FileSystem.downloadAsync(
+  //       `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${playerObject.image}`,
+  //       fileUri,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${userReducer.token}`,
+  //         },
+  //       }
+  //     );
 
-      if (downloadResumable.status === 200) {
-        setLocalImageUri(fileUri);
-      } else {
-        console.log(
-          "Failed to download image, status:",
-          downloadResumable.status
-        );
-      }
-    } catch (error) {
-      console.log("Error downloading player profile picture:", error);
-    }
-  };
+  //     if (downloadResumable.status === 200) {
+  //       setLocalImageUri(fileUri);
+  //     } else {
+  //       console.log(
+  //         "Failed to download image, status:",
+  //         downloadResumable.status
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log("Error downloading player profile picture:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    const checkAndLoadImage = async () => {
-      if (!playerObject.image) return;
-      const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
-      const fileUri = `${localDir}${playerObject.image}`;
-      const fileInfo = await FileSystem.getInfoAsync(fileUri);
-      if (fileInfo.exists) {
-        setLocalImageUri(fileUri);
-      } else {
-        await fetchPlayerProfilePicture();
-      }
-    };
-    checkAndLoadImage();
-  }, [playerObject.image]);
-
-  // // Do we need this?
   // useEffect(() => {
-  //   // console.log("&&& playerObject updated");
-  // }, [playerObject]);
+  //   const checkAndLoadImage = async () => {
+  //     if (!userObject.image) return;
+  //     const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
+  //     const fileUri = `${localDir}${userObject.image}`;
+  //     const fileInfo = await FileSystem.getInfoAsync(fileUri);
+  //     if (fileInfo.exists) {
+  //       setLocalImageUri(fileUri);
+  //     } else {
+  //       await fetchPlayerProfilePicture();
+  //     }
+  //   };
+  //   checkAndLoadImage();
+  // }, [playerObject.image]);
 
   const whichModalToDisplay = () => {
     if (isVisibleLinkUserModal) {
@@ -143,39 +138,30 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
       <View style={styles.container}>
         <View style={styles.containerTop}>
           <View style={styles.vwPlayerNameAndShirtNumber}>
-            <View style={styles.vwPlayerLeft}>
-              <Text style={styles.txtShirtNumber}>
-                {/* {props.lastActionPlayer.shirtNumber} */}
-                {playerObject.shirtNumber}
-              </Text>
-            </View>
             <View style={styles.vwPlayerRight}>
-              <Text style={styles.txtPlayerName}>{playerObject.firstName}</Text>
-              <Text style={styles.txtPlayerName}>
-                {playerObject.lastName.toUpperCase()}
-              </Text>
+              <Text style={styles.txtPlayerName}>{userObject.username}</Text>
             </View>
           </View>
-          <View style={styles.vwPlayerImage}>
+          {/* <View style={styles.vwPlayerImage}>
             <Image
               source={localImageUri ? { uri: localImageUri } : null}
               style={styles.imgPlayer}
             />
-          </View>
+          </View> */}
         </View>
         <ImageBackground
           source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
           style={styles.vwPlayerRolesWaveThing}
         >
           <View style={styles.vwPlayerLabel}>
-            <Text style={styles.txtPlayerLabel}>Player</Text>
+            <Text style={styles.txtPlayerLabel}>Member</Text>
           </View>
-          <View style={styles.vwPlayerLabel}>
+          {/* <View style={styles.vwPlayerLabel}>
             <Text style={styles.txtPlayerLabel}>{playerObject.position}</Text>
-          </View>
+          </View> */}
         </ImageBackground>
-        <View style={styles.containerBottom}>
-          <View style={styles.vwLinkedAccount}>
+        {/* <View style={styles.containerBottom}>
+          <View style={styles.vwLinkedAccountUnderline}>
             <Text style={styles.txtLabel}>Squad member account linked</Text>
             <View style={styles.vwLinkeAccountInput}>
               {playerObject.isUser ? (
@@ -194,41 +180,21 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
                 </ButtonKvNoDefault>
               )}
               {isAdminOfThisTeam && playerObject.isUser && (
-                <ButtonKvNoDefault
+                <ButtonKvNoDefaultTextOnly
                   onPress={() => {
                     console.log("Remove link");
                     setIsVisibleDeletePlayerUserLinkModal(true);
                   }}
-                  styleView={styles.btnCircleX}
+                  styleView={styles.btnSearch}
                   styleText={{ fontSize: 20 }}
                 >
-                  <Image
-                    source={require("../assets/images/btnCircleXGray.png")}
-                    resizeMode="contain"
-                    style={styles.imgIconForLink}
-                  />
-                </ButtonKvNoDefault>
+                  X
+                </ButtonKvNoDefaultTextOnly>
               )}
             </View>
           </View>
-
-          <View style={styles.vwShirtNumber}>
-            <Text style={styles.txtShirtNumberTitle}>Shirt Number</Text>
-            <Text style={styles.txtShirtNumberValue}>
-              {playerObject.shirtNumber}
-            </Text>
-          </View>
-          <View style={styles.vwShirtNumber}>
-            <Text style={styles.txtShirtNumberTitle}>Post</Text>
-            <Text style={styles.txtShirtNumberValue}>
-              {playerObject.position}
-            </Text>
-          </View>
-          {/* <View style={styles.vwShirtNumber}>
-            <Text style={styles.txtShirtNumberTitle}>Role</Text>
-          </View>
-          <Text style={{ fontSize: 11 }}> {JSON.stringify(playerObject)}</Text> */}
-        </View>
+          <Text> {JSON.stringify(playerObject, null, 2)}</Text>
+        </View> */}
       </View>
     </TemplateViewWithTopChildrenSmall>
   );
@@ -338,14 +304,15 @@ const styles = StyleSheet.create({
   containerBottom: {
     width: "100%",
     padding: 20,
-    paddingRight: 60,
-    gap: 20,
-    // borderWidth: 1,
-    // borderColor: "gray",
-    // borderStyle: "dashed",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderStyle: "dashed",
   },
-  vwLinkedAccount: {
+  vwLinkedAccountUnderline: {
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
     width: "100%",
+    marginBottom: 10,
   },
   txtLabel: {
     color: "gray",
@@ -357,9 +324,8 @@ const styles = StyleSheet.create({
   vwLinkeAccountInput: {
     flexDirection: "row",
     alignItems: "center",
-    // justifyContent: "space-between",
-    gap: 30,
-    // backgroundColor: "red",
+    justifyContent: "space-between",
+    gap: 10,
   },
   btnSearch: {
     flexDirection: "row",
@@ -372,27 +338,5 @@ const styles = StyleSheet.create({
     borderColor: "#806181",
     borderWidth: 1,
     // marginVertical: 3,
-  },
-  btnCircleX: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-  },
-
-  vwShirtNumber: {
-    borderBottomColor: "gray",
-    borderBottomWidth: 1,
-    width: "100%",
-    marginBottom: 10,
-  },
-  txtShirtNumberTitle: {
-    color: "gray",
-    marginBottom: 5,
-  },
-  txtShirtNumberValue: {
-    fontSize: 16,
   },
 });

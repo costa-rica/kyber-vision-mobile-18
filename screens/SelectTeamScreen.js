@@ -120,6 +120,40 @@ export default function SelectTeamScreen({ navigation }) {
     );
   };
 
+  const handleRequestJoinTeam = async () => {
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/join/${inviteCode}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      fetchTeams();
+      Alert.alert("Team joined successfully");
+      setInviteCode("");
+    } else {
+      const errorMessage =
+        resJson?.message ||
+        `There was a server error (and no resJson): ${response.status}`;
+
+      alert(errorMessage);
+      if (errorMessage.includes("User already in team")) {
+        setInviteCode("");
+      }
+    }
+    // };
+  };
+
   return (
     <TemplateViewWithTopChildren
       navigation={navigation}
@@ -201,7 +235,8 @@ export default function SelectTeamScreen({ navigation }) {
               onPress={() => {
                 // console.log("Yes ....");
                 if (inviteCode) {
-                  onPressYes(inviteCode);
+                  // onPressYes(inviteCode);
+                  handleRequestJoinTeam();
                 } else {
                   Alert.alert("Invite code is required");
                 }
@@ -241,9 +276,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    flex: 1,
   },
 
   vwInputGroup: {
@@ -276,17 +312,27 @@ const styles = StyleSheet.create({
   vwTeamRowSelected: {
     backgroundColor: "#D3D3D3", // light gray
   },
-
+  vwNoTeamInfo: {
+    alignItems: "center",
+    width: "70%",
+    gap: 20,
+  },
+  txtNoTeamInfo: {
+    fontSize: 16,
+    color: "#806181",
+    textAlign: "center",
+  },
   // ------------
   // Bottom
   // ------------
   containerBottom: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    paddingBottom: Dimensions.get("window").height * 0.075,
   },
 
   btnTribe: {

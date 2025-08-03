@@ -117,7 +117,7 @@ export default function AdminSettings({ navigation }) {
       }
     );
 
-    console.log("Received response:", response.status);
+    // console.log("Received response:", response.status);
 
     let resJson = null;
     const contentType = response.headers.get("Content-Type");
@@ -127,7 +127,7 @@ export default function AdminSettings({ navigation }) {
     }
 
     if (response.ok && resJson) {
-      console.log(`response ok - squadMembersArray`);
+      // console.log(`response ok - squadMembersArray`);
       // console.log(resJson);
       // setSquadMembersArray(resJson.squadArray);
       dispatch(updateSquadMembersArray(resJson.squadArray));
@@ -585,7 +585,11 @@ export default function AdminSettings({ navigation }) {
                   renderItem={({ item }) => (
                     <TouchableOpacity
                       onPress={() => {
-                        console.log(item);
+                        // console.log("- clicked on squad member -");
+                        // console.log(item);
+                        navigation.navigate("AdminSettingsUserCard", {
+                          userObject: item,
+                        });
                       }}
                       onLongPress={() => {
                         Alert.alert("Long Press -- > remove member");
