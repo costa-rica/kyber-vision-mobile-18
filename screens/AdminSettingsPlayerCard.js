@@ -89,6 +89,10 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
     checkAndLoadImage();
   }, [playerObject.image]);
 
+  useEffect(() => {
+    console.log("&&& playerObject updated");
+  }, [playerObject]);
+
   const whichModalToDisplay = () => {
     if (isVisibleLinkUserModal) {
       return {
@@ -149,15 +153,13 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
           </View>
         </ImageBackground>
         <View style={styles.containerBottom}>
-          <View style={styles.vwTeamName}>
+          <View style={styles.vwLinkedAccountUnderline}>
             <Text style={styles.txtLabel}>Squad member account linked</Text>
             <View style={styles.vwLinkeAccountInput}>
               {playerObject.isUser ? (
-                <Text style={styles.txtTeamNameValue}>
-                  {playerObject.username}
-                </Text>
+                <Text style={styles.txtValue}>{playerObject.username}</Text>
               ) : (
-                <Text style={styles.txtTeamNameValue}> No account linked</Text>
+                <Text style={styles.txtValue}> No account linked</Text>
               )}
               {isAdminOfThisTeam && (
                 <ButtonKvNoDefault
@@ -172,18 +174,7 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
               )}
             </View>
           </View>
-          {/* {teamReducer.squadMembersArray.length > 0 ? (
-            teamReducer.squadMembersArray.map((member) => (
-              <View style={styles.vwTeamName}>
-                <Text>{member.id}</Text>
-                <Text>{member.username}</Text>
-              </View>
-            ))
-          ) : (
-            <View style={styles.vwTeamName}>
-              <Text>No account linked</Text>
-            </View>
-          )} */}
+          <Text> {JSON.stringify(playerObject, null, 2)}</Text>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -298,21 +289,16 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderStyle: "dashed",
   },
-  vwTeamName: {
+  vwLinkedAccountUnderline: {
     borderBottomColor: "gray",
     borderBottomWidth: 1,
     width: "100%",
     marginBottom: 10,
   },
-  txtTeamNameTitle: {
-    color: "gray",
-    marginBottom: 5,
-  },
   txtLabel: {
-    // fontSize: 16,
     color: "gray",
   },
-  txtTeamNameValue: {
+  txtValue: {
     fontSize: 16,
     fontStyle: "italic",
   },

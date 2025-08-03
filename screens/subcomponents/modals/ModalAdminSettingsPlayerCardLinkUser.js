@@ -113,6 +113,9 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
                 ...playerObject,
                 username: userObject.username,
                 userId: userObject.userId,
+                isUser: true,
+                // isUser: userObject.isUser,
+                // role: userObject.role,
               };
               console.log("------- !! -------");
               console.log("---- > playerObject updated");
