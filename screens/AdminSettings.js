@@ -41,7 +41,7 @@ export default function AdminSettings({ navigation }) {
   const [showVisibilityOptions, setShowVisibilityOptions] = useState(false);
   const dispatch = useDispatch();
   const [playersArray, setPlayersArray] = useState([]);
-  const [squadMembersArray, setSquadMembersArray] = useState([]);
+  // const [squadMembersArray, setSquadMembersArray] = useState([]);
   const [isVisibleModalAddPlayer, setIsVisibleModalAddPlayer] = useState(false);
   const [isVisibleRemovePlayerModal, setIsVisibleRemovePlayerModal] =
     useState(false);

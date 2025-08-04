@@ -58,7 +58,8 @@ export default function SelectTeamScreen({ navigation }) {
         };
       });
       // console.log("tempArray");
-      // console.log(JSON.stringify(tempArray, null, 2));
+      // console.log("--- contract-team-user ---");
+      // console.log(JSON.stringify(resJson.contractTeamUserArray, null, 2));
       dispatch(updateTeamsArray(tempArray));
       dispatch(updateContractTeamUserArray(resJson.contractTeamUserArray));
     } else {
@@ -276,10 +277,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
     flex: 1,
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
 
   vwInputGroup: {
@@ -329,10 +330,10 @@ const styles = StyleSheet.create({
     // flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "gray",
-    borderWidth: 1,
-    borderStyle: "dashed",
     paddingBottom: Dimensions.get("window").height * 0.075,
+    // borderColor: "gray",
+    // borderWidth: 1,
+    // borderStyle: "dashed",
   },
 
   btnTribe: {

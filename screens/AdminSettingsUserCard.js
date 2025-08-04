@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Alert,
   ImageBackground,
+  ScrollView,
 } from "react-native";
 // import TemplateViewWithTopChildren from "./subcomponents/TemplateViewWithTopChildren";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
@@ -20,13 +21,14 @@ import { useState, useEffect } from "react";
 import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
 import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
-import { updateTeamsArray } from "../reducers/team";
+import { updateSquadMembersArray } from "../reducers/team";
+import { updateContractTeamUserArray } from "../reducers/user";
 import AdminSettingsPlayerCardWaveThing from "../assets/images/AdminSettingsPlayerCardWaveThing.svg";
-
 import ButtonKvNoDefault from "./subcomponents/buttons/ButtonKvNoDefault";
 import ButtonKvNoDefaultTextOnly from "./subcomponents/buttons/ButtonKvNoDefaultTextOnly";
 import ModalAdminSettingsPlayerCardLinkUser from "./subcomponents/modals/ModalAdminSettingsPlayerCardLinkUser";
 import ModalAdminSettingsDeletePlayerUserLinkYesNo from "./subcomponents/modals/ModalAdminSettingsDeletePlayerUserLinkYesNo";
+// import { ScrollView } from "react-native-gesture-handler";
 
 export default function AdminSettingsUserCard({ navigation, route }) {
   const [userObject, setUserObject] = useState(route.params.userObject);
@@ -45,56 +47,13 @@ export default function AdminSettingsUserCard({ navigation, route }) {
   )[0].isAdmin;
   const [showRolesOptions, setShowRolesOptions] = useState(false);
   const [rolesArray, setRolesArray] = useState([]);
+  const dispatch = useDispatch();
   const topChildren = (
     <Text>
       {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
       Settings
     </Text>
   );
-
-  // const fetchPlayerProfilePicture = async () => {
-  //   try {
-  //     const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
-  //     await FileSystem.makeDirectoryAsync(localDir, { intermediates: true });
-  //     const fileUri = `${localDir}${playerObject.image}`;
-
-  //     const downloadResumable = await FileSystem.downloadAsync(
-  //       `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${playerObject.image}`,
-  //       fileUri,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${userReducer.token}`,
-  //         },
-  //       }
-  //     );
-
-  //     if (downloadResumable.status === 200) {
-  //       setLocalImageUri(fileUri);
-  //     } else {
-  //       console.log(
-  //         "Failed to download image, status:",
-  //         downloadResumable.status
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log("Error downloading player profile picture:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const checkAndLoadImage = async () => {
-  //     if (!userObject.image) return;
-  //     const localDir = `${FileSystem.documentDirectory}profile-pictures/`;
-  //     const fileUri = `${localDir}${userObject.image}`;
-  //     const fileInfo = await FileSystem.getInfoAsync(fileUri);
-  //     if (fileInfo.exists) {
-  //       setLocalImageUri(fileUri);
-  //     } else {
-  //       await fetchPlayerProfilePicture();
-  //     }
-  //   };
-  //   checkAndLoadImage();
-  // }, [playerObject.image]);
 
   const whichModalToDisplay = () => {
     if (isVisibleLinkUserModal) {
@@ -139,9 +98,16 @@ export default function AdminSettingsUserCard({ navigation, route }) {
   }, [userObject]);
 
   const handleSelectRole = async (role) => {
+    if (role === "Admin" && userObject.email === userReducer.user.email) {
+      alert(
+        "You cannot modify your own admin status. Another admin must do this."
+      );
+      return;
+    }
     const bodyObj = {
       teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
       role: role,
+      userId: userObject.userId,
     };
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/toggle-role`,
@@ -171,6 +137,12 @@ export default function AdminSettingsUserCard({ navigation, route }) {
         isCoach: resJson.contractTeamUser.isCoach,
         // isPlayer: resJson.contractTeamUser.isPlayer,
       };
+
+      const updatedSquadMembersArray = teamReducer.squadMembersArray.map(
+        (user) => (user.userId === userObject.userId ? updatedUserObject : user)
+      );
+      dispatch(updateSquadMembersArray(updatedSquadMembersArray));
+
       // alert("Role updated successfully")
       setUserObject(updatedUserObject);
       setShowRolesOptions(false);
@@ -229,17 +201,8 @@ export default function AdminSettingsUserCard({ navigation, route }) {
                 ]}
                 onPress={() => setShowRolesOptions(!showRolesOptions)}
               >
-                {/* {teamReducer.teamsArray.filter((team) => team.selected)[0]
-                  .visibility === "On invitation" ? ( */}
-                {/* <TouchableOpacity
-                  onPress={() => setShowRolesOptions(!showRolesOptions)}
-                > */}
                 <View>
-                  <Text style={styles.txtRoleCapsule}>
-                    {/* {rolesArray.join(", ")}
-                     */}
-                    Select role ...
-                  </Text>
+                  <Text style={styles.txtRoleCapsule}>Select role ...</Text>
                 </View>
                 <View style={{ padding: 5 }}>
                   {showRolesOptions ? (
@@ -297,7 +260,13 @@ export default function AdminSettingsUserCard({ navigation, route }) {
             </View>
           )}
 
-          {/* <Text> {JSON.stringify(userObject, null, 2)}</Text> */}
+          {/* <Text style={{ fontSize: 11 }}> {JSON.stringify(userObject)}</Text>
+          <ScrollView>
+            <Text>
+              {" "}
+              {JSON.stringify(teamReducer.squadMembersArray, null, 2)}
+            </Text>
+          </ScrollView> */}
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -330,12 +299,11 @@ const styles = StyleSheet.create({
   },
   vwUserNameAndShirtNumber: {
     flexDirection: "row",
+    flex: 1,
     gap: 10,
     padding: 5,
-    width: Dimensions.get("window").width * 0.3,
     marginTop: 20,
-    marginLeft: 40,
-    // height: 100,
+    marginLeft: 30,
   },
   vwUserLeft: {
     justifyContent: "center",
@@ -367,9 +335,9 @@ const styles = StyleSheet.create({
     fontFamily: "ApfelGrotezkSemiBold",
   },
   vwUserImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     overflow: "hidden",
     // backgroundColor: "green",
   },
@@ -462,7 +430,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderRadius: 20,
     backgroundColor: "#f5f5f5",
-    width: Dimensions.get("window").width * 0.3,
+    width: Dimensions.get("window").width * 0.4,
     paddingLeft: 5,
     paddingVertical: 3,
   },
