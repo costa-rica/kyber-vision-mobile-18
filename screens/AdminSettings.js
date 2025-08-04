@@ -612,8 +612,10 @@ export default function AdminSettings({ navigation }) {
                         </View>
                       )}
                       {item?.isCoach && (
-                        <View style={styles.vwSquadMembersCoach}>
-                          <Text style={styles.txtSquadMembersCoach}>Coach</Text>
+                        <View style={styles.vwSquadMembersPlayer}>
+                          <Text style={styles.txtSquadMembersPlayer}>
+                            Coach
+                          </Text>
                         </View>
                       )}
                       {item?.isAdmin && (
