@@ -356,44 +356,48 @@ export default function UploadVideoScreen({ navigation }) {
           </View>
           <View style={styles.underline} />
 
-          <FlatList
-            data={userVideosArray}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
-              <View style={styles.vwUserVideoItem}>
-                <Text style={styles.txtVideoItemFilename}>{item.filename}</Text>
-                <Text>
-                  {new Date(item.session.sessionDate).toLocaleDateString(
-                    "en-GB",
-                    {
-                      day: "2-digit",
-                      month: "short",
-                    }
-                  )}{" "}
-                  {new Date(item.session.sessionDate).toLocaleTimeString(
-                    "en-GB",
-                    {
-                      hour: "2-digit",
-                    }
-                  )}
-                  h
-                </Text>
+          <View style={styles.vwUserVideoList}>
+            <FlatList
+              data={userVideosArray}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.vwUserVideoItem}>
+                  <Text style={styles.txtVideoItemFilename}>
+                    {item.filename}
+                  </Text>
+                  <Text>
+                    {new Date(item.session.sessionDate).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                      }
+                    )}{" "}
+                    {new Date(item.session.sessionDate).toLocaleTimeString(
+                      "en-GB",
+                      {
+                        hour: "2-digit",
+                      }
+                    )}
+                    h
+                  </Text>
 
-                <ButtonKvNoDefault
-                  onPress={() => {
-                    console.log("Delete video", item.id);
+                  <ButtonKvNoDefault
+                    onPress={() => {
+                      console.log("Delete video", item.id);
 
-                    dispatch(updateUploadReducerDeleteVideoObject(item));
-                    setIsVisibleModalDeleteVideo(true);
-                  }}
-                  styleView={styles.btnDeleteVideo}
-                  styleText={styles.txtDeleteVideo}
-                >
-                  <Text style={styles.txtDeleteVideo}>X</Text>
-                </ButtonKvNoDefault>
-              </View>
-            )}
-          />
+                      dispatch(updateUploadReducerDeleteVideoObject(item));
+                      setIsVisibleModalDeleteVideo(true);
+                    }}
+                    styleView={styles.btnDeleteVideo}
+                    styleText={styles.txtDeleteVideo}
+                  >
+                    <Text style={styles.txtDeleteVideo}>X</Text>
+                  </ButtonKvNoDefault>
+                </View>
+              )}
+            />
+          </View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -485,23 +489,6 @@ const styles = StyleSheet.create({
     // margin: 3,
   },
 
-  vwVideoHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 5,
-    marginTop: 10,
-    width: Dimensions.get("window").width * 0.9,
-  },
-
-  underline: {
-    height: 1,
-    backgroundColor: "#ccc",
-    width: Dimensions.get("window").width * 0.9,
-    alignSelf: "center",
-    marginBottom: 5,
-  },
-
   txtVideoItemFilename: {
     width: Dimensions.get("window").width * 0.3,
     color: "black",
@@ -515,7 +502,6 @@ const styles = StyleSheet.create({
     // fontWeight: "bold",
     fontSize: 11,
   },
-
   txtVideoItemDimensions: {
     width: Dimensions.get("window").width * 0.2,
     color: "black",
@@ -557,6 +543,7 @@ const styles = StyleSheet.create({
   // BOTTOM
   // ------------
   containerBottom: {
+    height: "60%",
     alignItems: "center",
     backgroundColor: "#FDFDFD", // ensure it's not transparent
     shadowColor: "#000", // for iOS
@@ -571,7 +558,29 @@ const styles = StyleSheet.create({
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
   },
+  vwVideoHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    marginTop: 10,
+    width: Dimensions.get("window").width * 0.9,
+  },
 
+  underline: {
+    height: 1,
+    backgroundColor: "#ccc",
+    width: Dimensions.get("window").width * 0.9,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
+
+  vwUserVideoList: {
+    flex: 1,
+    width: Dimensions.get("window").width,
+    alignItems: "center",
+    paddingVertical: 10,
+  },
   btnSelectVideo: {
     width: Dimensions.get("window").width * 0.8,
     backgroundColor: "#806181",
