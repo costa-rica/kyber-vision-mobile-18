@@ -40,6 +40,7 @@ export default function UploadVideoScreen({ navigation }) {
   const [isVisibleModalDeleteVideo, setIsVisibleModalDeleteVideo] =
     useState(false);
   const [userVideosArray, setUserVideosArray] = useState([]);
+  const [containerBottomExpanded, setContainerBottomExpanded] = useState(false);
 
   useEffect(() => {
     fetchUserVideosArray();
@@ -343,18 +344,30 @@ export default function UploadVideoScreen({ navigation }) {
         
         ------------ */}
 
-        <View style={styles.containerBottom}>
-          <Text> Videos Uploaded </Text>
-          <View style={styles.vwVideoHeader}>
-            <Text style={styles.txtVideoItemFilename}>Filename</Text>
-            <Text style={styles.txtVideoItemShort}>Date</Text>
-            {/* <Text style={styles.txtVideoItemShort}>Size (MB)</Text>
+        <View
+          style={[
+            styles.containerBottom,
+            containerBottomExpanded && styles.containerBottomExpanded,
+          ]}
+        >
+          <TouchableOpacity
+            style={{ justifyContent: "center", alignItems: "center" }}
+            onPress={() => setContainerBottomExpanded(!containerBottomExpanded)}
+          >
+            <Text> Videos Uploaded </Text>
+
+            <View style={styles.vwVideoHeaderBottom}>
+              <Text style={styles.txtVideoItemFilename}>Filename</Text>
+              <Text style={styles.txtVideoItemShort}>Date</Text>
+              {/* <Text style={styles.txtVideoItemShort}>Size (MB)</Text>
             <Text style={styles.txtVideoItemDimensions}>Dimensions</Text> */}
-            <Text
-              style={[styles.txtVideoItemShort, { textAlign: "right" }]}
-            ></Text>
-          </View>
-          <View style={styles.underline} />
+              <Text
+                style={[styles.txtVideoItemShort, { textAlign: "right" }]}
+              ></Text>
+            </View>
+
+            <View style={styles.underline} />
+          </TouchableOpacity>
 
           <View style={styles.vwUserVideoList}>
             <FlatList
@@ -476,8 +489,8 @@ const styles = StyleSheet.create({
   // TOP
   // ------------
   containerTop: {
-    // flex: 1,
-    height: "40%",
+    flex: 1,
+    // height: "40%",
     width: Dimensions.get("window").width,
     alignItems: "center",
     paddingVertical: 10,
@@ -488,7 +501,21 @@ const styles = StyleSheet.create({
     // borderRadius: 10,
     // margin: 3,
   },
-
+  vwVideoHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    marginTop: 10,
+    width: Dimensions.get("window").width * 0.9,
+  },
+  underline: {
+    height: 1,
+    backgroundColor: "#ccc",
+    width: Dimensions.get("window").width * 0.9,
+    alignSelf: "center",
+    marginBottom: 5,
+  },
   txtVideoItemFilename: {
     width: Dimensions.get("window").width * 0.3,
     color: "black",
@@ -543,7 +570,7 @@ const styles = StyleSheet.create({
   // BOTTOM
   // ------------
   containerBottom: {
-    height: "60%",
+    height: "10%",
     alignItems: "center",
     backgroundColor: "#FDFDFD", // ensure it's not transparent
     shadowColor: "#000", // for iOS
@@ -558,21 +585,18 @@ const styles = StyleSheet.create({
     // borderColor: "gray", // Change color as desired
     // borderStyle: "dashed",
   },
-  vwVideoHeader: {
+  containerBottomExpanded: {
+    height: "60%",
+  },
+
+  vwVideoHeaderBottom: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 5,
     marginTop: 10,
     width: Dimensions.get("window").width * 0.9,
-  },
-
-  underline: {
-    height: 1,
-    backgroundColor: "#ccc",
-    width: Dimensions.get("window").width * 0.9,
-    alignSelf: "center",
-    marginBottom: 5,
+    // backgroundColor: "green",
   },
 
   vwUserVideoList: {
