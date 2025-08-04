@@ -129,35 +129,14 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     }
   };
 
-  const rolesString = () => {
-    let roleString = "";
-    if (userObject.isAdmin) {
-      roleString = "Admin";
-      // setRolesArray(["Admin"]);
-    }
-    if (userObject.isCoach) {
-      if (roleString.length > 0) {
-        roleString = roleString + ", ";
-        // setRolesArray(["Admin", "Coach"]);
-      }
-      roleString = roleString + "Coach";
-      // setRolesArray(["Coach"]);
-    }
-    // if (userObject.isPlayer) {
-    //   if (roleString.length > 0) {
-    //     roleString = roleString + ", ";
-    //     // let temp = rolesArray;
-    //     // temp.push("Player");
-    //     // setRolesArray(temp);
-    //   }
-    //   roleString = roleString + "Player";
-    //   // setRolesArray(["Player"]);
-    // }
-    if (roleString.length === 0) {
-      roleString = "Member";
-    }
-    return roleString;
-  };
+  useEffect(() => {
+    const tempRoles = [];
+    if (userObject.isAdmin) tempRoles.push("Admin");
+    if (userObject.isCoach) tempRoles.push("Coach");
+    if (userObject.isPlayer) tempRoles.push("Player");
+    if (tempRoles.length === 0) tempRoles.push("Member");
+    setRolesArray(tempRoles);
+  }, [userObject]);
 
   const handleSelectRole = async (role) => {
     const bodyObj = {
@@ -231,24 +210,11 @@ export default function AdminSettingsUserCard({ navigation, route }) {
           source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
           style={styles.vwUserRolesWaveThing}
         >
-          {userObject.isAdmin && (
-            <View style={styles.vwUserLabel}>
-              <Text style={styles.txtUserLabel}>Admin</Text>
+          {rolesArray.map((role) => (
+            <View key={role} style={styles.vwUserLabel}>
+              <Text style={styles.txtUserLabel}>{role}</Text>
             </View>
-          )}
-          {userObject.isCoach && (
-            <View style={styles.vwUserLabel}>
-              <Text style={styles.txtUserLabel}>Coach</Text>
-            </View>
-          )}
-          {userObject.isPlayer && (
-            <View style={styles.vwUserLabel}>
-              <Text style={styles.txtUserLabel}>Player</Text>
-            </View>
-          )}
-          <View style={styles.vwUserLabel}>
-            <Text style={styles.txtUserLabel}>Member</Text>
-          </View>
+          ))}
         </ImageBackground>
         <View style={styles.containerBottom}>
           {isAdminOfThisTeam && (
@@ -267,7 +233,9 @@ export default function AdminSettingsUserCard({ navigation, route }) {
                   onPress={() => setShowRolesOptions(!showRolesOptions)}
                 > */}
                 <View>
-                  <Text style={styles.txtRoleCapsule}>{rolesString()}</Text>
+                  <Text style={styles.txtRoleCapsule}>
+                    {rolesArray.join(", ")}
+                  </Text>
                 </View>
                 <View style={{ padding: 5 }}>
                   {showRolesOptions ? (
@@ -306,7 +274,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
                         <View
                           style={[
                             styles.vwDropdownOptionCapsule,
-                            rolesString().includes(option.type)
+                            rolesArray.includes(option.type)
                               ? styles.vwDropdownOptionCapsuleSelected
                               : null,
                           ]}
@@ -407,7 +375,8 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   vwUserRolesWaveThing: {
-    // justifyContent: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
     alignItems: "flex-start",
     width: Dimensions.get("window").width,
     height: 100,
