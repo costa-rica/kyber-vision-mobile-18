@@ -134,7 +134,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     if (userObject.isAdmin) tempRoles.push("Admin");
     if (userObject.isCoach) tempRoles.push("Coach");
     if (userObject.isPlayer) tempRoles.push("Player");
-    if (tempRoles.length === 0) tempRoles.push("Member");
+    tempRoles.push("Member");
     setRolesArray(tempRoles);
   }, [userObject]);
 
@@ -210,16 +210,18 @@ export default function AdminSettingsUserCard({ navigation, route }) {
           source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
           style={styles.vwUserRolesWaveThing}
         >
-          {rolesArray.map((role) => (
-            <View key={role} style={styles.vwUserLabel}>
-              <Text style={styles.txtUserLabel}>{role}</Text>
-            </View>
-          ))}
+          <View style={styles.vwUserLabels}>
+            {rolesArray.map((role) => (
+              <View key={role} style={styles.vwUserLabel}>
+                <Text style={styles.txtUserLabel}>{role}</Text>
+              </View>
+            ))}
+          </View>
         </ImageBackground>
         <View style={styles.containerBottom}>
           {isAdminOfThisTeam && (
             <View style={styles.vwTeamRole}>
-              <Text style={styles.txtTeamRoleTitle}>Role</Text>
+              {/* <Text style={styles.txtTeamRoleTitle}>Role</Text> */}
               <TouchableOpacity
                 style={[
                   styles.touchableOpacityRoleCapsule,
@@ -234,7 +236,9 @@ export default function AdminSettingsUserCard({ navigation, route }) {
                 > */}
                 <View>
                   <Text style={styles.txtRoleCapsule}>
-                    {rolesArray.join(", ")}
+                    {/* {rolesArray.join(", ")}
+                     */}
+                    Select role ...
                   </Text>
                 </View>
                 <View style={{ padding: 5 }}>
@@ -250,10 +254,10 @@ export default function AdminSettingsUserCard({ navigation, route }) {
                 <View style={styles.vwRoleDropdown}>
                   {[
                     { type: "Admin", value: "Full rights over team" },
-                    {
-                      type: "Member",
-                      value: "",
-                    },
+                    // {
+                    //   type: "Member",
+                    //   value: "",
+                    // },
                     { type: "Coach", value: "" },
                   ]
                     .filter(
@@ -375,13 +379,23 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   vwUserRolesWaveThing: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
+    // flexDirection: "row",
+    // flexWrap: "wrap",
+    // alignItems: "flex-start",
     width: Dimensions.get("window").width,
     height: 100,
     marginTop: -50,
     padding: 10,
+  },
+  vwUserLabels: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
+    width: Dimensions.get("window").width * 0.5,
+    height: 100,
+    gap: 5,
+    // marginTop: -50,
+    // padding: 10,
   },
   vwUserLabel: {
     // height: 40,
@@ -409,10 +423,10 @@ const styles = StyleSheet.create({
     // borderStyle: "dashed",
   },
 
-  vwTeamRole: {
-    width: "50%",
-    marginBottom: 10,
-  },
+  // vwTeamRole: {
+  //   width: "50%",
+  //   marginBottom: 10,
+  // },
   touchableOpacityRoleCapsule: {
     flexDirection: "row",
     alignItems: "center",
