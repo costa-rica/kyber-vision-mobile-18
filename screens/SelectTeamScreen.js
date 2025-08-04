@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { updateTeamsArray } from "../reducers/team";
 import { updateContractTeamUserArray } from "../reducers/user";
+import { logoutUser } from "../reducers/user";
 import * as Clipboard from "expo-clipboard";
 
 export default function SelectTeamScreen({ navigation }) {
@@ -180,6 +181,8 @@ export default function SelectTeamScreen({ navigation }) {
               <Text style={styles.txtNoTeamInfo}>
                 You can use one of the three options below
               </Text>
+              {/* <Text>{JSON.stringify(userReducer.user)}</Text>
+              <Text>{JSON.stringify(userReducer.token)}</Text> */}
             </View>
           )}
         </View>
@@ -194,6 +197,15 @@ export default function SelectTeamScreen({ navigation }) {
             </ButtonKvNoDefaultTextOnly>
           </View>
           <View style={styles.vwInputGroup}>
+            {/* <ButtonKvStd
+              onPress={() => {
+                dispatch(logoutUser());
+                navigation.navigate("SplashScreen");
+              }}
+              style={styles.btnHomeNavigation}
+            >
+              Logout
+            </ButtonKvStd> */}
             <ButtonKvNoDefaultTextOnly
               onPress={() => console.log("Join a public squad")}
               styleView={styles.btnTribe}

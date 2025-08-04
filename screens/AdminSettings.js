@@ -358,6 +358,7 @@ export default function AdminSettings({ navigation }) {
             ----- */}
         <View style={styles.containerTop}>
           <View style={styles.vwContainerTopInner}>
+            {/* <Text> {process.env.EXPO_PUBLIC_API_URL}</Text> */}
             <View style={styles.vwTeamName}>
               <Text style={styles.txtTeamNameTitle}>Team Name</Text>
               <Text style={styles.txtTeamNameValue}>
