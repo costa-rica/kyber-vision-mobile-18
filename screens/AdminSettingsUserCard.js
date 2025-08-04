@@ -32,7 +32,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
   const [userObject, setUserObject] = useState(route.params.userObject);
   const userReducer = useSelector((state) => state.user);
   const teamReducer = useSelector((state) => state.team);
-  const [localImageUri, setLocalImageUri] = useState(null);
+  // const [localImageUri, setLocalImageUri] = useState(null);
   const [isVisibleLinkUserModal, setIsVisibleLinkUserModal] = useState(false);
   const [
     isVisibleDeletePlayerUserLinkModal,
@@ -43,6 +43,8 @@ export default function AdminSettingsUserCard({ navigation, route }) {
       team.teamId ===
       teamReducer.teamsArray.filter((team) => team.selected)[0].id
   )[0].isAdmin;
+  const [showRolesOptions, setShowRolesOptions] = useState(false);
+  const [rolesArray, setRolesArray] = useState([]);
   const topChildren = (
     <Text>
       {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
@@ -127,6 +129,82 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     }
   };
 
+  const rolesString = () => {
+    let roleString = "";
+    if (userObject.isAdmin) {
+      roleString = "Admin";
+      // setRolesArray(["Admin"]);
+    }
+    if (userObject.isCoach) {
+      if (roleString.length > 0) {
+        roleString = roleString + ", ";
+        // setRolesArray(["Admin", "Coach"]);
+      }
+      roleString = roleString + "Coach";
+      // setRolesArray(["Coach"]);
+    }
+    // if (userObject.isPlayer) {
+    //   if (roleString.length > 0) {
+    //     roleString = roleString + ", ";
+    //     // let temp = rolesArray;
+    //     // temp.push("Player");
+    //     // setRolesArray(temp);
+    //   }
+    //   roleString = roleString + "Player";
+    //   // setRolesArray(["Player"]);
+    // }
+    if (roleString.length === 0) {
+      roleString = "Member";
+    }
+    return roleString;
+  };
+
+  const handleSelectRole = async (role) => {
+    const bodyObj = {
+      teamId: teamReducer.teamsArray.filter((team) => team.selected)[0].id,
+      role: role,
+    };
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/toggle-role`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      // const updatedTeams = teamReducer.teamsArray.map((team) =>
+      //   team.selected ? { ...team, visibility } : team
+      // );
+      // dispatch(updateTeamsArray(updatedTeams));
+      const updatedUserObject = {
+        ...userObject,
+        isAdmin: resJson.contractTeamUser.isAdmin,
+        isCoach: resJson.contractTeamUser.isCoach,
+        // isPlayer: resJson.contractTeamUser.isPlayer,
+      };
+      // alert("Role updated successfully")
+      setUserObject(updatedUserObject);
+      setShowRolesOptions(false);
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
+    // alert(role);
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -137,64 +215,118 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>
-          <View style={styles.vwPlayerNameAndShirtNumber}>
-            <View style={styles.vwPlayerRight}>
-              <Text style={styles.txtPlayerName}>{userObject.username}</Text>
+          <View style={styles.vwUserNameAndShirtNumber}>
+            <View style={styles.vwUserRight}>
+              <Text style={styles.txtUserName}>{userObject.username}</Text>
             </View>
           </View>
-          {/* <View style={styles.vwPlayerImage}>
+          <View style={styles.vwUserImage}>
             <Image
-              source={localImageUri ? { uri: localImageUri } : null}
-              style={styles.imgPlayer}
+              source={require("../assets/images/iconMissingProfilePicture.png")}
+              style={styles.imgUser}
             />
-          </View> */}
+          </View>
         </View>
         <ImageBackground
           source={require("../assets/images/AdminSettingsPlayerCardWaveThing.png")}
-          style={styles.vwPlayerRolesWaveThing}
+          style={styles.vwUserRolesWaveThing}
         >
-          <View style={styles.vwPlayerLabel}>
-            <Text style={styles.txtPlayerLabel}>Member</Text>
+          {userObject.isAdmin && (
+            <View style={styles.vwUserLabel}>
+              <Text style={styles.txtUserLabel}>Admin</Text>
+            </View>
+          )}
+          {userObject.isCoach && (
+            <View style={styles.vwUserLabel}>
+              <Text style={styles.txtUserLabel}>Coach</Text>
+            </View>
+          )}
+          {userObject.isPlayer && (
+            <View style={styles.vwUserLabel}>
+              <Text style={styles.txtUserLabel}>Player</Text>
+            </View>
+          )}
+          <View style={styles.vwUserLabel}>
+            <Text style={styles.txtUserLabel}>Member</Text>
           </View>
-          {/* <View style={styles.vwPlayerLabel}>
-            <Text style={styles.txtPlayerLabel}>{playerObject.position}</Text>
-          </View> */}
         </ImageBackground>
-        {/* <View style={styles.containerBottom}>
-          <View style={styles.vwLinkedAccountUnderline}>
-            <Text style={styles.txtLabel}>Squad member account linked</Text>
-            <View style={styles.vwLinkeAccountInput}>
-              {playerObject.isUser ? (
-                <Text style={styles.txtValue}>{playerObject.username}</Text>
-              ) : (
-                <Text style={styles.txtValue}> No account linked</Text>
-              )}
-              {isAdminOfThisTeam && !playerObject.isUser && (
-                <ButtonKvNoDefault
-                  onPress={() => {
-                    setIsVisibleLinkUserModal(true);
-                  }}
-                  styleView={styles.btnSearch}
-                >
-                  <IconMagnifingGlass />
-                </ButtonKvNoDefault>
-              )}
-              {isAdminOfThisTeam && playerObject.isUser && (
-                <ButtonKvNoDefaultTextOnly
-                  onPress={() => {
-                    console.log("Remove link");
-                    setIsVisibleDeletePlayerUserLinkModal(true);
-                  }}
-                  styleView={styles.btnSearch}
-                  styleText={{ fontSize: 20 }}
-                >
-                  X
-                </ButtonKvNoDefaultTextOnly>
+        <View style={styles.containerBottom}>
+          {isAdminOfThisTeam && (
+            <View style={styles.vwTeamRole}>
+              <Text style={styles.txtTeamRoleTitle}>Role</Text>
+              <TouchableOpacity
+                style={[
+                  styles.touchableOpacityRoleCapsule,
+                  styles.vwDropdownOptionCapsule,
+                ]}
+                onPress={() => setShowRolesOptions(!showRolesOptions)}
+              >
+                {/* {teamReducer.teamsArray.filter((team) => team.selected)[0]
+                  .visibility === "On invitation" ? ( */}
+                {/* <TouchableOpacity
+                  onPress={() => setShowRolesOptions(!showRolesOptions)}
+                > */}
+                <View>
+                  <Text style={styles.txtRoleCapsule}>{rolesString()}</Text>
+                </View>
+                <View style={{ padding: 5 }}>
+                  {showRolesOptions ? (
+                    <BtnVisibilityUp />
+                  ) : (
+                    <BtnVisibilityDown />
+                  )}
+                </View>
+              </TouchableOpacity>
+              {/* </View> */}
+              {showRolesOptions && (
+                <View style={styles.vwRoleDropdown}>
+                  {[
+                    { type: "Admin", value: "Full rights over team" },
+                    {
+                      type: "Member",
+                      value: "",
+                    },
+                    { type: "Coach", value: "" },
+                  ]
+                    .filter(
+                      (option) =>
+                        option.type !==
+                        teamReducer.teamsArray.filter(
+                          (team) => team.selected
+                        )[0].visibility
+                    )
+                    .map((option) => (
+                      <TouchableOpacity
+                        key={option.type}
+                        style={styles.touchableOpacityDropdownOption}
+                        onPress={() => {
+                          handleSelectRole(option.type);
+                        }}
+                      >
+                        <View
+                          style={[
+                            styles.vwDropdownOptionCapsule,
+                            rolesString().includes(option.type)
+                              ? styles.vwDropdownOptionCapsuleSelected
+                              : null,
+                          ]}
+                        >
+                          <Text style={styles.txtDropdownOption}>
+                            {option.type}
+                          </Text>
+                        </View>
+                        <Text style={styles.txtDropdownOptionValue}>
+                          {option.value}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
               )}
             </View>
-          </View>
-          <Text> {JSON.stringify(playerObject, null, 2)}</Text>
-        </View> */}
+          )}
+
+          {/* <Text> {JSON.stringify(userObject, null, 2)}</Text> */}
+        </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
   );
@@ -214,27 +346,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    zIndex: 1,
+    paddingTop: 10,
+    // paddingRight: 5,
     // borderColor: "gray",
     // borderWidth: 1,
     // borderStyle: "dashed",
-    zIndex: 1,
   },
-  vwPlayerTop: {
+  vwUserTop: {
     flexDirection: "row",
   },
-  vwPlayerNameAndShirtNumber: {
-    // borderWidth: 1,
-    // borderColor: "#6E4C84",
-    // borderRadius: 30,
-    // backgroundColor: "blue",
+  vwUserNameAndShirtNumber: {
     flexDirection: "row",
     gap: 10,
     padding: 5,
     width: Dimensions.get("window").width * 0.3,
     marginTop: 20,
-    marginLeft: 20,
+    marginLeft: 40,
+    // height: 100,
   },
-  vwPlayerLeft: {
+  vwUserLeft: {
     justifyContent: "center",
     backgroundColor: "#806181",
     borderRadius: 30,
@@ -243,39 +374,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  txtShirtNumber: {
-    // fontWeight: "bold",
-    color: "white",
-    fontSize: 40,
-    // borderRadius: 7,
-    // height: 15,
-    // width: 20,
-    textAlign: "center",
-    fontFamily: "ApfelGrotezkSuperBold",
-  },
-  vwPlayerRight: {
+  // txtShirtNumber: {
+  //   // fontWeight: "bold",
+  //   color: "white",
+  //   fontSize: 40,
+  //   // borderRadius: 7,
+  //   // height: 15,
+  //   // width: 20,
+  //   textAlign: "center",
+  //   fontFamily: "ApfelGrotezkSuperBold",
+  // },
+  vwUserRight: {
     // alignItems: "center",
     justifyContent: "center",
   },
-  txtPlayerName: {
+  txtUserName: {
     // textAlign: "center",
     color: "#6E4C84",
-    fontSize: 16,
+    fontSize: 24,
     fontFamily: "ApfelGrotezkSemiBold",
   },
-  vwPlayerImage: {
+  vwUserImage: {
     width: 150,
     height: 150,
     borderRadius: 75,
     overflow: "hidden",
     // backgroundColor: "green",
   },
-  imgPlayer: {
-    width: "100%",
-    height: "100%",
+  imgUser: {
+    width: "90%",
+    height: "90%",
     resizeMode: "cover",
   },
-  vwPlayerRolesWaveThing: {
+  vwUserRolesWaveThing: {
     // justifyContent: "center",
     alignItems: "flex-start",
     width: Dimensions.get("window").width,
@@ -283,7 +414,7 @@ const styles = StyleSheet.create({
     marginTop: -50,
     padding: 10,
   },
-  vwPlayerLabel: {
+  vwUserLabel: {
     // height: 40,
     // width: 80,
     justifyContent: "center",
@@ -292,7 +423,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#806181",
     padding: 5,
   },
-  txtPlayerLabel: {
+  txtUserLabel: {
     fontSize: 20,
     color: "white",
     lineHeight: 20,
@@ -304,39 +435,94 @@ const styles = StyleSheet.create({
   containerBottom: {
     width: "100%",
     padding: 20,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderStyle: "dashed",
+    // borderWidth: 1,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
   },
-  vwLinkedAccountUnderline: {
-    borderBottomColor: "gray",
-    borderBottomWidth: 1,
-    width: "100%",
+
+  vwTeamRole: {
+    width: "50%",
     marginBottom: 10,
   },
-  txtLabel: {
-    color: "gray",
-  },
-  txtValue: {
-    fontSize: 16,
-    fontStyle: "italic",
-  },
-  vwLinkeAccountInput: {
+  touchableOpacityRoleCapsule: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
+    paddingHorizontal: 12,
+    marginTop: 5,
   },
-  btnSearch: {
+  txtRoleCapsule: {
+    fontSize: 14,
+  },
+  arrow: {
+    marginLeft: 8,
+  },
+  vwRoleDropdown: {
+    position: "absolute",
+    top: 50, // adjust for your layout
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 8,
+    width: Dimensions.get("window").width * 0.8,
+    zIndex: 10,
+    elevation: 5,
+  },
+  touchableOpacityDropdownOption: {
+    padding: 5,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    backgroundColor: "#E8E8E8",
-    borderColor: "#806181",
-    borderWidth: 1,
-    // marginVertical: 3,
+    gap: 5,
   },
+  vwDropdownOptionCapsule: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 20,
+    backgroundColor: "#f5f5f5",
+    width: Dimensions.get("window").width * 0.3,
+    paddingLeft: 5,
+    paddingVertical: 3,
+  },
+  vwDropdownOptionCapsuleSelected: {
+    backgroundColor: "#806181",
+  },
+  txtDropdownOption: {
+    fontSize: 14,
+  },
+  txtDropdownOptionValue: {
+    fontSize: 12,
+    color: "gray",
+  },
+
+  // vwLinkedAccountUnderline: {
+  //   borderBottomColor: "gray",
+  //   borderBottomWidth: 1,
+  //   width: "100%",
+  //   marginBottom: 10,
+  // },
+  // txtLabel: {
+  //   color: "gray",
+  // },
+  // txtValue: {
+  //   fontSize: 16,
+  //   fontStyle: "italic",
+  // },
+  // vwLinkeAccountInput: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "space-between",
+  //   gap: 10,
+  // },
+  // btnSearch: {
+  //   flexDirection: "row",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   height: 40,
+  //   width: 40,
+  //   borderRadius: 20,
+  //   backgroundColor: "#E8E8E8",
+  //   borderColor: "#806181",
+  //   borderWidth: 1,
+  //   // marginVertical: 3,
+  // },
 });
