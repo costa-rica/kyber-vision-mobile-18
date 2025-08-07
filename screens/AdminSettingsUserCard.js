@@ -160,7 +160,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
-      screenName={"AdminSettingsPlayerCard"}
+      screenName={"AdminSettingsUserCard"}
       modalComponentAndSetterObject={whichModalToDisplay()}
       topHeight={"15%"}
     >
