@@ -195,17 +195,6 @@ export default function AdminSettings({ navigation }) {
       };
     }
 
-    // if (isVisibleRemovePlayerModal) {
-    //   return {
-    //     modalComponent: (
-    //       <ModalAdminSettingsDeletePlayerYesNo
-    //         onPressYes={handleRemovePlayer}
-    //       />
-    //     ),
-    //     useState: isVisibleRemovePlayerModal,
-    //     useStateSetter: setIsVisibleRemovePlayerModal,
-    //   };
-    // }
     if (isVisibleInviteToSquadModal) {
       return {
         modalComponent: (
@@ -342,6 +331,86 @@ export default function AdminSettings({ navigation }) {
     }
 
     setIsVisibleInviteToSquadModal(false);
+  };
+
+  const confirmDeletePlayer = (player) => {
+    // keep your global selection in sync if other parts read it
+    dispatch(updateSelectedPlayerObject(player));
+
+    // Use the reducer value if present; otherwise fall back to the tapped item
+    const idForMsg = teamReducer.selectedPlayerObject?.id ?? player.id;
+    const firstName =
+      teamReducer.selectedPlayerObject?.firstName ?? player.firstName;
+    const lastName =
+      teamReducer.selectedPlayerObject?.lastName ?? player.lastName;
+
+    Alert.alert(
+      "Are you sure?",
+      `you want to delete ${firstName} ${lastName} (player id: ${idForMsg})?`,
+      [
+        { text: "No", style: "cancel" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => handleRemovePlayer(player),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const confirmDeleteSquadMember = (contractTeamUserObject) => {
+    Alert.alert(
+      "Are you sure?",
+      `you want to delete ${contractTeamUserObject.username} (user id: ${contractTeamUserObject.userId}) from the squad?`,
+      [
+        { text: "No", style: "cancel" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => handleRemoveSquadMember(contractTeamUserObject),
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleRemoveSquadMember = async (contractTeamUserObject) => {
+    // console.log("--- removed Player ----");
+    // console.log(JSON.stringify(playerObject));
+    const bodyObj = {
+      contractTeamUserId: contractTeamUserObject.id,
+    };
+    console.log("--- removed Player ----");
+    console.log(JSON.stringify(bodyObj));
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      Alert.alert("Squad member removed successfully");
+      fetchSquadMembers();
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
+    // setIsVisibleRemovePlayerModal(false);
   };
 
   return (
@@ -523,8 +592,9 @@ export default function AdminSettings({ navigation }) {
                       if (!isAdminOfThisTeam) {
                         return;
                       }
-                      setIsVisibleRemovePlayerModal(true);
-                      dispatch(updateSelectedPlayerObject(item));
+                      confirmDeletePlayer(item);
+                      // setIsVisibleRemovePlayerModal(true);
+                      // dispatch(updateSelectedPlayerObject(item));
                     }}
                     delayLongPress={500} // optional: control long press timing
                   >
@@ -594,9 +664,16 @@ export default function AdminSettings({ navigation }) {
                         });
                       }}
                       onLongPress={() => {
-                        Alert.alert("Long Press -- > remove member");
+                        // Alert.alert(
+                        //   `Long Press -- > remove member ${JSON.stringify(
+                        //     item,
+                        //     null,
+                        //     2
+                        //   )}`
+                        // );
                         // setIsVisibleRemovePlayerModal(true);
                         // dispatch(updateSelectedPlayerObject(item));
+                        confirmDeleteSquadMember(item);
                       }}
                       delayLongPress={500} // optional: control long press timing
                       style={styles.vwSquadMembersRow}
