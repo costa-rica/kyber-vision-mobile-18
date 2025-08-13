@@ -569,6 +569,7 @@ export default function AdminSettings({ navigation }) {
                   <ButtonKvNoDefaultTextOnly
                     onPress={() => {
                       console.log("Add");
+                      isAdminOfThisTeam && setIsVisibleInviteToSquadModal(true);
                     }}
                     styleView={styles.btnAddElement}
                     styleText={styles.txtBtnAddElement}
