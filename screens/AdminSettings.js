@@ -195,17 +195,17 @@ export default function AdminSettings({ navigation }) {
       };
     }
 
-    if (isVisibleRemovePlayerModal) {
-      return {
-        modalComponent: (
-          <ModalAdminSettingsDeletePlayerYesNo
-            onPressYes={handleRemovePlayer}
-          />
-        ),
-        useState: isVisibleRemovePlayerModal,
-        useStateSetter: setIsVisibleRemovePlayerModal,
-      };
-    }
+    // if (isVisibleRemovePlayerModal) {
+    //   return {
+    //     modalComponent: (
+    //       <ModalAdminSettingsDeletePlayerYesNo
+    //         onPressYes={handleRemovePlayer}
+    //       />
+    //     ),
+    //     useState: isVisibleRemovePlayerModal,
+    //     useStateSetter: setIsVisibleRemovePlayerModal,
+    //   };
+    // }
     if (isVisibleInviteToSquadModal) {
       return {
         modalComponent: (

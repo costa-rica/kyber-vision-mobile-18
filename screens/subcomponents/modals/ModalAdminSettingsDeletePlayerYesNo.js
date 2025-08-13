@@ -32,21 +32,21 @@ export default function ModalAdminSettingsDeletePlayerYesNo({ onPressYes }) {
       <View style={styles.vwVideoDetails}></View>
 
       <View style={styles.vwInputAndButton}>
-        <Text>Enter player first name:</Text>
+        {/* <Text>Enter player first name:</Text>
         <TextInput
           // placeholder="Enter player first name"
           style={styles.txtInputPlayerName}
           value={playerName}
           onChangeText={setPlayerName}
-        />
+        /> */}
         <ButtonKvNoDefaultTextOnly
           onPress={() => {
-            console.log("Yes ....");
-            if (playerName === teamReducer.selectedPlayerObject?.firstName) {
-              onPressYes(teamReducer.selectedPlayerObject);
-            } else {
-              Alert.alert("Confirm delete", "Player name does not match");
-            }
+            console.log("Yes .... deleting player");
+            // if (playerName === teamReducer.selectedPlayerObject?.firstName) {
+            onPressYes(teamReducer.selectedPlayerObject);
+            // } else {
+            //   Alert.alert("Confirm delete", "Player name does not match");
+            // }
           }}
           styleView={[
             styles.btnYes,

@@ -21,6 +21,7 @@ import { useState, useEffect } from "react";
 import BtnVisibilityDown from "../assets/images/buttons/btnVisibilityDown.svg";
 import BtnVisibilityUp from "../assets/images/buttons/btnVisibilityUp.svg";
 import IconMagnifingGlass from "../assets/images/iconMagnifingGlass.svg";
+import BtnUserCardRemoveUser from "../assets/images/adminSettings/btnUserCardRemoveUser.svg";
 import { updateSquadMembersArray } from "../reducers/team";
 import { updateContractTeamUserArray } from "../reducers/user";
 import AdminSettingsPlayerCardWaveThing from "../assets/images/AdminSettingsPlayerCardWaveThing.svg";
