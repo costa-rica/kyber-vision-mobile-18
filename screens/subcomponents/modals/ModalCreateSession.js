@@ -23,6 +23,7 @@ export default function ModalCreateSession({
 }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
+  const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -59,6 +60,7 @@ export default function ModalCreateSession({
     const contractLeagueTeamId = leaguesArray.find(
       (league) => league.selected
     )?.contractLeagueTeamId;
+    const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0].id;
     console.log("leagueId", leagueId);
     console.log("contractLeagueTeamId", contractLeagueTeamId);
 
@@ -79,7 +81,7 @@ export default function ModalCreateSession({
     const sessionDate = combinedDateTime.toISOString();
 
     const bodyObj = {
-      teamId: leagueId,
+      teamId,
       contractLeagueTeamId,
       sessionDate,
     };

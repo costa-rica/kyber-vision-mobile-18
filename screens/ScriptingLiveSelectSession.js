@@ -49,9 +49,46 @@ export default function ScriptingLiveSelectSession({ navigation }) {
   );
 
   useEffect(() => {
-    console.log("--- scriptReducer.sessionsArray ---");
-    console.log(scriptReducer.sessionsArray);
+    fetchSessionsArray();
   }, []);
+
+  const fetchSessionsArray = async () => {
+    // console.log("fetchSessionsArray ---");
+
+    const response = await fetch(
+      // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
+        teamReducer.teamsArray.filter((team) => team.selected)[0].id
+      }`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        // body: JSON.stringify(bodyObj),
+      }
+    );
+
+    // console.log("Received response:", response.status);
+
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+    // console.log("--- here are the sessions ---");
+    // console.log(resJson);
+    let tempArray = [];
+    resJson.sessionsArray.map((session) => {
+      tempArray.push({
+        ...session,
+        selected: false,
+      });
+    });
+    dispatch(updateSessionsArray(tempArray));
+  };
 
   const fetchLeaguesArray = async () => {
     console.log(" -- fetchLeaguesArray ---");
