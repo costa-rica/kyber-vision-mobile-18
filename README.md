@@ -11,6 +11,10 @@ EXPO_PUBLIC_API_URL_SERVER=https://api.kv16.dashanddata.com
 EXPO_PUBLIC_ENVIRONMENT=workstation
 ```
 
+## outdated packages
+
+`npx expo install --fix`
+
 ## Upload Video Screen
 
 - install `npx expo install expo-image-picker`
