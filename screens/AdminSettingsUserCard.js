@@ -157,6 +157,63 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     // alert(role);
   };
 
+  const confirmDeleteSquadMember = (contractTeamUserObject) => {
+    Alert.alert(
+      "Are you sure?",
+      `you want to delete ${contractTeamUserObject.username} (user id: ${contractTeamUserObject.userId}) from the squad?`,
+      [
+        { text: "No", style: "cancel" },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: () => {
+            handleRemoveSquadMember(contractTeamUserObject);
+            navigation.goBack();
+          },
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleRemoveSquadMember = async (contractTeamUserObject) => {
+    // console.log("--- removed Player ----");
+    // console.log(JSON.stringify(playerObject));
+    const bodyObj = {
+      contractTeamUserId: contractTeamUserObject.id,
+    };
+    console.log("--- removed Player ----");
+    console.log(JSON.stringify(bodyObj));
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userReducer.token}`,
+        },
+        body: JSON.stringify(bodyObj),
+      }
+    );
+    let resJson = null;
+    const contentType = response.headers.get("Content-Type");
+    if (contentType?.includes("application/json")) {
+      resJson = await response.json();
+    }
+
+    if (response.ok && resJson) {
+      Alert.alert("Squad member removed successfully");
+      // fetchSquadMembers();
+    } else {
+      const errorMessage =
+        resJson?.error ||
+        `There was a server error (and no resJson): ${response.status}`;
+      alert(errorMessage);
+    }
+
+    // setIsVisibleRemovePlayerModal(false);
+  };
+
   return (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
@@ -191,7 +248,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
             ))}
           </View>
         </ImageBackground>
-        <View style={styles.containerBottom}>
+        <View style={styles.containerMiddle}>
           {isAdminOfThisTeam && (
             <View style={styles.vwTeamRole}>
               {/* <Text style={styles.txtTeamRoleTitle}>Role</Text> */}
@@ -263,11 +320,25 @@ export default function AdminSettingsUserCard({ navigation, route }) {
 
           {/* <Text style={{ fontSize: 11 }}> {JSON.stringify(userObject)}</Text>
           <ScrollView>
-            <Text>
-              {" "}
-              {JSON.stringify(teamReducer.squadMembersArray, null, 2)}
-            </Text>
+          <Text>
+          {" "}
+          {JSON.stringify(teamReducer.squadMembersArray, null, 2)}
+          </Text>
           </ScrollView> */}
+        </View>
+        <View style={styles.containerBottom}>
+          <View style={styles.vwRemoveUserButtonContainer}>
+            {/* <Text style={styles.txtRemoveUser}>Remove User</Text> */}
+            <TouchableOpacity
+              style={styles.btnRemoveUser}
+              onPress={() => {
+                // alert("Remove user");
+                confirmDeleteSquadMember(userObject);
+              }}
+            >
+              <BtnUserCardRemoveUser />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </TemplateViewWithTopChildrenSmall>
@@ -315,16 +386,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  // txtShirtNumber: {
-  //   // fontWeight: "bold",
-  //   color: "white",
-  //   fontSize: 40,
-  //   // borderRadius: 7,
-  //   // height: 15,
-  //   // width: 20,
-  //   textAlign: "center",
-  //   fontFamily: "ApfelGrotezkSuperBold",
-  // },
+
   vwUserRight: {
     // alignItems: "center",
     justifyContent: "center",
@@ -382,11 +444,12 @@ const styles = StyleSheet.create({
   },
 
   // ------------
-  // Bottom
+  // Middle
   // ------------
-  containerBottom: {
+  containerMiddle: {
     width: "100%",
     padding: 20,
+    flex: 1,
     // borderWidth: 1,
     // borderColor: "gray",
     // borderStyle: "dashed",
@@ -446,35 +509,22 @@ const styles = StyleSheet.create({
     color: "gray",
   },
 
-  // vwLinkedAccountUnderline: {
-  //   borderBottomColor: "gray",
-  //   borderBottomWidth: 1,
-  //   width: "100%",
-  //   marginBottom: 10,
-  // },
-  // txtLabel: {
-  //   color: "gray",
-  // },
-  // txtValue: {
-  //   fontSize: 16,
-  //   fontStyle: "italic",
-  // },
-  // vwLinkeAccountInput: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "space-between",
-  //   gap: 10,
-  // },
-  // btnSearch: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   justifyContent: "center",
-  //   height: 40,
-  //   width: 40,
-  //   borderRadius: 20,
-  //   backgroundColor: "#E8E8E8",
-  //   borderColor: "#806181",
-  //   borderWidth: 1,
-  //   // marginVertical: 3,
-  // },
+  // ------------
+  // Bottom
+  // ------------
+  containerBottom: {
+    width: "100%",
+    padding: 20,
+    paddingBottom: 50,
+    // borderWidth: 1,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
+  },
+  vwRemoveUserButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    gap: 10,
+  },
 });

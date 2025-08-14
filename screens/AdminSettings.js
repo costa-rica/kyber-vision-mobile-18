@@ -664,15 +664,6 @@ export default function AdminSettings({ navigation }) {
                         });
                       }}
                       onLongPress={() => {
-                        // Alert.alert(
-                        //   `Long Press -- > remove member ${JSON.stringify(
-                        //     item,
-                        //     null,
-                        //     2
-                        //   )}`
-                        // );
-                        // setIsVisibleRemovePlayerModal(true);
-                        // dispatch(updateSelectedPlayerObject(item));
                         confirmDeleteSquadMember(item);
                       }}
                       delayLongPress={500} // optional: control long press timing
