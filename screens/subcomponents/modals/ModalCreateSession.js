@@ -88,7 +88,7 @@ export default function ModalCreateSession({
 
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/sessions/create`,
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/create`,
         {
           method: "POST",
           headers: {

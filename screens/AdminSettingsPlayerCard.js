@@ -57,7 +57,7 @@ export default function AdminSettingsPlayerCard({ navigation, route }) {
       const fileUri = `${localDir}${playerObject.image}`;
 
       const downloadResumable = await FileSystem.downloadAsync(
-        `${process.env.EXPO_PUBLIC_API_URL}/players/profile-picture/${playerObject.image}`,
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/players/profile-picture/${playerObject.image}`,
         fileUri,
         {
           headers: {

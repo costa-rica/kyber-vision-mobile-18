@@ -99,8 +99,8 @@ export default function HomeScreen({ navigation }) {
     // console.log("fetchSessionsArray ---");
 
     const response = await fetch(
-      // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
-      `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/${teamId}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/${
         teamReducer.teamsArray.filter((team) => team.selected)[0].id
       }`,
       {

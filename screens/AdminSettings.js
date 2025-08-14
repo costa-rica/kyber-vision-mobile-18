@@ -71,7 +71,7 @@ export default function AdminSettings({ navigation }) {
 
   const fetchPlayers = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/players/team/${
         teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       }`,
       {
@@ -105,7 +105,7 @@ export default function AdminSettings({ navigation }) {
 
   const fetchSquadMembers = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/${
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/${
         teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       }`,
       {
@@ -147,7 +147,7 @@ export default function AdminSettings({ navigation }) {
       visibility: visibility,
     };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/update-visibility`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/teams/update-visibility`,
       {
         method: "POST",
         headers: {
@@ -228,7 +228,7 @@ export default function AdminSettings({ navigation }) {
       positionAbbreviation: playerObject.positionAbbreviation,
     };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/add-player`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/teams/add-player`,
       {
         method: "POST",
         headers: {
@@ -266,7 +266,7 @@ export default function AdminSettings({ navigation }) {
     console.log("--- removed Player ----");
     console.log(JSON.stringify(bodyObj));
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/player`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/teams/player`,
       {
         method: "DELETE",
         headers: {
@@ -303,7 +303,7 @@ export default function AdminSettings({ navigation }) {
       email: emailString,
     };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/add-squad-member`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/add-squad-member`,
       {
         method: "POST",
         headers: {
@@ -384,7 +384,7 @@ export default function AdminSettings({ navigation }) {
     console.log("--- removed Player ----");
     console.log(JSON.stringify(bodyObj));
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/`,
       {
         method: "DELETE",
         headers: {
@@ -427,7 +427,7 @@ export default function AdminSettings({ navigation }) {
             ----- */}
         <View style={styles.containerTop}>
           <View style={styles.vwContainerTopInner}>
-            {/* <Text> {process.env.EXPO_PUBLIC_API_URL}</Text> */}
+            {/* <Text> {process.env.EXPO_PUBLIC_API_BASE_URL}</Text> */}
             <View style={styles.vwTeamName}>
               <Text style={styles.txtTeamNameTitle}>Team Name</Text>
               <Text style={styles.txtTeamNameValue}>

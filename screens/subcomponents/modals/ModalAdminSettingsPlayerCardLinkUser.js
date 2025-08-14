@@ -82,8 +82,8 @@ export default function ModalAdminSettingsPlayerCardLinkUser({
     };
 
     const response = await fetch(
-      // `${process.env.EXPO_PUBLIC_API_URL}/teams/link-user-to-team-as-player`,
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-player-user/link-user-to-player`,
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/teams/link-user-to-team-as-player`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-player-user/link-user-to-player`,
       {
         method: "POST",
         headers: {

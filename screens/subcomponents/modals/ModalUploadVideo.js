@@ -41,7 +41,7 @@ export default function ModalUploadVideo({ handleSendVideo }) {
 
   //   try {
   //     const response = await fetch(
-  //       `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
+  //       `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/upload-youtube`,
   //       {
   //         method: "POST",
   //         body: formData,

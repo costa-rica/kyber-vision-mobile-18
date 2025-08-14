@@ -41,7 +41,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
 
   const fetchPlayers = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/players/team/${
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/players/team/${
         teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       }`,
       {

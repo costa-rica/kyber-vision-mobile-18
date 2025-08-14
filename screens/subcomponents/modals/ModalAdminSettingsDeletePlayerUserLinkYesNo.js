@@ -28,7 +28,7 @@ export default function ModalAdminSettingsDeletePlayerUserLinkYesNo({
     //   playerId: playerObject.id,
     // };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-player-user/${playerObject.id}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-player-user/${playerObject.id}`,
       {
         method: "DELETE",
         headers: {

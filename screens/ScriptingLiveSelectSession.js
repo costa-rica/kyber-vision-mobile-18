@@ -56,8 +56,8 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     // console.log("fetchSessionsArray ---");
 
     const response = await fetch(
-      // `${process.env.EXPO_PUBLIC_API_URL}/sessions/${teamId}`,
-      `${process.env.EXPO_PUBLIC_API_URL}/sessions/${
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/${teamId}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/${
         teamReducer.teamsArray.filter((team) => team.selected)[0].id
       }`,
       {
@@ -94,7 +94,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     console.log(" -- fetchLeaguesArray ---");
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/leagues/${
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/leagues/${
         teamReducer.teamsArray.filter((team) => team.selected)[0].id
       }`,
       {
@@ -114,8 +114,8 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     if (contentType?.includes("application/json")) {
       resJson = await response.json();
     }
-    console.log("--- here are the leagues ---");
-    console.log(resJson);
+    // console.log("--- here are the leagues ---");
+    // console.log(resJson);
     let tempArray = [];
     resJson.leaguesArray.forEach((league) => {
       tempArray.push({
@@ -129,8 +129,8 @@ export default function ScriptingLiveSelectSession({ navigation }) {
   const handleSelectSession = (session) => {
     // dispatch(setScriptingForPlayerObject({ sessionId }));
     // navigation.navigate("ScriptingLive");
-    console.log(" --- handleSelectSession ---");
-    console.log(session);
+    // console.log(" --- handleSelectSession ---");
+    // console.log(session);
     let tempArray = scriptReducer.sessionsArray.map((item) => {
       if (item.id === session.id) {
         return {

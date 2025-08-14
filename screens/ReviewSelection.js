@@ -12,7 +12,7 @@ import ButtonKvStd from "./subcomponents/buttons/ButtonKvStd";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { updateTeamsArray } from "../reducers/user";
+import { updateTeamsArray } from "../reducers/team";
 import {
   updateReviewReducerVideoObject,
   createReviewActionsArray,
@@ -94,7 +94,7 @@ export default function ReviewSelectionScreen({ navigation }) {
 
   const fetchVideoArray = async (teamId) => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/videos/team/${teamId}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/team/${teamId}`,
       {
         method: "GET",
         headers: {
@@ -145,6 +145,8 @@ export default function ReviewSelectionScreen({ navigation }) {
       reviewReducerOffline = require("../offlineData/reviewReducer.json");
       fetchVideoArrayOffline();
     } else {
+      console.log("Fetching videos");
+      console.log(teamReducer.teamsArray.find((tribe) => tribe.selected)?.id);
       fetchVideoArray(
         teamReducer.teamsArray.find((tribe) => tribe.selected)?.id
       );
@@ -172,7 +174,7 @@ export default function ReviewSelectionScreen({ navigation }) {
     } else {
       try {
         const response = await fetch(
-          `${process.env.EXPO_PUBLIC_API_URL}/sessions/review-selection-screen/get-actions`,
+          `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/review-selection-screen/get-actions`,
           {
             method: "POST",
             headers: {
@@ -243,7 +245,7 @@ export default function ReviewSelectionScreen({ navigation }) {
       })
     );
   };
-  console.log("----- populated ok tempPlayerDbObjectsArray -------");
+  // console.log("----- populated ok tempPlayerDbObjectsArray -------");
 
   const renderVideoItem = ({ item: video }) => (
     <TouchableOpacity

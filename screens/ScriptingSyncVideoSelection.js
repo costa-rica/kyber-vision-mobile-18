@@ -90,7 +90,7 @@ export default function ScriptingSyncVideoSelection({ navigation }) {
 
   const fetchUserVideosArray = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/videos/user`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/user`,
       {
         method: "GET",
         headers: {

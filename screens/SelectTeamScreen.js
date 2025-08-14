@@ -30,7 +30,7 @@ export default function SelectTeamScreen({ navigation }) {
   const fetchTeams = async () => {
     // The id in the Tribe Array is the TEAM ID
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user`,
       {
         method: "GET",
         headers: {
@@ -124,7 +124,7 @@ export default function SelectTeamScreen({ navigation }) {
 
   const handleRequestJoinTeam = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/join/${inviteCode}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/join/${inviteCode}`,
       {
         method: "GET",
         headers: {

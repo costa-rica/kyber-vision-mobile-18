@@ -120,7 +120,7 @@ export default function CreateTeamScreen({ navigation }) {
       playersArray: playersArrayMinusAddPlayer,
     };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/teams/create`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/teams/create`,
       {
         method: "POST",
         headers: {

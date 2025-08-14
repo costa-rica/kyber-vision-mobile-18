@@ -19,11 +19,11 @@ export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
   const [credentials, setCredentials] = useState({
     email:
-      process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation"
+      process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation"
         ? "nrodrig1@gmail.com"
         : "",
     password:
-      process.env.EXPO_PUBLIC_ENVIRONMENT == "workstation" ? "test" : "",
+      process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -34,7 +34,7 @@ export default function LoginScreen({ navigation }) {
   const handleClickLogin = async () => {
     console.log(
       "Login ---> API URL:",
-      `${process.env.EXPO_PUBLIC_API_URL}/users/login`
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/login`
     );
 
     const bodyObj = {
@@ -43,7 +43,7 @@ export default function LoginScreen({ navigation }) {
     };
     // console.log(`email: ${credentials.email}, ${credentials.password}`);
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/users/login`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

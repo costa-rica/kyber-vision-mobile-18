@@ -34,8 +34,8 @@ export default function ScriptingSyncVideo({ navigation }) {
     );
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/sessions/scripting-sync-video-screen/get-actions-for-syncing/${syncReducer.syncReducerSelectedVideoObject.session.id}`,
-      // `${process.env.EXPO_PUBLIC_API_URL}/sessions/scripting-sync-video-screen/get-actions-for-syncing/${syncReducer.syncReducerSelectedVideoObject.id}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/scripting-sync-video-screen/get-actions-for-syncing/${syncReducer.syncReducerSelectedVideoObject.session.id}`,
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/sessions/scripting-sync-video-screen/get-actions-for-syncing/${syncReducer.syncReducerSelectedVideoObject.id}`,
       {
         method: "GET",
         headers: {
@@ -163,9 +163,9 @@ export default function ScriptingSyncVideo({ navigation }) {
     }
 
     const response = await fetch(
-      // `${process.env.EXPO_PUBLIC_API_URL}/contract-script-video/modify-delta-time/${selectedScript.contractScriptVideoId}`,
-      // `${process.env.EXPO_PUBLIC_API_URL}/contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script/${selectedScript.scriptId}`,
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script`,
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-script-video/modify-delta-time/${selectedScript.contractScriptVideoId}`,
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script/${selectedScript.scriptId}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-video-actions/scripting-sync-video-screen/update-delta-time-all-actions-in-script`,
       {
         method: "POST",
         headers: {

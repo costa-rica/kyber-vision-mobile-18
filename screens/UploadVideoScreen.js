@@ -132,7 +132,7 @@ export default function UploadVideoScreen({ navigation }) {
 
   const fetchUserVideosArray = async () => {
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/videos/user`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/user`,
       {
         method: "GET",
         headers: {
@@ -174,7 +174,7 @@ export default function UploadVideoScreen({ navigation }) {
     console.log(" --- > in handleSendVideo");
     dispatch(updateUploadReducerLoading(true));
     const formData = new FormData();
-    console.log(" --- > in handleSendVideo [2]");
+    console.log(" --- [2]");
     formData.append("video", {
       uri: video.uri,
       name: video.fileName || "video.mp4",
@@ -186,12 +186,12 @@ export default function UploadVideoScreen({ navigation }) {
       "sessionId",
       uploadReducer.uploadReducerModalUploadVideoSelectedSessionObject.id
     );
-    console.log(" --- > in handleSendVideo [3]");
+    // console.log(" --- > in handleSendVideo [3]");
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 120000); // 120 sec timeout
     console.log("uploading ... ");
     console.log(
-      "sessionId: ",
+      "---> sessionId: ",
       uploadReducer.uploadReducerModalUploadVideoSelectedSessionObject.id
     );
     console.log(`formData: `);
@@ -199,7 +199,7 @@ export default function UploadVideoScreen({ navigation }) {
 
     try {
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/videos/upload-youtube`,
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/upload-youtube`,
         {
           method: "POST",
           body: formData,
@@ -225,7 +225,7 @@ export default function UploadVideoScreen({ navigation }) {
 
   const handleDeleteVideo = async () => {
     console.log("---- > handleDeleteVideo");
-    const fetchUrl = `${process.env.EXPO_PUBLIC_API_URL}/videos/${uploadReducer.uploadReducerDeleteVideoObject.id}`;
+    const fetchUrl = `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/${uploadReducer.uploadReducerDeleteVideoObject.id}`;
     console.log("fetchUrl: ", fetchUrl);
     console.log("userReducer.token: ", userReducer.token);
     const response = await fetch(fetchUrl, {

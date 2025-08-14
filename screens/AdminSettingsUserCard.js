@@ -111,7 +111,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
       userId: userObject.userId,
     };
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/toggle-role`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/toggle-role`,
       {
         method: "POST",
         headers: {
@@ -185,7 +185,7 @@ export default function AdminSettingsUserCard({ navigation, route }) {
     console.log("--- removed Player ----");
     console.log(JSON.stringify(bodyObj));
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/contract-team-user/`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-team-user/`,
       {
         method: "DELETE",
         headers: {

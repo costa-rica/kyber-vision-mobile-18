@@ -59,7 +59,7 @@ export default function RegisterScreen({ navigation }) {
 
     console.log(
       "Register ---> API URL:",
-      `${process.env.EXPO_PUBLIC_API_URL}/users/register`
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/register`
     );
     console.log("- handleClickRegister  👀");
 
@@ -67,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
     console.log(`email: ${email}, ${password}`);
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/users/register`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/users/register`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

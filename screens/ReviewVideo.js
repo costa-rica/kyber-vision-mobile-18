@@ -221,8 +221,8 @@ export default function ReviewVideo({ navigation, route }) {
     console.log(reviewReducer.reviewReducerVideoObject.id);
 
     const response = await fetch(
-      // `${process.env.EXPO_PUBLIC_API_URL}/videos//montage-service/queue-a-job/${reviewReducer.reviewReducerVideoObject.id}`,
-      `${process.env.EXPO_PUBLIC_API_URL}/videos/montage-service/queue-a-job`,
+      // `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos//montage-service/queue-a-job/${reviewReducer.reviewReducerVideoObject.id}`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/videos/montage-service/queue-a-job`,
       {
         method: "POST",
         headers: {

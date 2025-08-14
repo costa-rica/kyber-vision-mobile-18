@@ -292,12 +292,12 @@ export default function ScriptingLive({ navigation }) {
       const tapXAdjusted =
         tapDetails.padPosCenterX + userReducer.circleRadiusOuter;
 
-      console.log(
-        `half court line: ${
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
-        }`
-      );
+      // console.log(
+      //   `half court line: ${
+      //     scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
+      //     scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
+      //   }`
+      // );
 
       // Determine posistion
       if (
@@ -305,44 +305,44 @@ export default function ScriptingLive({ navigation }) {
         scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
       ) {
-        console.log("back row");
+        // console.log("back row");
         if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
         ) {
-          console.log("right");
+          // console.log("right");
           lastActionPositionIndexRef.current = 1;
           // setLastActionPosition(1);
         } else if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
         ) {
-          console.log("middle");
+          // console.log("middle");
           lastActionPositionIndexRef.current = 6;
           // setLastActionPosition(6);
         } else {
-          console.log("left ");
+          // console.log("left ");
           lastActionPositionIndexRef.current = 5;
           // setLastActionPosition(5);
         }
       } else {
-        console.log("front row");
+        // console.log("front row");
         if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
         ) {
-          console.log("right");
+          // console.log("right");
           lastActionPositionIndexRef.current = 2;
           // setLastActionPosition(2);
         } else if (
           tapXAdjusted >
           scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
         ) {
-          console.log("middle");
+          // console.log("middle");
           lastActionPositionIndexRef.current = 3;
           // setLastActionPosition(3);
         } else {
-          console.log("left ");
+          // console.log("left ");
           lastActionPositionIndexRef.current = 4;
           // setLastActionPosition(4);
         }
@@ -618,7 +618,7 @@ export default function ScriptingLive({ navigation }) {
     };
 
     const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/scripts/scripting-live-screen/receive-actions-array`,
+      `${process.env.EXPO_PUBLIC_API_BASE_URL}/scripts/scripting-live-screen/receive-actions-array`,
       {
         method: "POST",
         headers: {
