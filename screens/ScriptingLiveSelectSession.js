@@ -277,31 +277,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    borderColor: "#806181",
-    borderWidth: 1,
-  },
-  vwSessionItemName: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#806181",
-    borderWidth: 1,
-  },
-  vwSessionItemCity: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#806181",
-    borderWidth: 1,
+    // borderColor: "#806181",
+    // borderWidth: 1,
   },
   txtSessionItemDate: {
     fontSize: 16,
     // fontWeight: "bold",
   },
+
+  vwSessionItemName: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center", // or 'flex-start' if you want left-align
+    // borderColor: "#806181",
+    // borderWidth: 1,
+    flexShrink: 1, // allow it to shrink and wrap
+  },
+
   txtSessionItemName: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: "bold",
     color: "black",
+    flexWrap: "wrap",
+    width: "100%", // ensure wrapping happens within column width
+    textAlign: "center", // or 'left'
+  },
+  vwSessionItemCity: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "#806181",
+    // borderWidth: 1,
   },
   txtSessionItemCity: {
     fontSize: 12,
