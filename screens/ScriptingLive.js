@@ -221,55 +221,42 @@ export default function ScriptingLive({ navigation }) {
       setTapIsActive(true);
     });
 
-  const gestureSwipeOnChange = Gesture.Pan().onChange(
-    (event) => {
-      // console.log("👍 start gestureSwipeOnChange");
+  const gestureSwipeOnChange = Gesture.Pan().onChange((event) => {
+    // console.log("👍 start gestureSwipeOnChange");
 
-      const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
+    const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
-      // console.log("- IN gestureSwipeOnChange");
-      // const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
-      // const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
-      const swipePosX = x - userReducer.circleRadiusOuter;
-      const swipePosY =
-        y +
-        scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
-        userReducer.circleRadiusOuter;
+    // console.log("- IN gestureSwipeOnChange");
+    // const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
+    // const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
+    const swipePosX = x - userReducer.circleRadiusOuter;
+    const swipePosY =
+      y +
+      scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+      userReducer.circleRadiusOuter;
 
-      const distanceFromCenter = Math.sqrt(
-        Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-          Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+    const distanceFromCenter = Math.sqrt(
+      Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+        Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+    );
+
+    const relativeToPadCenterX = swipePosX - tapDetails.padPosCenterX;
+    const relativeToPadCenterY = swipePosY - tapDetails.padPosCenterY;
+
+    const inInnerCircle = distanceFromCenter < userReducer.circleRadiusInner;
+    const inMiddleCircle = distanceFromCenter < userReducer.circleRadiusMiddle;
+
+    if (inInnerCircle) {
+      handleSwipeColorChange("center");
+      setCurrentActionType(null);
+    } else {
+      logicFourTwelveCircle(
+        relativeToPadCenterX,
+        relativeToPadCenterY,
+        inMiddleCircle
       );
-
-      const relativeToPadCenterX = swipePosX - tapDetails.padPosCenterX;
-      const relativeToPadCenterY = swipePosY - tapDetails.padPosCenterY;
-      // const relativeToPadCenterX =
-      //   swipePosX - tapDetails.padPosCenterX - userReducer.circleRadiusOuter;
-      // const relativeToPadCenterY =
-      //   swipePosY - tapDetails.padPosCenterY - userReducer.circleRadiusOuter;
-
-      // console.log(`Swipe - X: ${swipePosX} - Y: ${swipePosY}`);
-      // console.log("relativeToPadCenterX: " + relativeToPadCenterX);
-      // console.log("relativeToPadCenterY: " + relativeToPadCenterY);
-
-      const inInnerCircle = distanceFromCenter < userReducer.circleRadiusInner;
-      const inMiddleCircle =
-        distanceFromCenter < userReducer.circleRadiusMiddle;
-
-      if (inInnerCircle) {
-        handleSwipeColorChange("center");
-        setCurrentActionType(null);
-      } else {
-        logicFourTwelveCircle(
-          relativeToPadCenterX,
-          relativeToPadCenterY,
-          inMiddleCircle
-        );
-      }
     }
-    // console.log("👍 end gestureSwipeOnChange");
-    // }
-  );
+  });
 
   // Combine swipe and tap gestures
   const gestureSwipeOnEnd = Gesture.Pan().onEnd((event) => {
@@ -360,15 +347,6 @@ export default function ScriptingLive({ navigation }) {
           // setLastActionPosition(4);
         }
       }
-      // setLastActionPosition(lastActionPositionIndexRef.current);
-
-      // setLastActionType(
-      //   scriptReducer.typesArray[lastActionTypeIndexRef.current]
-      // );
-      // setLastActionQuality(
-      //   scriptReducer.qualityArrayOuterCircle[lastActionQualityIndexRef.current]
-      // );
-      // setLastActionSubtype("?");
       addNewActionToScriptReducersActionsArray(
         scriptReducer.typesArray[lastActionTypeIndexRef.current],
         scriptReducer.qualityArrayOuterCircle[
@@ -478,25 +456,16 @@ export default function ScriptingLive({ navigation }) {
         if (-relativeToPadCenterY > boundary15Y) {
           // console.log("--- Right Top ---");
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else if (Math.abs(relativeToPadCenterY) < boundary15Y) {
           // console.log("--- Right Middle ---");
           wheelPositionOuter = 5;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else {
           // console.log("--- Right Bottom ---");
           wheelPositionOuter = 6;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         }
       }
@@ -723,11 +692,12 @@ export default function ScriptingLive({ navigation }) {
     dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
-  const handleModifyPlayer = (playerObj) => {
+  // const handleModifyPlayer = (playerObj) => {
+  const handleModifyLastActionPlayer = (playerObj) => {
     console.log(`lastActionPlayer: ${playerObj.firstName}`);
     const tempArray = scriptReducer.playersArray.map((player) => {
       if (player.id === playerObj.id) {
-        console.log("***** found the player ***");
+        // console.log("***** found the player ***");
         return {
           ...player,
           selected: !player.selected,
@@ -736,7 +706,7 @@ export default function ScriptingLive({ navigation }) {
       return { ...player, selected: false };
     });
     dispatch(updatePlayersArray(tempArray));
-    dispatch(setScriptingForPlayerObject(playerObj));
+    // dispatch(setScriptingForPlayerObject(playerObj));
     console.log(`- selected player [2]: ${playerObj.firstName}`);
     // setLastActionPlayer(player);
     const lastRecordedAction =
@@ -890,7 +860,7 @@ export default function ScriptingLive({ navigation }) {
         // setLastActionPosition={setLastActionPosition}
         handleModifyPosition={handleModifyPosition}
         // lastActionPlayer={lastActionPlayer}
-        handleModifyPlayer={handleModifyPlayer}
+        handleModifyLastActionPlayer={handleModifyLastActionPlayer}
         // setLastActionPlayer={setLastActionPlayer}
         // handleLastActionPlayerPress={handleLastActionPlayerPress}
         // lastActionType={lastActionType}

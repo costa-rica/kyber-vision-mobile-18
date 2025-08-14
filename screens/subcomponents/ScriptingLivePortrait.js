@@ -31,7 +31,7 @@ import Lightning from "../../assets/images/lightning.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateScriptLivePortraitVwVolleyballCourtCoords,
-  replaceScriptMatchActionsArray,
+  updateScriptSessionActionsArray,
 } from "../../reducers/script";
 
 export default function ScriptingLivePortrait(props) {
@@ -41,13 +41,33 @@ export default function ScriptingLivePortrait(props) {
   const dispatch = useDispatch();
 
   const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
-    console.log("handleVwVolleyballCourtAndGestSuperLayout");
-    console.log(event.nativeEvent.layout);
+    // console.log("handleVwVolleyballCourtAndGestSuperLayout");
+    // console.log(event.nativeEvent.layout);
     const { width, height, x, y } = event.nativeEvent.layout;
 
     dispatch(
       updateScriptLivePortraitVwVolleyballCourtCoords({ x, y, width, height })
     );
+  };
+
+  const handleLastActionPlayerName = () => {
+    const lastActionPlayerId =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ]?.playerId;
+    // console.log(lastActionPlayerId);
+    if (!lastActionPlayerId) return null;
+    // console.log(
+    //   scriptReducer.playersArray.filter(
+    //     (player) => player.id === lastActionPlayerId
+    //   )[0]
+    // );
+    const lastActionPlayerName = scriptReducer.playersArray.filter(
+      (player) => player.id === lastActionPlayerId
+    )[0].firstName;
+    // console.log(lastActionPlayerName);
+
+    return lastActionPlayerName;
   };
 
   // -----------------
@@ -135,20 +155,7 @@ export default function ScriptingLivePortrait(props) {
             <Text style={styles.txtTeamName}>Team 2</Text>
           </View>
         </View>
-        {/* <Text>{props.orientation}</Text> */}
-        {/* <View style={styles.testActionsContainer}>
-          <ScrollView>
-            {scriptReducer.actionsArray.map((action, index) => (
-              <View key={index}>
-                <Text>
-                  Id: {action.id}, Type: {action.type}, Subtype:{" "}
-                  {action.subtype}, Quality: {action.quality}, PlayerId:{" "}
-                  {action.playerId}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View> */}
+
         <View style={styles.vwGroupScoreAndSets}>
           <View style={styles.vwGroupSetSuper}>
             <View style={styles.vwGroupSet}>
@@ -269,8 +276,11 @@ export default function ScriptingLivePortrait(props) {
             <View style={styles.vwGroupLastActionButtons}>
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
-                  console.log("pressed Quality");
-                  props.setLastActionDropDownIsVisibleQuality((prev) => !prev);
+                  if (scriptReducer.sessionActionsArray.length > 0) {
+                    props.setLastActionDropDownIsVisibleQuality(
+                      (prev) => !prev
+                    );
+                  }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
                 styleText={styles.txtLastAction}
@@ -282,8 +292,11 @@ export default function ScriptingLivePortrait(props) {
               </ButtonKvNoDefaultTextOnly>
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
-                  console.log("pressed Position");
-                  props.setLastActionDropDownIsVisiblePosition((prev) => !prev);
+                  if (scriptReducer.sessionActionsArray.length > 0) {
+                    props.setLastActionDropDownIsVisiblePosition(
+                      (prev) => !prev
+                    );
+                  }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
                 styleText={styles.txtLastAction}
@@ -296,21 +309,26 @@ export default function ScriptingLivePortrait(props) {
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Player");
-                  props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
+                  if (scriptReducer.sessionActionsArray.length > 0) {
+                    props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
+                  }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
                 {/* {props.lastActionPlayer.firstName.slice(0, 4)} */}
-                {scriptReducer.scriptingForPlayerObject?.firstName.slice(
+                {/* {scriptReducer.scriptingForPlayerObject?.firstName.slice(
                   0,
                   4
-                ) || "?"}
+                ) || "?"} */}
+                {handleLastActionPlayerName() || "?"}
               </ButtonKvNoDefaultTextOnly>
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Type");
-                  props.setLastActionDropDownIsVisibleType((prev) => !prev);
+                  if (scriptReducer.sessionActionsArray.length > 0) {
+                    props.setLastActionDropDownIsVisibleType((prev) => !prev);
+                  }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
@@ -322,7 +340,11 @@ export default function ScriptingLivePortrait(props) {
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   console.log("pressed Subtype");
-                  props.setLastActionDropDownIsVisibleSubtype((prev) => !prev);
+                  if (scriptReducer.sessionActionsArray.length > 0) {
+                    props.setLastActionDropDownIsVisibleSubtype(
+                      (prev) => !prev
+                    );
+                  }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
@@ -393,7 +415,7 @@ export default function ScriptingLivePortrait(props) {
                       onPress={() => {
                         // console.log(`player pressed: ${player.firstName}`);
                         // props.handleLastActionPlayerPress(player);
-                        props.handleModifyPlayer(player);
+                        props.handleModifyLastActionPlayer(player);
                         props.setLastActionDropDownIsVisiblePlayer(false);
                       }}
                       style={styles.btnDropDown}
@@ -495,9 +517,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed service");
-                dispatch(
-                  replaceScriptMatchActionsArray({ sessionActionsArray: [] })
-                );
+                dispatch(updateScriptSessionActionsArray([]));
               }}
               style={styles.btnRallyGroupBottom}
             >
@@ -582,6 +602,16 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
+      {/* <View>
+        <Text>Script Array</Text>
+        <Text>
+          {JSON.stringify(
+            scriptReducer.sessionActionsArray[
+              scriptReducer.sessionActionsArray.length - 1
+            ]
+          )}
+        </Text>
+      </View> */}
     </View>
   );
 }
