@@ -4,6 +4,8 @@ import {
   View,
   FlatList,
   TouchableOpacity,
+  TextInput,
+  Dimensions,
 } from "react-native";
 import ButtonKvStd from "../buttons/ButtonKvStd";
 // import ButtonKvNoDefaultTextOnly from "../buttons/ButtonKvNoDefaultTextOnly";
@@ -17,9 +19,9 @@ import { updateSessionsArray } from "../../../reducers/script";
 export default function ModalCreateSession({
   isVisibleModalCreateSession,
   setIsVisibleModalCreateSession,
-  leaguesArray,
-  setLeaguesArray,
-  fetchLeaguesArray,
+  // teamLeaguesArray,
+  // setTeamLeaguesArray,
+  // fetchTeamLeaguesArray,
 }) {
   const userReducer = useSelector((state) => state.user);
   const scriptReducer = useSelector((state) => state.script);
@@ -41,34 +43,36 @@ export default function ModalCreateSession({
       setSelectedTime(time);
     }
   };
-  const handleSelectSession = (sessionId) => {
-    let tempArray = [...leaguesArray];
-    tempArray.forEach((league) => {
-      if (league.id === sessionId) {
-        league.selected = true;
-      } else {
-        league.selected = false;
-      }
-    });
-    setLeaguesArray(tempArray);
-  };
+  const [sessionName, setSessionName] = useState("");
+  const [sessionCity, setSessionCity] = useState("");
+  // const handleSelectSession = (sessionId) => {
+  //   let tempArray = [...teamLeaguesArray];
+  //   tempArray.forEach((league) => {
+  //     if (league.id === sessionId) {
+  //       league.selected = true;
+  //     } else {
+  //       league.selected = false;
+  //     }
+  //   });
+  //   setTeamLeaguesArray(tempArray);
+  // };
 
   // #GoodApiCall
   // --> This is good template for API calls
   const handleCreateSession = async () => {
-    const leagueId = leaguesArray.find((league) => league.selected)?.id;
-    const contractLeagueTeamId = leaguesArray.find(
-      (league) => league.selected
-    )?.contractLeagueTeamId;
+    // const leagueId = teamLeaguesArray.find((league) => league.selected)?.id;
+    // const contractLeagueTeamId = teamLeaguesArray.find(
+    //   (league) => league.selected
+    // )?.contractLeagueTeamId;
     const teamId = teamReducer.teamsArray.filter((team) => team.selected)[0].id;
-    console.log("leagueId", leagueId);
-    console.log("contractLeagueTeamId", contractLeagueTeamId);
+    // console.log("leagueId", leagueId);
+    // console.log("contractLeagueTeamId", contractLeagueTeamId);
 
-    if (!leagueId) {
-      // console.warn("No league selected.");
-      alert("No league selected.");
-      return;
-    }
+    // if (!leagueId) {
+    //   // console.warn("No league selected.");
+    //   alert("No league selected.");
+    //   return;
+    // }
 
     const combinedDateTime = new Date(
       selectedDate.getFullYear(),
@@ -82,8 +86,10 @@ export default function ModalCreateSession({
 
     const bodyObj = {
       teamId,
-      contractLeagueTeamId,
+      // contractLeagueTeamId,
       sessionDate,
+      sessionName,
+      sessionCity,
     };
 
     try {
@@ -104,8 +110,8 @@ export default function ModalCreateSession({
 
       if (contentType?.includes("application/json")) {
         const resJson = await response.json();
-        console.log("--- Here is the NEW session ---");
-        console.log(resJson);
+        // console.log("--- Here is the NEW session ---");
+        // console.log(resJson);
         if (resJson.result) {
           alert("Session created successfully");
           let tempArray = [...scriptReducer.sessionsArray];
@@ -131,37 +137,31 @@ export default function ModalCreateSession({
         <Text style={{ fontSize: 18, marginBottom: 20 }}>
           Enter session details:
         </Text>
+        <View style={styles.vwTxtInputGroup}>
+          <Text style={styles.txtInputLabel}>Name: </Text>
+          <TextInput
+            placeholder="pratice session name..."
+            placeholderTextColor="gray"
+            value={sessionName}
+            onChangeText={(text) => setSessionName(text)}
+            style={styles.txtInput}
+          />
+        </View>
+        <View style={styles.vwTxtInputGroup}>
+          <Text style={styles.txtInputLabel}>City: </Text>
+          <TextInput
+            placeholder="Aix-en-Provence"
+            placeholderTextColor="gray"
+            value={sessionCity}
+            onChangeText={(text) => setSessionCity(text)}
+            style={styles.txtInput}
+          />
+        </View>
 
-        <FlatList
-          data={leaguesArray}
-          renderItem={({ item }) => (
-            <View style={styles.vwSessionItem}>
-              <TouchableOpacity
-                style={[
-                  styles.btnSelectSession,
-                  item.selected && styles.btnSelectSessionSelected,
-                ]}
-                onPress={() => handleSelectSession(item.id)}
-              >
-                <View style={styles.vwItemDetails}>
-                  <Text style={styles.txtSessionItemDate}>{item.id}</Text>
-                  <Text style={styles.txtSessionItemCity}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        />
-
-        <View style={{ marginBottom: 20, width: "100%" }}>
+        <View style={styles.vwDateTimeTouchOpacityWrapper}>
           <TouchableOpacity
             onPress={() => setShowDatePicker(true)}
-            style={{
-              borderColor: "#806181",
-              borderWidth: 1,
-              borderRadius: 5,
-              padding: 10,
-            }}
+            style={styles.btnDatePicker}
           >
             <Text>
               {selectedDate.toLocaleDateString("fr-FR", {
@@ -182,7 +182,7 @@ export default function ModalCreateSession({
             />
           )}
         </View>
-        <View style={{ marginBottom: 20, width: "100%" }}>
+        <View style={styles.vwDateTimeTouchOpacityWrapper}>
           <TouchableOpacity
             onPress={() => setShowTimePicker(true)}
             style={{
@@ -230,47 +230,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    width: "80%",
+    width: Dimensions.get("window").width * 0.9,
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
+    gap: 20,
   },
-  vwSessionItem: {
-    marginBottom: 10,
-  },
-  btnSelectSession: {
-    width: "100%",
-    height: 40,
-    borderRadius: 5,
+  vwTxtInputGroup: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    borderWidth: 1,
-    borderColor: "#806181",
-  },
-  btnSelectSessionSelected: {
-    backgroundColor: "#806181",
-  },
-  vwItemDetails: {
-    flexDirection: "row",
-    // justifyContent: "center",
-    alignItems: "center",
     width: "100%",
-    paddingLeft: 10,
     gap: 5,
+    alignItems: "center",
   },
-  // vwSessionItemCity: {
-  //   flex: 1,
-  //   justifyContent: "center",
-  //   alignItems: "center",
-  // },
-  txtSessionItemDate: {
-    fontSize: 16,
-    // fontWeight: "bold",
+  txtInput: {
+    flex: 1,
+    borderColor: "#806181",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    // width: Dimensions.get("window").width * 0.8,
+    // backgroundColor: "green",
   },
-  txtSessionItemCity: {
-    fontSize: 16,
-    fontWeight: "bold",
+  vwDateTimeTouchOpacityWrapper: {
+    // marginBottom: 20,
+    width: "100%",
+    // backgroundColor: "green",
+  },
+  btnDatePicker: {
+    borderColor: "#806181",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
   },
   vwButtons: {
     flexDirection: "row",

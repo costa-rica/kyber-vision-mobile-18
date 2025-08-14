@@ -37,7 +37,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
   const [isVisibleModalCreateSession, setIsVisibleModalCreateSession] =
     useState(false);
   // const [sessionsArray, setSessionsArray] = useState([]);
-  const [leaguesArray, setLeaguesArray] = useState([]);
+  // const [teamLeaguesArray, setTeamLeaguesArray] = useState([]);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -90,41 +90,41 @@ export default function ScriptingLiveSelectSession({ navigation }) {
     dispatch(updateSessionsArray(tempArray));
   };
 
-  const fetchLeaguesArray = async () => {
-    console.log(" -- fetchLeaguesArray ---");
+  // const fetchTeamLeaguesArray = async () => {
+  //   console.log(" -- fetchTeamLeaguesArray ---");
 
-    const response = await fetch(
-      `${process.env.EXPO_PUBLIC_API_BASE_URL}/leagues/${
-        teamReducer.teamsArray.filter((team) => team.selected)[0].id
-      }`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userReducer.token}`,
-        },
-      }
-    );
+  //   const response = await fetch(
+  //     `${process.env.EXPO_PUBLIC_API_BASE_URL}/leagues/team/${
+  //       teamReducer.teamsArray.filter((team) => team.selected)[0].id
+  //     }`,
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${userReducer.token}`,
+  //       },
+  //     }
+  //   );
 
-    console.log("Received response:", response.status);
+  //   console.log("Received response:", response.status);
 
-    let resJson = null;
-    const contentType = response.headers.get("Content-Type");
+  //   let resJson = null;
+  //   const contentType = response.headers.get("Content-Type");
 
-    if (contentType?.includes("application/json")) {
-      resJson = await response.json();
-    }
-    // console.log("--- here are the leagues ---");
-    // console.log(resJson);
-    let tempArray = [];
-    resJson.leaguesArray.forEach((league) => {
-      tempArray.push({
-        ...league,
-        selected: false,
-      });
-    });
-    setLeaguesArray(tempArray);
-  };
+  //   if (contentType?.includes("application/json")) {
+  //     resJson = await response.json();
+  //   }
+  //   // console.log("--- here are the leagues ---");
+  //   // console.log(resJson);
+  //   let tempArray = [];
+  //   resJson.teamLeaguesArray.forEach((league) => {
+  //     tempArray.push({
+  //       ...league,
+  //       selected: false,
+  //     });
+  //   });
+  //   setTeamLeaguesArray(tempArray);
+  // };
 
   const handleSelectSession = (session) => {
     // dispatch(setScriptingForPlayerObject({ sessionId }));
@@ -170,6 +170,11 @@ export default function ScriptingLiveSelectSession({ navigation }) {
                       {formatSessionDateToLocal(item.sessionDate)}
                     </Text>
                   </View>
+                  <View style={styles.vwSessionItemName}>
+                    <Text style={styles.txtSessionItemName}>
+                      {item.sessionName}
+                    </Text>
+                  </View>
                   <View style={styles.vwSessionItemCity}>
                     <Text style={styles.txtSessionItemCity}>{item.city}</Text>
                   </View>
@@ -186,7 +191,7 @@ export default function ScriptingLiveSelectSession({ navigation }) {
               style={{ width: "100%", backgroundColor: "#A3A3A3" }}
               onPress={() => {
                 console.log("New Live Session");
-                fetchLeaguesArray();
+                // fetchTeamLeaguesArray();
                 setIsVisibleModalCreateSession(true);
               }}
             >
@@ -206,8 +211,8 @@ export default function ScriptingLiveSelectSession({ navigation }) {
             <ModalCreateSession
               isVisibleModalCreateSession={isVisibleModalCreateSession}
               setIsVisibleModalCreateSession={setIsVisibleModalCreateSession}
-              leaguesArray={leaguesArray}
-              setLeaguesArray={setLeaguesArray}
+              // teamLeaguesArray={teamLeaguesArray}
+              // setTeamLeaguesArray={setTeamLeaguesArray}
               navigation={navigation}
             />
           </View>
@@ -264,7 +269,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 5,
     flexDirection: "row",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     borderWidth: 1,
     borderColor: "#806181",
   },
@@ -272,19 +277,36 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    borderColor: "#806181",
+    borderWidth: 1,
+  },
+  vwSessionItemName: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderColor: "#806181",
+    borderWidth: 1,
   },
   vwSessionItemCity: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    borderColor: "#806181",
+    borderWidth: 1,
   },
   txtSessionItemDate: {
     fontSize: 16,
     // fontWeight: "bold",
   },
-  txtSessionItemCity: {
+  txtSessionItemName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "black",
+  },
+  txtSessionItemCity: {
+    fontSize: 12,
+    // fontWeight: "bold",
+    color: "gray",
   },
 
   // ------------
