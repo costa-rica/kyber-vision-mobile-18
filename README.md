@@ -1,13 +1,13 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.17.0
+#### v 0.18.0
 
 ## .env
 
 ```bash
 EXPO_PUBLIC_API_BASE_URL=http://192.168.1.193:3000
 EXPO_PUBLIC_API_BASE_URL_WORKSTATION=http://192.168.1.193:3000
-EXPO_PUBLIC_API_BASE_URL_SERVER=https://api.kv16.dashanddata.com
+EXPO_PUBLIC_API_BASE_URL_SERVER=https://api.kv18.dashanddata.com
 EXPO_PUBLIC_ENVIRONMENT_01=workstation
 ```
 
@@ -34,7 +34,7 @@ EXPO_PUBLIC_ENVIRONMENT_01=workstation
     "mimeType": "video/mp4",
     "rotation": 0,
     "type": "video",
-    "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540costa-rica%252Fkyber-vision-mobile-17/ImagePicker/239b138b-1734-4528-b1f9-9dd9c3eaf7ee.mp4",
+    "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540costa-rica%252Fkyber-vision-mobile-18/ImagePicker/239b138b-1734-4528-b1f9-9dd9c3eaf7ee.mp4",
     "width": 478
   }
 ]
