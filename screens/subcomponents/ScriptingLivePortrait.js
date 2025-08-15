@@ -138,6 +138,10 @@ export default function ScriptingLivePortrait(props) {
     width: Dimensions.get("window").width * 0.2 - 5,
   };
 
+  // Safe 4-char truncation: returns "" if not a string/nullish
+  // const truncate4 = (v) => (typeof v === "string" ? v.slice(0, 4) : "");
+  // const truncate4 = (v) => "return string";
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -316,12 +320,10 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {/* {props.lastActionPlayer.firstName.slice(0, 4)} */}
-                {/* {scriptReducer.scriptingForPlayerObject?.firstName.slice(
-                  0,
-                  4
-                ) || "?"} */}
-                {handleLastActionPlayerName() || "?"}
+                {/* {handleLastActionPlayerName() || "?"} */}
+                {handleLastActionPlayerName() !== null
+                  ? handleLastActionPlayerName().slice(0, 4)
+                  : "?"}
               </ButtonKvNoDefaultTextOnly>
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
@@ -349,9 +351,14 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
+                {/* {truncate4(scriptReducer.sessionActionsArray.at(-1)?.subtype)} */}
                 {scriptReducer.sessionActionsArray[
                   scriptReducer.sessionActionsArray.length - 1
-                ]?.subtype || "?"}
+                ]?.subtype !== null
+                  ? scriptReducer.sessionActionsArray[
+                      scriptReducer.sessionActionsArray.length - 1
+                    ]?.subtype.slice(0, 4)
+                  : "?"}
               </ButtonKvNoDefaultTextOnly>
               {/* ---- Dropdowns ---- */}
               {props.lastActionDropDownIsVisibleQuality && (
@@ -456,7 +463,24 @@ export default function ScriptingLivePortrait(props) {
                     styles.vwDropDownContainer,
                   ]}
                 >
-                  {scriptReducer.subtypesArray.map((subtype, index) => (
+                  {(props.subtypesForLastAction || []).map((subtype, index) => (
+                    <TouchableOpacity
+                      key={`${subtype}-${index}`}
+                      onPress={() => {
+                        props.setLastActionDropDownIsVisibleSubtype(false);
+                        props.handleModifySubtype(subtype);
+                      }}
+                      style={styles.btnDropDown}
+                    >
+                      <Text style={styles.txtDropDownBtn}>
+                        {subtype !== null ? subtype.slice(0, 4) : ""}
+                        {/* {truncate4(subtype)} */}
+                        {/* {subtype?.slice(0, 4)} */}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                  {/* {scriptReducer.subtypesArray.map((subtype, index) => ( 
+                 
                     <TouchableOpacity
                       key={index}
                       onPress={() => {
@@ -468,7 +492,7 @@ export default function ScriptingLivePortrait(props) {
                     >
                       <Text style={styles.txtDropDownBtn}>{subtype}</Text>
                     </TouchableOpacity>
-                  ))}
+                  ))}*/}
                 </View>
               )}
             </View>
@@ -604,16 +628,24 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
-      {/* <View>
-        <Text>Script Array</Text>
+      <View>
+        <Text>sub types</Text>
         <Text>
           {JSON.stringify(
             scriptReducer.sessionActionsArray[
               scriptReducer.sessionActionsArray.length - 1
-            ]
+            ]?.subtype
           )}
         </Text>
-      </View> */}
+        <Text>
+          {
+            typeof scriptReducer.sessionActionsArray[
+              scriptReducer.sessionActionsArray.length - 1
+            ]?.subtype
+          }
+        </Text>
+        {/* <Text>{JSON.stringify(props.subtypesForLastAction)}</Text> */}
+      </View>
     </View>
   );
 }

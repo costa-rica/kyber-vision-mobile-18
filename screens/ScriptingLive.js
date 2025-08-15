@@ -22,7 +22,7 @@ import {
   // updateScriptId,
 } from "../reducers/script";
 import SwipePad from "./subcomponents/swipePads/SwipePad";
-
+import { useMemo } from "react";
 export default function ScriptingLive({ navigation }) {
   // const [tapIsActive, setTapIsActive] = useState(true);
   const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
@@ -766,11 +766,29 @@ export default function ScriptingLive({ navigation }) {
   // -----------------
   //  Score
   // -----------------
-
-  const handlePressWin = () => {};
+  const handleSetScorePress = (team, scoreAdjust) => {
+    // scores can never go below 0
+    if (team === "analyzed") {
+      if (setScores.teamAnalyzed + scoreAdjust < 0) {
+        return;
+      }
+      setSetScores({
+        teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
+        teamOpponent: setScores.teamOpponent,
+      });
+    } else {
+      if (setScores.teamOpponent + scoreAdjust < 0) {
+        return;
+      }
+      setSetScores({
+        teamAnalyzed: setScores.teamAnalyzed,
+        teamOpponent: setScores.teamOpponent + scoreAdjust,
+      });
+    }
+  };
 
   // -----------------
-  //  Set Circle
+  //  Set Circle (score)
   // -----------------
   // Expects team: "analyzed" | "opponent"
   const handleSetCirclePress = (team, setIndex) => {
@@ -801,27 +819,6 @@ export default function ScriptingLive({ navigation }) {
     }
   };
 
-  const handleSetScorePress = (team, scoreAdjust) => {
-    // scores can never go below 0
-    if (team === "analyzed") {
-      if (setScores.teamAnalyzed + scoreAdjust < 0) {
-        return;
-      }
-      setSetScores({
-        teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
-        teamOpponent: setScores.teamOpponent,
-      });
-    } else {
-      if (setScores.teamOpponent + scoreAdjust < 0) {
-        return;
-      }
-      setSetScores({
-        teamAnalyzed: setScores.teamAnalyzed,
-        teamOpponent: setScores.teamOpponent + scoreAdjust,
-      });
-    }
-  };
-
   const styleVwMainPosition = {
     position: "absolute",
     left: padPositionCenter.x, // Center modal horizontally
@@ -845,6 +842,32 @@ export default function ScriptingLive({ navigation }) {
     }
     // return null; // Nothing renders if all are false
   };
+
+  // ...
+  const subtypesForLastAction = useMemo(() => {
+    const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type;
+    if (!lastActionType) return [];
+    return scriptReducer.subtypesByType[lastActionType] ?? [];
+  }, [scriptReducer.sessionActionsArray, scriptReducer.subtypesByType]);
+  // const createSubtypesArray = () => {
+  //   const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type; // safest way to read last
+
+  //   if (!lastActionType) return [];
+  //   return scriptReducer.subtypesByType[lastActionType] ?? [];
+  // };
+  // const createSubtypesArray = () => {
+  //   console.log(" --- subtypesArray ---");
+  //   const lastActionType =
+  //     scriptReducer.sessionActionsArray[
+  //       scriptReducer.sessionActionsArray.length - 1
+  //     ]?.type;
+
+  //   if (!lastActionType) return;
+  //   console.log("lastActionType: ", lastActionType);
+  //   const subtypesArray = scriptReducer.subtypesArrays[lastActionType];
+  //   console.log("subtypesArray: ", subtypesArray.length);
+  //   return subtypesArray;
+  // };
 
   return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall
@@ -901,6 +924,7 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisibleSubtype={
           setLastActionDropDownIsVisibleSubtype
         }
+        subtypesForLastAction={subtypesForLastAction}
         sendScriptReducerSessionActionsArrayToServer={
           sendScriptReducerSessionActionsArrayToServer
         }
