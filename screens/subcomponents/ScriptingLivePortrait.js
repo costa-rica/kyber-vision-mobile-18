@@ -548,6 +548,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed win");
+                props.handleSetScorePress("analyzed", 1);
               }}
               style={styles.btnRallyGroupBottom}
             >
@@ -557,6 +558,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed lose");
+                props.handleSetScorePress("opponent", 1);
               }}
               style={styles.btnRallyGroupTop}
             >

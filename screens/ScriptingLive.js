@@ -143,8 +143,8 @@ export default function ScriptingLive({ navigation }) {
 
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
-  const [currentActionType, setCurrentActionType] = useState(null);
-  const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
+  // const [currentActionType, setCurrentActionType] = useState(null);
+  // const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
 
   // -------------
   // Gesture Stuff
@@ -248,7 +248,7 @@ export default function ScriptingLive({ navigation }) {
 
     if (inInnerCircle) {
       handleSwipeColorChange("center");
-      setCurrentActionType(null);
+      // setCurrentActionType(null);
     } else {
       logicFourTwelveCircle(
         relativeToPadCenterX,
@@ -762,6 +762,12 @@ export default function ScriptingLive({ navigation }) {
 
     dispatch(updateScriptSessionActionsArray(updatedArray));
   };
+
+  // -----------------
+  //  Score
+  // -----------------
+
+  const handlePressWin = () => {};
 
   // -----------------
   //  Set Circle
