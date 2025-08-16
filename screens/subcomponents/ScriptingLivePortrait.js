@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Alert,
 } from "react-native";
 import TemplateView from "./TemplateView";
 import { useState } from "react";
@@ -537,7 +538,21 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed service");
-                dispatch(updateScriptSessionActionsArray([]));
+
+                Alert.alert(
+                  "Development Feature",
+                  `Do you want to clear session actions array?`,
+                  [
+                    { text: "No", style: "cancel" },
+                    {
+                      text: "Yes",
+                      style: "destructive",
+                      onPress: () =>
+                        dispatch(updateScriptSessionActionsArray([])),
+                    },
+                  ],
+                  { cancelable: true }
+                );
               }}
               style={styles.btnRallyGroupBottom}
             >

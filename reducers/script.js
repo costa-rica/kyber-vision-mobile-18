@@ -15,7 +15,7 @@ const initialState = {
   // testPayloadQuailty: null,
   // newObj: null,
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
-  typesArray: ["Bl", "Def", "Set", "Att", "tap"],
+  typesArray: ["Bl", "Def", "Set", "Att", "Serve", "Reception"],
   subtypesByType: {
     Serve: [
       "Default (Power serve)",
@@ -44,7 +44,6 @@ const initialState = {
       "Roll shot",
       "Off Speed",
     ],
-    tap: [], // optional: define explicitly so lookups never break
   },
   qualityArrayOuterCircle: [
     "0",
