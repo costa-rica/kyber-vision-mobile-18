@@ -17,14 +17,22 @@ import { loginUser } from "../reducers/user";
 
 export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [credentials, setCredentials] = useState({
-    email:
-      process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation"
-        ? "nrodrig1@gmail.com"
-        : "",
-    password:
-      process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : "",
-  });
+  const [email, setEmail] = useState(
+    process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation"
+      ? "nrodrig1@gmail.com"
+      : ""
+  );
+  const [password, setPassword] = useState(
+    process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : ""
+  );
+  // const [credentials, setCredentials] = useState({
+  //   email:
+  //     process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation"
+  //       ? "nrodrig1@gmail.com"
+  //       : "",
+  //   password:
+  //     process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : "",
+  // });
   const [showPassword, setShowPassword] = useState(false);
 
   // useEffect(() => {
@@ -38,8 +46,8 @@ export default function LoginScreen({ navigation }) {
     );
 
     const bodyObj = {
-      email: credentials.email,
-      password: credentials.password,
+      email: email,
+      password: password,
     };
     // console.log(`email: ${credentials.email}, ${credentials.password}`);
     const response = await fetch(
@@ -98,10 +106,11 @@ export default function LoginScreen({ navigation }) {
               <TextInput
                 placeholder="your.email@volleyball.com"
                 placeholderTextColor="gray"
-                value={credentials.email}
-                onChangeText={(text) =>
-                  setCredentials({ ...credentials, email: text })
-                }
+                value={email}
+                onChangeText={(text) => {
+                  console.log("text:", text);
+                  setEmail(text);
+                }}
                 style={styles.txtInputWithIcon}
               />
             </View>
@@ -124,10 +133,8 @@ export default function LoginScreen({ navigation }) {
                 placeholder="••••••••••"
                 placeholderTextColor="gray"
                 secureTextEntry={!showPassword}
-                value={credentials.password}
-                onChangeText={(text) =>
-                  setCredentials({ ...credentials, password: text })
-                }
+                value={password}
+                onChangeText={(text) => setPassword(text)}
                 style={styles.txtInputWithIcon}
               />
             </View>
