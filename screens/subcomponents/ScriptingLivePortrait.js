@@ -351,14 +351,7 @@ export default function ScriptingLivePortrait(props) {
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
                 styleText={styles.txtLastAction}
               >
-                {/* {truncate4(scriptReducer.sessionActionsArray.at(-1)?.subtype)} */}
-                {scriptReducer.sessionActionsArray[
-                  scriptReducer.sessionActionsArray.length - 1
-                ]?.subtype !== null
-                  ? scriptReducer.sessionActionsArray[
-                      scriptReducer.sessionActionsArray.length - 1
-                    ]?.subtype.slice(0, 4)
-                  : "?"}
+                {props.getSubtypeForLastAction()}
               </ButtonKvNoDefaultTextOnly>
               {/* ---- Dropdowns ---- */}
               {props.lastActionDropDownIsVisibleQuality && (
@@ -463,22 +456,25 @@ export default function ScriptingLivePortrait(props) {
                     styles.vwDropDownContainer,
                   ]}
                 >
-                  {(props.subtypesForLastAction || []).map((subtype, index) => (
-                    <TouchableOpacity
-                      key={`${subtype}-${index}`}
-                      onPress={() => {
-                        props.setLastActionDropDownIsVisibleSubtype(false);
-                        props.handleModifySubtype(subtype);
-                      }}
-                      style={styles.btnDropDown}
-                    >
-                      <Text style={styles.txtDropDownBtn}>
-                        {subtype !== null ? subtype.slice(0, 4) : ""}
-                        {/* {truncate4(subtype)} */}
-                        {/* {subtype?.slice(0, 4)} */}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {/* {(props.subtypesForLastAction || []).map((subtype, index) => ( */}
+                  {(props.subtypesArrayForLastAction || []).map(
+                    (subtype, index) => (
+                      <TouchableOpacity
+                        key={`${subtype}-${index}`}
+                        onPress={() => {
+                          props.setLastActionDropDownIsVisibleSubtype(false);
+                          props.handleModifySubtype(subtype);
+                        }}
+                        style={styles.btnDropDown}
+                      >
+                        <Text style={styles.txtDropDownBtn}>
+                          {subtype !== null ? subtype.slice(0, 4) : ""}
+                          {/* {truncate4(subtype)} */}
+                          {/* {subtype?.slice(0, 4)} */}
+                        </Text>
+                      </TouchableOpacity>
+                    )
+                  )}
                   {/* {scriptReducer.subtypesArray.map((subtype, index) => ( 
                  
                     <TouchableOpacity
@@ -628,7 +624,7 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
-      <View>
+      {/* <View>
         <Text>sub types</Text>
         <Text>
           {JSON.stringify(
@@ -644,8 +640,7 @@ export default function ScriptingLivePortrait(props) {
             ]?.subtype
           }
         </Text>
-        {/* <Text>{JSON.stringify(props.subtypesForLastAction)}</Text> */}
-      </View>
+      </View> */}
     </View>
   );
 }

@@ -10,9 +10,8 @@ import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTo
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
 import ScriptingLandscape from "./subcomponents/ScriptingLiveLandscape";
 import { Gesture } from "react-native-gesture-handler";
-import { useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   // replaceScriptMatchActionsArray,
@@ -844,11 +843,30 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // ...
-  const subtypesForLastAction = useMemo(() => {
+  const subtypesArrayForLastAction = useMemo(() => {
     const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type;
     if (!lastActionType) return [];
     return scriptReducer.subtypesByType[lastActionType] ?? [];
   }, [scriptReducer.sessionActionsArray, scriptReducer.subtypesByType]);
+
+  const getSubtypeForLastAction = useCallback(() => {
+    const last = scriptReducer.sessionActionsArray.at(-1);
+    if (!last) return "?";
+    const v = last.subtype ?? null;
+    return typeof v === "string" && v.length > 0 ? v.slice(0, 4) : "?";
+  }, [scriptReducer.sessionActionsArray]);
+
+  // const subtypeForLastAction = () => {
+  //   console.log("-- subtypeForLastAction --");
+  //   const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type;
+  //   console.log("lastActionType: ", lastActionType);
+  //   if (!lastActionType) return "?";
+  //   console.log(
+  //     "scriptReducer.subtypesByType[lastActionType]: ",
+  //     scriptReducer.subtypesByType[lastActionType]
+  //   );
+  //   return scriptReducer.subtypesByType[lastActionType] ?? "?";
+  // };
   // const createSubtypesArray = () => {
   //   const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type; // safest way to read last
 
@@ -924,7 +942,8 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisibleSubtype={
           setLastActionDropDownIsVisibleSubtype
         }
-        subtypesForLastAction={subtypesForLastAction}
+        subtypesArrayForLastAction={subtypesArrayForLastAction}
+        getSubtypeForLastAction={getSubtypeForLastAction}
         sendScriptReducerSessionActionsArrayToServer={
           sendScriptReducerSessionActionsArrayToServer
         }
