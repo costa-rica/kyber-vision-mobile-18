@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   TextInput,
+  Alert,
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
@@ -150,6 +151,13 @@ export default function ScriptingLive({ navigation }) {
   // -------------
   const gestureTapBegin = Gesture.Tap().onBegin((event) => {
     console.log("gestureTapBegin");
+
+    // 🚫 Stop if match already won (best of 5 → first to 3)
+    if (matchSetsWon.teamAnalyzed === 3 || matchSetsWon.teamOpponent === 3) {
+      Alert.alert("Reached end of game", "Please send the script.");
+      return;
+    }
+
     setSwipeColorDict(userReducer.defaultWheelColors);
     setSwipeTextStyleDict(defaultTextStyles);
     if (tapIsActive) {
@@ -583,9 +591,10 @@ export default function ScriptingLive({ navigation }) {
       subtype: null,
       quality: quality || 0,
       playerId: scriptReducer.scriptingForPlayerObject.id,
-      setNumber: 0,
-      scoreTeamAnalyzed: 0,
-      scoreTeamOpponent: 0,
+      setNumber: matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1,
+      scoreTeamAnalyzed: setScores.teamAnalyzed,
+      // scoreTeamOpponent: setScores.teamOpponent,
+      scoreTeamOther: setScores.teamOpponent,
       // rotation: scriptReducer.rotationArray[0],
       rotation: "rotation not set yet",
       zone: position,
@@ -763,28 +772,173 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // -----------------
-  //  Score
+  //  Score + Set Logic (best of 5, win by 2; set 5 to 15)
   // -----------------
+  // team: "analyzed" | "opponent"
+  // scoreAdjust: +1 or -1 (we only evaluate set end on +1)
   const handleSetScorePress = (team, scoreAdjust) => {
-    // scores can never go below 0
+    // // 🚫 Stop Alert is in GestureTapBegin
+
+    // Compute new set scores with floor at 0
+    let newAnalyzed = setScores.teamAnalyzed;
+    let newOpponent = setScores.teamOpponent;
+
     if (team === "analyzed") {
-      if (setScores.teamAnalyzed + scoreAdjust < 0) {
-        return;
-      }
-      setSetScores({
-        teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
-        teamOpponent: setScores.teamOpponent,
-      });
+      const next = newAnalyzed + scoreAdjust;
+      if (next < 0) return;
+      newAnalyzed = next;
     } else {
-      if (setScores.teamOpponent + scoreAdjust < 0) {
-        return;
+      const next = newOpponent + scoreAdjust;
+      if (next < 0) return;
+      newOpponent = next;
+    }
+
+    // Push the score change into the last recorded action (if any)
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+    if (!lastRecordedAction) {
+      // No actions yet: just update the local set score state and bail
+      setSetScores({ teamAnalyzed: newAnalyzed, teamOpponent: newOpponent });
+      return;
+    }
+
+    // Update last action’s score fields
+    let updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? {
+            ...action,
+            scoreTeamAnalyzed: newAnalyzed,
+            scoreTeamOther: newOpponent,
+          }
+        : action
+    );
+
+    // Decide current set number and its target points
+    const currentSetNumber =
+      matchSetsWon.teamAnalyzed + matchSetsWon.teamOpponent + 1; // 1..5
+    const setTarget = currentSetNumber === 5 ? 15 : 25;
+
+    // Only check for set end on increment (+1). Decrements simply adjust scores.
+    let setJustEnded = false;
+    let winner = null; // "analyzed" | "opponent"
+
+    if (scoreAdjust > 0) {
+      // Win-by-2 condition
+      if (newAnalyzed >= setTarget && newAnalyzed - newOpponent >= 2) {
+        setJustEnded = true;
+        winner = "analyzed";
+      } else if (newOpponent >= setTarget && newOpponent - newAnalyzed >= 2) {
+        setJustEnded = true;
+        winner = "opponent";
       }
+    }
+
+    if (setJustEnded) {
+      // 1) Update matchSetsWon
+      setMatchSetsWon((prev) => {
+        const next = {
+          teamAnalyzed: prev.teamAnalyzed + (winner === "analyzed" ? 1 : 0),
+          teamOpponent: prev.teamOpponent + (winner === "opponent" ? 1 : 0),
+        };
+        return next;
+      });
+
+      // 2) Reset set scores to begin next set (if match not over)
+      const winsAnalyzed =
+        matchSetsWon.teamAnalyzed + (winner === "analyzed" ? 1 : 0);
+      const winsOpponent =
+        matchSetsWon.teamOpponent + (winner === "opponent" ? 1 : 0);
+      const matchOver = winsAnalyzed === 3 || winsOpponent === 3;
+
       setSetScores({
-        teamAnalyzed: setScores.teamAnalyzed,
-        teamOpponent: setScores.teamOpponent + scoreAdjust,
+        teamAnalyzed: 0,
+        teamOpponent: 0,
+      });
+
+      // 3) Optionally append a "Set" action to mark the start of the next set
+      //    (only if the match is not over and there will be a next set)
+      if (!matchOver) {
+        const nextSetNumber = currentSetNumber + 1; // start of next set
+        const nowIso = new Date().toISOString();
+
+        const setStartAction = {
+          dateScripted: nowIso,
+          timestamp: nowIso,
+          type: "Set",
+          subtype: null,
+          quality: "0",
+          playerId: scriptReducer.scriptingForPlayerObject.id,
+          setNumber: nextSetNumber,
+          scoreTeamAnalyzed: 0,
+          scoreTeamOther: 0,
+          rotation: "rotation not set yet",
+          zone: 3, // neutral/default
+          opponentServed: false,
+          favorite: false,
+          sessionId: scriptReducer.sessionsArray.find((s) => s.selected).id,
+        };
+
+        updatedArray = [...updatedArray, setStartAction];
+      }
+    } else {
+      // No set end: just persist the new running scores
+      setSetScores({
+        teamAnalyzed: newAnalyzed,
+        teamOpponent: newOpponent,
       });
     }
+
+    // Persist actions array
+    dispatch(updateScriptSessionActionsArray(updatedArray));
   };
+
+  // -----------------
+  //  Score
+  // -----------------
+  // const handleSetScorePress = (team, scoreAdjust) => {
+  //   let teamAnalyzedScore = setScores.teamAnalyzed;
+  //   let teamOpponentScore = setScores.teamOpponent;
+  //   // scores can never go below 0
+  //   if (team === "analyzed") {
+  //     if (setScores.teamAnalyzed + scoreAdjust < 0) {
+  //       return;
+  //     }
+  //     setSetScores({
+  //       teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
+  //       teamOpponent: setScores.teamOpponent,
+  //     });
+  //     teamAnalyzedScore = setScores.teamAnalyzed + scoreAdjust;
+  //   } else {
+  //     if (setScores.teamOpponent + scoreAdjust < 0) {
+  //       return;
+  //     }
+  //     setSetScores({
+  //       teamAnalyzed: setScores.teamAnalyzed,
+  //       teamOpponent: setScores.teamOpponent + scoreAdjust,
+  //     });
+  //     teamOpponentScore = setScores.teamOpponent + scoreAdjust;
+  //   }
+  //   // Modify score in scriptReducer.sessionActionsArray
+  //   const lastRecordedAction =
+  //     scriptReducer.sessionActionsArray[
+  //       scriptReducer.sessionActionsArray.length - 1
+  //     ];
+  //   if (!lastRecordedAction) return;
+
+  //   const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+  //     action.timestamp === lastRecordedAction.timestamp
+  //       ? {
+  //           ...action,
+  //           scoreTeamAnalyzed: teamAnalyzedScore,
+  //           scoreTeamOther: teamOpponentScore,
+  //         }
+  //       : action
+  //   );
+
+  //   dispatch(updateScriptSessionActionsArray(updatedArray));
+  // };
 
   // -----------------
   //  Set Circle (score)
@@ -855,37 +1009,6 @@ export default function ScriptingLive({ navigation }) {
     const v = last.subtype ?? null;
     return typeof v === "string" && v.length > 0 ? v.slice(0, 4) : "?";
   }, [scriptReducer.sessionActionsArray]);
-
-  // const subtypeForLastAction = () => {
-  //   console.log("-- subtypeForLastAction --");
-  //   const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type;
-  //   console.log("lastActionType: ", lastActionType);
-  //   if (!lastActionType) return "?";
-  //   console.log(
-  //     "scriptReducer.subtypesByType[lastActionType]: ",
-  //     scriptReducer.subtypesByType[lastActionType]
-  //   );
-  //   return scriptReducer.subtypesByType[lastActionType] ?? "?";
-  // };
-  // const createSubtypesArray = () => {
-  //   const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type; // safest way to read last
-
-  //   if (!lastActionType) return [];
-  //   return scriptReducer.subtypesByType[lastActionType] ?? [];
-  // };
-  // const createSubtypesArray = () => {
-  //   console.log(" --- subtypesArray ---");
-  //   const lastActionType =
-  //     scriptReducer.sessionActionsArray[
-  //       scriptReducer.sessionActionsArray.length - 1
-  //     ]?.type;
-
-  //   if (!lastActionType) return;
-  //   console.log("lastActionType: ", lastActionType);
-  //   const subtypesArray = scriptReducer.subtypesArrays[lastActionType];
-  //   console.log("subtypesArray: ", subtypesArray.length);
-  //   return subtypesArray;
-  // };
 
   return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall

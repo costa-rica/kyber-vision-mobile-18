@@ -16,61 +16,6 @@ const initialState = {
   // newObj: null,
   // --- These are meant to be hardcoded and available throughout the app --- NO MODIFY in code
   typesArray: ["Bl", "Def", "Set", "Att", "tap"],
-  // subtypesArray: [
-  //   "B2",
-  //   "B1",
-  //   "BC",
-  //   "FB",
-  //   "AC",
-  //   "NS",
-  //   "Q",
-  //   "Hi",
-  //   "Tip",
-  //   "Pwr",
-  //   "Rol",
-  //   "B3",
-  // ],
-  // subtypesArrays: [
-  //   {
-  //     Serve: [
-  //       "Default (Power serve)",
-  //       "Float (or jump float)",
-  //       "Spin (or jump spin)",
-  //       "Hybrid",
-  //     ],
-  //   },
-  //   {
-  //     Bl: ["1 player", "2 players (default)", "3 players"],
-  //   },
-  //   {
-  //     Def: ["Dig (default)", "Attack cover", "Tip cover", "Freeball"],
-  //   },
-  //   {
-  //     Reception: ["Default (Pass)", "Overhead", "Dive"],
-  //   },
-  //   {
-  //     Set: [
-  //       "Second tempo (default)",
-  //       "First tempo",
-  //       "High ball",
-  //       "Negative tempo",
-  //     ],
-  //   },
-  //   {
-  //     Att: [
-  //       "Power (default)",
-  //       "Fake (or Tip or Deep shot)",
-  //       "Block Out attempt",
-  //       "Block Touch attempt",
-  //       "First hand (or pushed)",
-  //       "Over the net fight",
-  //       "Freeball",
-  //       "Block recycle",
-  //       "Roll shot",
-  //       "Off Speed",
-  //     ],
-  //   },
-  // ],
   subtypesByType: {
     Serve: [
       "Default (Power serve)",
