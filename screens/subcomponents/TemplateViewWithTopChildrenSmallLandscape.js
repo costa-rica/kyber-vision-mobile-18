@@ -5,6 +5,7 @@ import {
   Text,
   TouchableWithoutFeedback,
   Alert,
+  Dimensions,
 } from "react-native";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
@@ -16,7 +17,7 @@ export default function TemplateViewWithTopChildrenSmallLandscape({
   children,
   navigation,
   topChildren,
-  sizeOfLogo = 40,
+  sizeOfLogo = 30,
   topHeight = 1,
   screenName,
   modalComponentAndSetterObject = {
@@ -50,21 +51,60 @@ export default function TemplateViewWithTopChildrenSmallLandscape({
     // alignItems: "center",
     // justifyContent: "center",
   };
+  const stylesVwBackgroundTopLeftImage = {
+    width: Dimensions.get("window").width * 0.3,
+    height: "100%",
+    borderBottomRightRadius: 10,
+    overflow: "hidden",
+    // alignItems: "center",
+    // justifyContent: "center",
+  };
+  const stylesVwBackgroundTopRightImage = {
+    width: Dimensions.get("window").width * 0.2,
+    height: "100%",
+    justifyContent: "flex-end",
+    borderBottomLeftRadius: 10,
+    overflow: "hidden",
+  };
 
   return (
     <View style={styles.container}>
       <View style={stylesContainerTop}>
+        {/* <View style={styles.vwBackgroundTop}></View> */}
         <View style={styles.vwBackgroundTop}>
-          <Image
-            source={require("../../assets/images/imgBackgroundBottomFade.png")}
-            style={styles.imgBackgroundTop}
-          />
-          <Image
-            source={require("../../assets/images/imgBackgroundBottomFade.png")}
-            style={styles.imgBackgroundTop}
-          />
+          <View style={stylesVwBackgroundTopLeftImage}>
+            <Image
+              source={require("../../assets/images/imgBackgroundBottomFade.png")}
+              style={styles.imgBackgroundTop}
+            />
+            <View style={styles.vwOpaqueCover} />
+
+            <View style={styles.btnBack}>
+              <ButtonKvImage
+                onPress={() => {
+                  handleBackPress();
+                }}
+              >
+                <BackArrow style={styles.svgBackArrow} />
+              </ButtonKvImage>
+            </View>
+            <View style={styles.vwLogoCrystal}>
+              <KyberVisionLogoCrystal width={sizeOfLogo} height={sizeOfLogo} />
+            </View>
+            <View style={styles.vwLiveScriptingText}>
+              <Text style={styles.txtLiveScripting}>Live Scripting</Text>
+            </View>
+          </View>
+          <View style={stylesVwBackgroundTopRightImage}>
+            <Image
+              source={require("../../assets/images/imgBackgroundBottomFade.png")}
+              style={styles.imgBackgroundTop}
+              // resizeMode="center"
+            />
+            <View style={styles.vwOpaqueCover} />
+          </View>
         </View>
-        <View style={stylesVwTopContent}>
+        {/* <View style={stylesVwTopContent}>
           <View style={styles.btnBack}>
             <ButtonKvImage
               onPress={() => {
@@ -74,7 +114,7 @@ export default function TemplateViewWithTopChildrenSmallLandscape({
               <BackArrow style={styles.svgBackArrow} />
             </ButtonKvImage>
           </View>
-        </View>
+        </View> */}
         {/* )} */}
       </View>
       <View style={styles.containerBottom}>{children}</View>
@@ -92,16 +132,41 @@ const styles = StyleSheet.create({
   },
   vwBackgroundTop: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     width: "100%",
     height: "100%",
+    backgroundColor: "#806181",
   },
-  imgBackgroundTop: {
+  vwOpaqueCover: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
     height: "100%",
+    backgroundColor: "black",
+    opacity: 0.5,
   },
+  vwLogoCrystal: {
+    position: "absolute",
+    top: 10,
+    left: 70,
+  },
+
   btnBack: {
-    paddingLeft: 30,
-    paddingTop: 10,
+    position: "absolute",
+    top: 10,
+    left: 30,
+  },
+  vwLiveScriptingText: {
+    position: "absolute",
+    top: 15,
+    right: 30,
+    // backgroundColor: "red",
+  },
+  txtLiveScripting: {
+    color: "white",
+    fontSize: 22,
+    fontWeight: "bold",
   },
 
   containerBottom: {
