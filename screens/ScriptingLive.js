@@ -1070,6 +1070,7 @@ export default function ScriptingLive({ navigation }) {
         navigation={navigation}
         combinedGestures={combinedGestures}
         orientation={orientation}
+        setOrientation={setOrientation}
         setScores={setScores}
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}
