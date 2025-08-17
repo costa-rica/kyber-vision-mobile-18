@@ -1,0 +1,110 @@
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  TouchableWithoutFeedback,
+  Alert,
+} from "react-native";
+import ButtonKvImage from "./buttons/ButtonKvImage";
+import BackArrow from "../../assets/images/navigationAndSmall/btnTemplateViewBackArrow.svg";
+import { useNavigation } from "@react-navigation/native";
+import KyberVisionLogoCrystal from "../../assets/images/KyberVisionLogoCrystal.svg";
+import ModalLoading from "./modals/ModalLoading";
+import { useSelector } from "react-redux";
+export default function TemplateViewWithTopChildrenSmallLandscape({
+  children,
+  navigation,
+  topChildren,
+  sizeOfLogo = 40,
+  topHeight = 1,
+  screenName,
+  modalComponentAndSetterObject = {
+    modalComponent: null,
+    useState: false,
+    useStateSetter: () => {},
+  },
+  onBackPress = () => {},
+}) {
+  const uploadReducer = useSelector((state) => state.upload);
+  const handleBackPress = async () => {
+    onBackPress();
+    navigation.goBack();
+  };
+
+  // styles
+  const stylesContainerTop = {
+    position: "relative",
+    height: topHeight,
+    width: "100%",
+  };
+  const stylesVwTopContent = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    // height: 100,
+    flexDirection: "row",
+    // backgroundColor: "red",
+    zIndex: 1,
+    // alignItems: "center",
+    // justifyContent: "center",
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={stylesContainerTop}>
+        <View style={styles.vwBackgroundTop}>
+          <Image
+            source={require("../../assets/images/imgBackgroundBottomFade.png")}
+            style={styles.imgBackgroundTop}
+          />
+          <Image
+            source={require("../../assets/images/imgBackgroundBottomFade.png")}
+            style={styles.imgBackgroundTop}
+          />
+        </View>
+        <View style={stylesVwTopContent}>
+          <View style={styles.btnBack}>
+            <ButtonKvImage
+              onPress={() => {
+                handleBackPress();
+              }}
+            >
+              <BackArrow style={styles.svgBackArrow} />
+            </ButtonKvImage>
+          </View>
+        </View>
+        {/* )} */}
+      </View>
+      <View style={styles.containerBottom}>{children}</View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  containerTop: {
+    height: 1,
+  },
+  vwBackgroundTop: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    height: "100%",
+  },
+  imgBackgroundTop: {
+    height: "100%",
+  },
+  btnBack: {
+    paddingLeft: 30,
+    paddingTop: 10,
+  },
+
+  containerBottom: {
+    flex: 1,
+  },
+});

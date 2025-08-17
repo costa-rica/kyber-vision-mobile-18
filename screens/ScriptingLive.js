@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import TemplateViewWithTopChildrenSmall from "./subcomponents/TemplateViewWithTopChildrenSmall";
 import ScriptingPortrait from "./subcomponents/ScriptingLivePortrait";
-import ScriptingLandscape from "./subcomponents/ScriptingLiveLandscape";
+import ScriptingLiveLandscape from "./subcomponents/ScriptingLiveLandscape";
 import { Gesture } from "react-native-gesture-handler";
 import * as ScreenOrientation from "expo-screen-orientation";
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -1023,21 +1023,10 @@ export default function ScriptingLive({ navigation }) {
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
         // ----------- Dropdowns Value -----------
-        // lastActionQuality={lastActionQuality}
-        // setLastActionQuality={setLastActionQuality}
         handleModifyQuality={handleModifyQuality}
-        // lastActionPosition={lastActionPosition}
-        // setLastActionPosition={setLastActionPosition}
         handleModifyPosition={handleModifyPosition}
-        // lastActionPlayer={lastActionPlayer}
         handleModifyLastActionPlayer={handleModifyLastActionPlayer}
-        // setLastActionPlayer={setLastActionPlayer}
-        // handleLastActionPlayerPress={handleLastActionPlayerPress}
-        // lastActionType={lastActionType}
-        // setLastActionType={setLastActionType}
         handleModifyType={handleModifyType}
-        // lastActionSubtype={lastActionSubtype}
-        // setLastActionSubtype={setLastActionSubtype}
         handleModifySubtype={handleModifySubtype}
         // --------- Dropdowns Toggles -----------
         // Quality
@@ -1076,27 +1065,55 @@ export default function ScriptingLive({ navigation }) {
     </TemplateViewWithTopChildrenSmall>
   ) : (
     <View>
-      <ScriptingLandscape
+      {/* <Text>Scripting - Live - Landscape</Text> */}
+      <ScriptingLiveLandscape
+        navigation={navigation}
         combinedGestures={combinedGestures}
         orientation={orientation}
         setScores={setScores}
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}
         handleSetScorePress={handleSetScorePress}
-        // lastActionQuality={lastActionQuality}
-        // setLastActionQuality={setLastActionQuality}
-        // lastActionPosition={lastActionPosition}
-        // setLastActionPosition={setLastActionPosition}
-        // lastActionPlayer={lastActionPlayer}
-        // setLastActionPlayer={setLastActionPlayer}
-        // lastActionType={lastActionType}
-        // setLastActionType={setLastActionType}
-        // lastActionSubtype={lastActionSubtype}
-        // setLastActionSubtype={setLastActionSubtype}
-        lastActionDropDownIsVisible={lastActionDropDownIsVisible}
-        setLastActionDropDownIsVisible={setLastActionDropDownIsVisible}
+        // ----------- Dropdowns Value -----------
+        handleModifyQuality={handleModifyQuality}
+        handleModifyPosition={handleModifyPosition}
+        handleModifyLastActionPlayer={handleModifyLastActionPlayer}
+        handleModifyType={handleModifyType}
+        handleModifySubtype={handleModifySubtype}
+        // --------- Dropdowns Toggles -----------
+        // Quality
+        lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
+        setLastActionDropDownIsVisibleQuality={
+          setLastActionDropDownIsVisibleQuality
+        }
+        // Position
+        lastActionDropDownIsVisiblePosition={
+          lastActionDropDownIsVisiblePosition
+        }
+        setLastActionDropDownIsVisiblePosition={
+          setLastActionDropDownIsVisiblePosition
+        }
+        // Player
+        lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
+        setLastActionDropDownIsVisiblePlayer={
+          setLastActionDropDownIsVisiblePlayer
+        }
+        // Type
+        lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
+        setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
+        // Subtype
+        lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
+        setLastActionDropDownIsVisibleSubtype={
+          setLastActionDropDownIsVisibleSubtype
+        }
+        subtypesArrayForLastAction={subtypesArrayForLastAction}
+        getSubtypeForLastAction={getSubtypeForLastAction}
+        sendScriptReducerSessionActionsArrayToServer={
+          sendScriptReducerSessionActionsArrayToServer
+        }
       />
-      <View style={stylesCircle} />
+      {/* {renderSwipePad()} */}
+      {/* <View style={stylesCircle} /> */}
     </View>
   );
 }
