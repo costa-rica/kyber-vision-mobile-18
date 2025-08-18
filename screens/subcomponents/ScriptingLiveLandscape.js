@@ -14,10 +14,6 @@ import BtnReception from "../../assets/images/buttons/btnReception.svg";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
-  const stylesContainer = {
-    height: Dimensions.get("window").height,
-    width: Dimensions.get("window").width * (1 / 3),
-  };
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -46,22 +42,6 @@ export default function ScriptingLiveLandscape(props) {
   //  Styles
   // -----------------
 
-  const stylesBtnBottom = {
-    width: Dimensions.get("window").width * 0.1,
-    height: Dimensions.get("window").width * 0.1,
-    // zIndex: 2,
-    // backgroundColor: "white",
-    marginLeft: -Dimensions.get("window").width * 0.1,
-    marginTop: Dimensions.get("window").width * 0.01,
-  };
-  const stylesBtnTop = {
-    width: Dimensions.get("window").width * 0.1,
-    height: Dimensions.get("window").width * 0.1,
-    // zIndex: 2,
-    marginRight: -Dimensions.get("window").width * 0.1,
-    marginTop: -Dimensions.get("window").width * 0.1,
-  };
-
   return (
     <TemplateViewWithTopChildrenSmallLandscape
       navigation={props.navigation}
@@ -69,9 +49,10 @@ export default function ScriptingLiveLandscape(props) {
       topHeight={50}
       onBackPress={handleBackPress}
     >
-      <View style={styles.container}>
-        <View style={[stylesContainer, styles.containerLeft]}>
-          <View style={styles.vwContainerLeftTop}>
+      <View style={{ flex: 1 }}>
+        {/* <View style={[stylesContainer, styles.containerLeft]}> */}
+        <View style={[styles.column, { backgroundColor: "blue" }]}>
+          {/* <View style={styles.vwContainerLeftTop}>
             <View style={[styles.vwContainerLeftTopLayer, { zIndex: 0 }]}>
               <View style={styles.vwGroupButtonsCircle} />
             </View>
@@ -81,7 +62,7 @@ export default function ScriptingLiveLandscape(props) {
               </View>
             </View>
             <View style={[styles.vwContainerLeftTopLayer, { zIndex: 2 }]}>
-              {/* <Text> Foreground</Text> */}
+
 
               <ButtonKvImage
                 onPress={() => {
@@ -103,21 +84,25 @@ export default function ScriptingLiveLandscape(props) {
               </ButtonKvImage>
             </View>
           </View>
-          <View style={styles.vwContainerLeftBottom}></View>
+          <View style={styles.vwContainerLeftBottom}></View> */}
         </View>
-        <GestureHandlerRootView
+        {/* <GestureHandlerRootView
           style={[stylesContainer, styles.containerMiddle]}
+        > */}
+        <GestureHandlerRootView
+          style={[styles.column, { backgroundColor: "yellow" }]}
         >
           {/* <GestureHandlerRootView> */}
-          <GestureDetector gesture={props.combinedGestures}>
-            {/* <View style={stylesContainer}> */}
+          {/* <GestureDetector gesture={props.combinedGestures}>
+           
             <View style={styles.vwMain}>
               <Text>Scripting - Live - Landscape</Text>
               <Text>{props.orientation}</Text>
             </View>
-          </GestureDetector>
+          </GestureDetector> */}
         </GestureHandlerRootView>
-        <View style={[stylesContainer, styles.containerRight]}></View>
+        {/* <View style={[stylesContainer, styles.containerRight]}></View> */}
+        <View style={[styles.column, { backgroundColor: "green" }]}></View>
       </View>
     </TemplateViewWithTopChildrenSmallLandscape>
   );
@@ -129,6 +114,12 @@ const LINE_THICKNESS = 8;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    flex: 1,
+    backgroundColor: "red",
+  },
+  column: {
+    flex: 1,
+    // height: 100,
   },
   // -----
   // Top Children
@@ -157,6 +148,7 @@ const styles = StyleSheet.create({
   containerLeft: {
     // backgroundColor: "blue",
     flex: 1,
+    // height: 300,
   },
   vwContainerLeftTop: {
     flex: 1,
@@ -165,6 +157,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
     borderStyle: "dashed",
+    position: "relative",
   },
 
   // LAYER
@@ -234,19 +227,21 @@ const styles = StyleSheet.create({
   // },
   vwContainerLeftBottom: {
     height: 100,
-    backgroundColor: "green",
+    backgroundColor: "purple",
   },
   // -----
   // MIDDLE
   // -----
   containerMiddle: {
     backgroundColor: "yellow",
+    flex: 1,
   },
 
   // -----
   // RIGHT
   // -----
   containerRight: {
-    backgroundColor: "green",
+    backgroundColor: "orange",
+    flex: 1,
   },
 });

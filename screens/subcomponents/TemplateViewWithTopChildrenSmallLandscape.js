@@ -216,5 +216,8 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     flex: 1,
+    backgroundColor: "blue",
+    // height: 100,
+    flexDirection: "row",
   },
 });
