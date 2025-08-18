@@ -14,6 +14,7 @@ import BtnReception from "../../assets/images/buttons/btnReception.svg";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
+  const scriptReducer = useSelector((state) => state.script);
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -41,7 +42,15 @@ export default function ScriptingLiveLandscape(props) {
   // -----------------
   //  Styles
   // -----------------
+  const stylesBtnTop = {
+    width: Dimensions.get("window").width * 0.1,
+    height: Dimensions.get("window").width * 0.1,
+  };
 
+  const stylesBtnBottom = {
+    width: Dimensions.get("window").width * 0.1,
+    height: Dimensions.get("window").width * 0.1,
+  };
   return (
     <TemplateViewWithTopChildrenSmallLandscape
       navigation={props.navigation}
@@ -49,10 +58,10 @@ export default function ScriptingLiveLandscape(props) {
       topHeight={50}
       onBackPress={handleBackPress}
     >
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         {/* <View style={[stylesContainer, styles.containerLeft]}> */}
-        <View style={[styles.column, { backgroundColor: "blue" }]}>
-          {/* <View style={styles.vwContainerLeftTop}>
+        <View style={[styles.column]}>
+          <View style={styles.vwContainerLeftTop}>
             <View style={[styles.vwContainerLeftTopLayer, { zIndex: 0 }]}>
               <View style={styles.vwGroupButtonsCircle} />
             </View>
@@ -61,30 +70,59 @@ export default function ScriptingLiveLandscape(props) {
                 <View style={styles.vwGroupButtonsDiagonalLine} />
               </View>
             </View>
-            <View style={[styles.vwContainerLeftTopLayer, { zIndex: 2 }]}>
 
-
-              <ButtonKvImage
-                onPress={() => {
-                  console.log("pressed reception");
-                }}
-                style={styles.btnRallyGroupTop}
+            <View
+              style={[
+                styles.vwContainerLeftTopLayer,
+                { zIndex: 2, flexDirection: "row" },
+              ]}
+            >
+              <View style={[styles.vwContainerLeftTopLayerLeft]}>
+                <ButtonKvImage
+                  onPress={() => {
+                    console.log("pressed service");
+                  }}
+                  // style={styles.btnRallyGroupBottom}
+                  // style={stylesBtnRallyGroupBottom}
+                  style={{ padding: 0 }}
+                >
+                  <BtnService style={stylesBtnBottom} />
+                </ButtonKvImage>
+              </View>
+              <View
+                style={[styles.vwContainerLeftTopLayerRight]}
+                // pointerEvents="box-none" // let touches pass through unless they hit a child
               >
-                <BtnReception style={stylesBtnTop} />
-              </ButtonKvImage>
-            </View>
-            <View style={[styles.vwContainerLeftTopLayer, { zIndex: 3 }]}>
-              <ButtonKvImage
-                onPress={() => {
-                  console.log("pressed service");
-                }}
-                style={styles.btnRallyGroupBottom}
-              >
-                <BtnService style={stylesBtnBottom} />
-              </ButtonKvImage>
+                <ButtonKvImage
+                  onPress={() => {
+                    console.log("pressed reception");
+                  }}
+                  // style={styles.btnRallyGroupTop}
+                  // style={stylesBtnRallyGroupTop}
+                  style={{ padding: 0 }}
+                >
+                  <BtnReception style={stylesBtnTop} />
+                </ButtonKvImage>
+              </View>
             </View>
           </View>
-          <View style={styles.vwContainerLeftBottom}></View> */}
+          <View style={styles.vwContainerLeftBottom}>
+            {/* <View style={styles.vwScriptDetails}> */}
+            <Text style={{ color: "#806181" }}>
+              {" "}
+              {scriptReducer.sessionActionsArray.length} actions recorded
+            </Text>
+            <Text style={{ fontStyle: "italic", color: "#806181" }}>
+              {" "}
+              {
+                scriptReducer.sessionActionsArray.filter(
+                  (action) => action.favorite
+                ).length
+              }{" "}
+              favorites
+            </Text>
+            {/* </View> */}
+          </View>
         </View>
         {/* <GestureHandlerRootView
           style={[stylesContainer, styles.containerMiddle]}
@@ -115,7 +153,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flex: 1,
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
   column: {
     flex: 1,
@@ -154,10 +192,10 @@ const styles = StyleSheet.create({
     flex: 1,
     // height: "50%",
     // backgroundColor: "red",
-    borderWidth: 1,
-    borderColor: "gray",
-    borderStyle: "dashed",
-    position: "relative",
+    // borderWidth: 1,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
+    // position: "relative",
   },
 
   // LAYER
@@ -202,32 +240,31 @@ const styles = StyleSheet.create({
 
   // FOREGROUND LAYER
 
-  btnRallyGroupBottom: {
-    paddingHorizontal: 0,
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
+  // btnRallyGroupBottom: {
+  //   paddingHorizontal: 0,
+  //   // borderColor: "gray",
+  //   // borderWidth: 1,
+  //   // borderStyle: "dashed",
+  //   paddingTop: 50,
+  // },
+  vwContainerLeftTopLayerLeft: {
+    width: "50%",
+    // backgroundColor: "red",
+    // justifyContent: "flex-end",
+    alignItems: "flex-end",
     paddingTop: 50,
   },
-  // vwGroupButtonsCircle: {
-  //   height: 50,
-  //   width: 50,
-  //   borderRadius: 25,
-  //   // borderRadius: (Dimensions.get("window").width * 0.2) / 2,
-  //   // backgroundColor: "gray",
-  //   // width: Dimensions.get("window").width * 0.2,
-  //   // height: Dimensions.get("window").width * 0.2,
-  //   // top: Dimensions.get("window").width * 0.05,
-  //   // left:
-  //   //   (Dimensions.get("window").width * 0.4) / 2 -
-  //   //   (Dimensions.get("window").width * 0.2) / 2,
-  //   // position: "absolute",
-  //   backgroundColor: "#806181",
-  //   opacity: 0.5,
-  // },
+  vwContainerLeftTopLayerRight: {
+    width: "50%",
+    // backgroundColor: "green",
+    alignItems: "flex-start",
+    paddingBottom: 50,
+  },
   vwContainerLeftBottom: {
-    height: 100,
-    backgroundColor: "purple",
+    // height: 100,
+    // backgroundColor: "purple",
+    paddingBottom: 20,
+    paddingLeft: 40,
   },
   // -----
   // MIDDLE

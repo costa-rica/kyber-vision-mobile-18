@@ -61,7 +61,7 @@ export default function TemplateViewWithTopChildrenSmallLandscape({
     overflow: "hidden",
     // alignItems: "center",
     // justifyContent: "center",
-    backgroundColor: "red",
+    // backgroundColor: "red",
   };
   const stylesVwBackgroundTopRightImage = {
     width: Dimensions.get("window").width * 0.1,
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
 
   containerBottom: {
     flex: 1,
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
     // height: 100,
     flexDirection: "row",
   },

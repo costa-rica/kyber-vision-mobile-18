@@ -602,7 +602,7 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
         <View style={styles.vwSendScriptGroup}>
-          <View style={styles.vwScriptDetails}>
+          <View>
             <Text style={{ color: "#806181" }}>
               {" "}
               {scriptReducer.sessionActionsArray.length} actions recorded

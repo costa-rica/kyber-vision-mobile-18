@@ -1064,7 +1064,7 @@ export default function ScriptingLive({ navigation }) {
       {renderSwipePad()}
     </TemplateViewWithTopChildrenSmall>
   ) : (
-    <View>
+    <View style={{ flex: 1 }}>
       {/* <Text>Scripting - Live - Landscape</Text> */}
       <ScriptingLiveLandscape
         navigation={navigation}
