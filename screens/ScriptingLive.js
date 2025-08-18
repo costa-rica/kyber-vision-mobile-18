@@ -183,6 +183,13 @@ export default function ScriptingLive({ navigation }) {
           x: x,
           y: y,
         });
+        console.log(
+          `TapBegin - X: ${x} - Y: ${
+            y +
+            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+            userReducer.circleRadiusOuter
+          }`
+        );
       }
 
       setPadVisible(true);
