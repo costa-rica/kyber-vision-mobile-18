@@ -52,6 +52,12 @@ export default function ScriptingLiveLandscape(props) {
   // -----------------
   //  Styles
   // -----------------
+  /// -- Style params for Button Groups
+  // const CIRCLE_SIZE = 100;
+  const CIRCLE_SIZE = Dimensions.get("window").width * 0.1;
+  const DIAGONAL_LEN = Math.ceil(CIRCLE_SIZE * Math.SQRT2); // ~141
+  const LINE_THICKNESS = 8;
+
   const stylesBtnTop = {
     width: Dimensions.get("window").width * 0.1,
     height: Dimensions.get("window").width * 0.1,
@@ -61,34 +67,64 @@ export default function ScriptingLiveLandscape(props) {
     width: Dimensions.get("window").width * 0.1,
     height: Dimensions.get("window").width * 0.1,
   };
-  const stylesVwGroupButtonsCircle = {
-    borderRadius: (Dimensions.get("window").width * 0.2) / 2,
-    backgroundColor: "gray",
-    width: Dimensions.get("window").width * 0.2,
-    height: Dimensions.get("window").width * 0.2,
-    top: Dimensions.get("window").width * 0.05,
-    left:
-      (Dimensions.get("window").width * 0.4) / 2 -
-      (Dimensions.get("window").width * 0.2) / 2,
-    position: "absolute",
-    backgroundColor: "#806181",
-    opacity: 0.5,
-  };
-  const stylesVwGroupButtonsDiagonalLine = {
-    position: "absolute",
-    width: Dimensions.get("window").width * 0.21, // roughly 0.15 * √2 for diagonal spacing
-    height: 8,
-    backgroundColor: "#806181",
-    top: "50%",
-    left: "50%",
-    transform: [
-      { translateX: -0.5 * Dimensions.get("window").width * 0.21 },
-      { translateY: -5 },
-      { rotate: "-45deg" },
-    ],
-    zIndex: 0,
+
+  // -------- Styles RIGHT --------
+  const stylesVwGroupButtons = {
+    // position: "relative",
+    // flexDirection: "row",
+    // width: Dimensions.get("window").width * 0.4,
+    justifyContent: "center",
+    alignItems: "center",
+    // borderColor: "gray",
+    // borderWidth: 5,
+    // borderStyle: "dashed",
   };
 
+  const stylesVwGroupButtonsCircle = {
+    borderRadius: (Dimensions.get("window").width * 0.1) / 2,
+    backgroundColor: "gray",
+    width: Dimensions.get("window").width * 0.1,
+    height: Dimensions.get("window").width * 0.1,
+    // top: Dimensions.get("window").width * 0.05,
+    // left:
+    //   (Dimensions.get("window").width * 0.4) / 2 -
+    //   (Dimensions.get("window").width * 0.2) / 2,
+    // position: "absolute",
+    backgroundColor: "#806181",
+    opacity: 0.25,
+  };
+  // const stylesVwGroupButtonsDiagonalLine = {
+  //   // position: "absolute",
+  //   width: Dimensions.get("window").width * 0.21, // roughly 0.15 * √2 for diagonal spacing
+  //   height: 8,
+  //   backgroundColor: "#806181",
+  //   // top: "50%",
+  //   // left: "50%",
+  //   transform: [
+  //     { translateX: -0.5 * Dimensions.get("window").width * 0.21 },
+  //     { translateY: -5 },
+  //     { rotate: "-45deg" },
+  //   ],
+  //   // zIndex: 0,
+  // };
+
+  const stylesVwGroupButtonsDiagonalLine = {
+    width: DIAGONAL_LEN, // long enough to cross the circle’s corners
+    height: LINE_THICKNESS, // line thickness
+    borderRadius: LINE_THICKNESS / 2, // rounded ends (optional)
+    backgroundColor: "#806181",
+    opacity: 0.8,
+    transform: [{ rotate: "-45deg" }], // top-right → bottom-left
+    // zIndex: 1,
+  };
+  const stylesBtnKvImageTopRight = {
+    marginTop: -CIRCLE_SIZE / 2,
+    marginLeft: CIRCLE_SIZE / 2,
+  };
+  const stylesBtnKvImageBottomLeft = {
+    marginBottom: -CIRCLE_SIZE / 2,
+    marginRight: CIRCLE_SIZE / 2,
+  };
   return (
     <TemplateViewWithTopChildrenSmallLandscape
       navigation={props.navigation}
@@ -97,8 +133,11 @@ export default function ScriptingLiveLandscape(props) {
       onBackPress={handleBackPress}
     >
       <View style={styles.container}>
-        {/* <View style={[stylesContainer, styles.containerLeft]}> */}
-        {/* <View style={[styles.column]}> */}
+        {/* 
+
+LEFT 
+
+*/}
         <View style={styles.containerLeft}>
           <View style={styles.vwContainerLeftTop}>
             <View style={[styles.vwContainerLeftTopLayer, { zIndex: 0 }]}>
@@ -284,30 +323,46 @@ export default function ScriptingLiveLandscape(props) {
             </View>
           </GestureDetector>
         </GestureHandlerRootView>
-        {/* <View style={[stylesContainer, styles.containerRight]}></View> */}
-        <View style={[styles.column, { backgroundColor: "green" }]}>
-          <View style={styles.vwGroupButtons}>
+        {/* 
+        
+        RIGHT COLUMN: W / L buttons
+        
+        */}
+        {/* <View style={[styles.column]}> */}
+        <View style={styles.containerRight}>
+          {/* <View style={styles.vwGroupButtons}> */}
+          <View style={stylesVwGroupButtons}>
             <View style={stylesVwGroupButtonsCircle} />
-            <View style={stylesVwGroupButtonsDiagonalLine} />
-            <ButtonKvImage
-              onPress={() => {
-                console.log("pressed win");
-                props.handleSetScorePress("analyzed", 1);
-              }}
-              style={styles.btnRallyGroupBottom}
-            >
-              <BtnWin style={stylesBtnBottom} />
-            </ButtonKvImage>
-
-            <ButtonKvImage
-              onPress={() => {
-                console.log("pressed lose");
-                props.handleSetScorePress("opponent", 1);
-              }}
-              style={styles.btnRallyGroupTop}
-            >
-              <BtnLose style={stylesBtnTop} />
-            </ButtonKvImage>
+            <View style={styles.vwLayerAndCentered}>
+              <View style={stylesVwGroupButtonsDiagonalLine} />
+            </View>
+            <View style={[styles.vwLayerAndCentered, { flexDirection: "row" }]}>
+              <View style={styles.vwButtonKvImageBottomAndLeft}>
+                <ButtonKvImage
+                  onPress={() => {
+                    console.log("pressed lose");
+                    props.handleSetScorePress("opponent", 1);
+                  }}
+                  // style={styles.btnRallyGroupTop}
+                  style={stylesBtnKvImageBottomLeft}
+                >
+                  <BtnLose style={stylesBtnTop} />
+                </ButtonKvImage>
+              </View>
+              <View style={styles.vwButtonKvImageTopAndRight}>
+                <ButtonKvImage
+                  onPress={() => {
+                    console.log("pressed win");
+                    props.handleSetScorePress("analyzed", 1);
+                  }}
+                  // style={styles.btnRallyGroupBottom}
+                  // style={styles.btnKvImageTopRight}
+                  style={stylesBtnKvImageTopRight}
+                >
+                  <BtnWin style={stylesBtnBottom} />
+                </ButtonKvImage>
+              </View>
+            </View>
           </View>
         </View>
       </View>
@@ -328,6 +383,24 @@ const styles = StyleSheet.create({
     flex: 1,
     // height: 100,
   },
+  vwLayerAndCentered: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  vwButtonKvImageTopAndRight: {
+    width: "50%",
+    // backgroundColor: "red",
+  },
+  vwButtonKvImageBottomAndLeft: {
+    width: "50%",
+    // backgroundColor: "green",
+  },
+  btnKvImageTopRight: {},
   // -----
   // Top Children
   // -----
@@ -410,13 +483,6 @@ const styles = StyleSheet.create({
 
   // FOREGROUND LAYER
 
-  // btnRallyGroupBottom: {
-  //   paddingHorizontal: 0,
-  //   // borderColor: "gray",
-  //   // borderWidth: 1,
-  //   // borderStyle: "dashed",
-  //   paddingTop: 50,
-  // },
   vwContainerLeftTopLayerLeft: {
     width: "50%",
     // backgroundColor: "red",
@@ -582,36 +648,21 @@ const styles = StyleSheet.create({
   // RIGHT
   // -----
   containerRight: {
-    backgroundColor: "orange",
+    // backgroundColor: "orange",
     flex: 1,
-  },
-
-  vwGroupButtons: {
-    position: "relative",
-    flexDirection: "row",
-    width: Dimensions.get("window").width * 0.4,
     justifyContent: "center",
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
+    alignItems: "center",
   },
 
-  btnRallyGroupBottom: {
-    paddingHorizontal: 0,
-    // borderColor: "gray",
-    // borderWidth: 1,
-    // borderStyle: "dashed",
-    paddingTop: 50,
-  },
-  vwGroupButtonsLine: {
-    width: Dimensions.get("window").width * 0.4,
-    height: 5,
-    backgroundColor: "#806181",
-    position: "absolute",
-    top: Dimensions.get("window").width * 0.2 - 20,
-    left: 0,
-    // rotate
-    transform: [{ rotate: "-45deg" }],
-    zIndex: 0,
-  },
+  // vwGroupButtonsLine: {
+  //   width: Dimensions.get("window").width * 0.4,
+  //   height: 5,
+  //   backgroundColor: "#806181",
+  //   position: "absolute",
+  //   top: Dimensions.get("window").width * 0.2 - 20,
+  //   left: 0,
+  //   // rotate
+  //   transform: [{ rotate: "-45deg" }],
+  //   zIndex: 0,
+  // },
 });
