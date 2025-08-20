@@ -201,6 +201,19 @@ export default function ScriptingLiveLandscape(props) {
     borderStyle: "dashed",
     zIndex: 1,
   };
+  const stylesGesterPositionHalfCourtFrontBack = {
+    position: "absolute",
+    top:
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height +
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height / 2,
+    left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
+    width: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width,
+    height: 0,
+    borderWidth: 2,
+    borderColor: "gray",
+    borderStyle: "dashed",
+    zIndex: 1,
+  };
   const stylesGesterPositionTopMiddle = {
     position: "absolute",
     top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
@@ -225,8 +238,9 @@ export default function ScriptingLiveLandscape(props) {
     >
       {props.renderSwipePad()}
       <View style={styles.container}>
-        <View style={stylesGesterPositionTopLeft} />
+        {/* <View style={stylesGesterPositionTopLeft} />
         <View style={stylesGesterPositionTopMiddle} />
+        <View style={stylesGesterPositionHalfCourtFrontBack} /> */}
         {/* 
 
 LEFT 
@@ -287,6 +301,16 @@ LEFT
               favorites
             </Text>
             {/* </View> */}
+            {/* {scriptReducer.sessionActionsArray.length > 0 && (
+              <Text style={{ color: "#806181" }}>
+                Position:{" "}
+                {
+                  scriptReducer.sessionActionsArray[
+                    scriptReducer.sessionActionsArray.length - 1
+                  ].zone
+                }
+              </Text>
+            )} */}
           </View>
         </View>
 

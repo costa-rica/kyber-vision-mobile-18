@@ -178,7 +178,16 @@ export default function ScriptingLive({ navigation }) {
             userReducer.circleRadiusOuter
           }`
         );
+        setTapDetails({
+          timestamp,
+          padPosCenterX: x - userReducer.circleRadiusOuter,
+          padPosCenterY:
+            y +
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+            userReducer.circleRadiusOuter,
+        });
       } else {
+        // Landscape
         setPadPositionCenter({
           x:
             x +
@@ -197,19 +206,28 @@ export default function ScriptingLive({ navigation }) {
             userReducer.circleRadiusOuter
           }`
         );
+        setTapDetails({
+          timestamp,
+          padPosCenterX:
+            x +
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
+            userReducer.circleRadiusOuter,
+          padPosCenterY:
+            y +
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
+            userReducer.circleRadiusOuter,
+        });
       }
 
       setPadVisible(true);
-      setTapDetails({
-        timestamp,
-        // padPosCenterX: padPositionCenter.x,
-        // padPosCenterY: padPositionCenter.y,
-        padPosCenterX: x - userReducer.circleRadiusOuter,
-        padPosCenterY:
-          y +
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-          userReducer.circleRadiusOuter,
-      });
+      // setTapDetails({
+      //   timestamp,
+      //   padPosCenterX: x - userReducer.circleRadiusOuter,
+      //   padPosCenterY:
+      //     y +
+      //     scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+      //     userReducer.circleRadiusOuter,
+      // });
 
       setTapIsActive(false);
     }
@@ -247,14 +265,33 @@ export default function ScriptingLive({ navigation }) {
 
     const { x, y, translationX, translationY, absoluteX, absoluteY } = event;
 
-    // console.log("- IN gestureSwipeOnChange");
-    // const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
-    // const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
-    const swipePosX = x - userReducer.circleRadiusOuter;
-    const swipePosY =
-      y +
-      scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-      userReducer.circleRadiusOuter;
+    // // This works on Portait (and Landscape)
+    // // ---> but does not work with Landscape modified tapDetails
+    // const swipePosX = x - userReducer.circleRadiusOuter;
+    // const swipePosY =
+    //   y +
+    //   scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+    //   userReducer.circleRadiusOuter;
+
+    let swipePosX;
+    let swipePosY;
+    if (orientation === "portrait") {
+      swipePosX = x - userReducer.circleRadiusOuter;
+      swipePosY =
+        y +
+        scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+        userReducer.circleRadiusOuter;
+    } else {
+      // // Landscape
+      swipePosX =
+        x +
+        scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
+        userReducer.circleRadiusOuter;
+      swipePosY =
+        y +
+        scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
+        userReducer.circleRadiusOuter;
+    }
 
     const distanceFromCenter = Math.sqrt(
       Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
@@ -320,52 +357,111 @@ export default function ScriptingLive({ navigation }) {
       //   }`
       // );
 
-      // Determine posistion
-      if (
-        tapYAdjusted >
-        scriptReducer.coordsScriptLivePortraitContainerMiddle.y +
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.height * 0.5
-      ) {
-        // console.log("back row");
+      // Determine posistion portait
+      if (orientation == "portrait") {
         if (
-          tapXAdjusted >
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
+          tapYAdjusted >
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.y +
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.height * 0.5
         ) {
-          // console.log("right");
-          lastActionPositionIndexRef.current = 1;
-          // setLastActionPosition(1);
-        } else if (
-          tapXAdjusted >
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
-        ) {
-          // console.log("middle");
-          lastActionPositionIndexRef.current = 6;
-          // setLastActionPosition(6);
+          // console.log("back row");
+          if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
+          ) {
+            // console.log("right");
+            lastActionPositionIndexRef.current = 1;
+            // setLastActionPosition(1);
+          } else if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
+          ) {
+            // console.log("middle");
+            lastActionPositionIndexRef.current = 6;
+            // setLastActionPosition(6);
+          } else {
+            // console.log("left ");
+            lastActionPositionIndexRef.current = 5;
+            // setLastActionPosition(5);
+          }
         } else {
-          // console.log("left ");
-          lastActionPositionIndexRef.current = 5;
-          // setLastActionPosition(5);
+          // console.log("front row");
+          if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
+          ) {
+            // console.log("right");
+            lastActionPositionIndexRef.current = 2;
+            // setLastActionPosition(2);
+          } else if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
+          ) {
+            // console.log("middle");
+            lastActionPositionIndexRef.current = 3;
+            // setLastActionPosition(3);
+          } else {
+            // console.log("left ");
+            lastActionPositionIndexRef.current = 4;
+            // setLastActionPosition(4);
+          }
         }
       } else {
-        // console.log("front row");
+        console.log(`tapXAdjusted: ${tapXAdjusted}`);
+        console.log(
+          `landscape gest first 1/3: ${
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width *
+            0.33
+          }`
+        );
         if (
-          tapXAdjusted >
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
+          tapYAdjusted >
+          scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height +
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+              .height /
+              2
         ) {
-          // console.log("right");
-          lastActionPositionIndexRef.current = 2;
-          // setLastActionPosition(2);
-        } else if (
-          tapXAdjusted >
-          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
-        ) {
-          // console.log("middle");
-          lastActionPositionIndexRef.current = 3;
-          // setLastActionPosition(3);
+          // Landscape Back Row
+          if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+              scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+                .width *
+                0.66
+          ) {
+            lastActionPositionIndexRef.current = 1;
+          } else if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+              scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+                .width *
+                0.33
+          ) {
+            lastActionPositionIndexRef.current = 6;
+          } else {
+            lastActionPositionIndexRef.current = 5;
+          }
         } else {
-          // console.log("left ");
-          lastActionPositionIndexRef.current = 4;
-          // setLastActionPosition(4);
+          // Landscape Front Row
+          if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+              scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+                .width *
+                0.66
+          ) {
+            lastActionPositionIndexRef.current = 2;
+          } else if (
+            tapXAdjusted >
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+              scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+                .width *
+                0.33
+          ) {
+            lastActionPositionIndexRef.current = 3;
+          } else {
+            lastActionPositionIndexRef.current = 4;
+          }
         }
       }
       addNewActionToScriptReducersActionsArray(
