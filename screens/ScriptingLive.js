@@ -184,12 +184,16 @@ export default function ScriptingLive({ navigation }) {
             x +
             scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
             userReducer.circleRadiusOuter,
-          y: y - userReducer.circleRadiusOuter,
+          // y: y - userReducer.circleRadiusOuter,
+          y:
+            y +
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
+            userReducer.circleRadiusOuter,
         });
         console.log(
           `TapBegin - X: ${x} - Y: ${
             y +
-            scriptReducer.coordsScriptLiveLandscapeContainerLeft.y -
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
             userReducer.circleRadiusOuter
           }`
         );

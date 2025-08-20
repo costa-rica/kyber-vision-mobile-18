@@ -241,135 +241,137 @@ LEFT
             {/* </View> */}
           </View>
         </View>
-        {/* <GestureHandlerRootView
-          style={[stylesContainer, styles.containerMiddle]}
-        > */}
-        <GestureHandlerRootView style={[styles.column]}>
+
+        {/* <GestureHandlerRootView style={[styles.column]}> */}
+        <View style={[styles.column]}>
           {/* <GestureHandlerRootView> */}
-          <GestureDetector gesture={props.combinedGestures}>
-            {/* <View style={styles.vwMain}>
+          {/* <GestureDetector gesture={props.combinedGestures}> */}
+          {/* <View style={styles.vwMain}>
               <Text>Scripting - Live - Landscape</Text>
               <Text>{props.orientation}</Text>
             </View> */}
-            <View style={styles.containerMiddle}>
-              <View
-                style={styles.containerMiddleTop}
-                onLayout={(event) =>
-                  handleOnLayoutContainerMiddleTopLayout(event)
-                }
-              >
-                <View style={styles.vwGroupScoreAndSets}>
-                  <View style={styles.vwGroupSetSuper}>
-                    <View style={styles.vwGroupSet}>
-                      {Array.from({ length: 3 }).map((_, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() =>
-                            props.handleSetCirclePress("analyzed", index + 1)
-                          }
-                          style={[
-                            styles.touchOpSetsCircle,
-                            props.matchSetsWon.teamAnalyzed > index &&
-                              styles.touchOpSetsCircleFilled,
-                          ]}
-                        />
-                      ))}
-                    </View>
-                  </View>
-                  <View style={styles.vwGroupScore}>
-                    {/* <View style={styles.vwRowButtonsAdjustScore}> */}
-                    <View style={stylesVwRowButtonsAdjustScore}>
-                      <ButtonKvStd
-                        onPress={() => {
-                          props.handleSetScorePress("analyzed", 1);
-                        }}
-                        style={styles.btnPlus}
-                      >
-                        +
-                      </ButtonKvStd>
-                      <ButtonKvStd
-                        onPress={() => {
-                          props.handleSetScorePress("opponent", 1);
-                        }}
-                        style={styles.btnPlus}
-                      >
-                        +
-                      </ButtonKvStd>
-                    </View>
-                    {/* <View style={styles.vwRowScore}> */}
-                    <View style={stylesVwRowScore}>
-                      <Text style={styles.txtRowScore}>
-                        {props.setScores.teamAnalyzed}
-                      </Text>
-                      <Text style={styles.txtRowScore}>-</Text>
-                      <Text style={styles.txtRowScore}>
-                        {props.setScores.teamOpponent}
-                      </Text>
-                    </View>
-                    {/* <View style={styles.vwRowButtonsAdjustScore}> */}
-                    <View style={stylesVwRowButtonsAdjustScore}>
-                      <ButtonKvStd
-                        onPress={() => {
-                          props.handleSetScorePress("analyzed", -1);
-                        }}
-                        style={styles.btnPlus}
-                      >
-                        -
-                      </ButtonKvStd>
-                      <ButtonKvStd
-                        onPress={() => {
-                          props.handleSetScorePress("opponent", -1);
-                        }}
-                        style={styles.btnPlus}
-                      >
-                        -
-                      </ButtonKvStd>
-                    </View>
-                  </View>
-                  <View style={styles.vwGroupSetSuper}>
-                    <View style={styles.vwGroupSet}>
-                      {/* <Text>vwGroupSet</Text> */}
-                      {/* <View style={styles.vwSetCircles}> */}
-                      {Array.from({ length: 3 }).map((_, index) => (
-                        <TouchableOpacity
-                          key={index}
-                          onPress={() =>
-                            props.handleSetCirclePress("opponent", index + 1)
-                          }
-                          style={[
-                            styles.touchOpSetsCircle,
-                            props.matchSetsWon.teamOpponent > index &&
-                              styles.touchOpSetsCircleFilled,
-                          ]}
-                        />
-                      ))}
-                    </View>
+          <View style={styles.containerMiddle}>
+            <View
+              style={styles.containerMiddleTop}
+              onLayout={(event) =>
+                handleOnLayoutContainerMiddleTopLayout(event)
+              }
+            >
+              <View style={styles.vwGroupScoreAndSets}>
+                <View style={styles.vwGroupSetSuper}>
+                  <View style={styles.vwGroupSet}>
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                          props.handleSetCirclePress("analyzed", index + 1)
+                        }
+                        style={[
+                          styles.touchOpSetsCircle,
+                          props.matchSetsWon.teamAnalyzed > index &&
+                            styles.touchOpSetsCircleFilled,
+                        ]}
+                      />
+                    ))}
                   </View>
                 </View>
-              </View>
-              <View style={styles.containerMiddleBottom}>
-                <View style={styles.vwPlayer}>
-                  <View style={styles.vwPlayerLeft}>
-                    <Text style={styles.txtShirtNumber}>
-                      {/* {props.lastActionPlayer.shirtNumber} */}
-                      {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                <View style={styles.vwGroupScore}>
+                  {/* <View style={styles.vwRowButtonsAdjustScore}> */}
+                  <View style={stylesVwRowButtonsAdjustScore}>
+                    <ButtonKvStd
+                      onPress={() => {
+                        props.handleSetScorePress("analyzed", 1);
+                      }}
+                      style={styles.btnPlus}
+                    >
+                      +
+                    </ButtonKvStd>
+                    <ButtonKvStd
+                      onPress={() => {
+                        props.handleSetScorePress("opponent", 1);
+                      }}
+                      style={styles.btnPlus}
+                    >
+                      +
+                    </ButtonKvStd>
+                  </View>
+                  {/* <View style={styles.vwRowScore}> */}
+                  <View style={stylesVwRowScore}>
+                    <Text style={styles.txtRowScore}>
+                      {props.setScores.teamAnalyzed}
+                    </Text>
+                    <Text style={styles.txtRowScore}>-</Text>
+                    <Text style={styles.txtRowScore}>
+                      {props.setScores.teamOpponent}
                     </Text>
                   </View>
-                  <View style={styles.vwPlayerRight}>
-                    <Text style={styles.txtPlayerName}>
-                      {scriptReducer.scriptingForPlayerObject?.firstName}
-                    </Text>
-                    <Text style={styles.txtPlayerName}>
-                      {scriptReducer.scriptingForPlayerObject?.lastName}
-                    </Text>
+                  {/* <View style={styles.vwRowButtonsAdjustScore}> */}
+                  <View style={stylesVwRowButtonsAdjustScore}>
+                    <ButtonKvStd
+                      onPress={() => {
+                        props.handleSetScorePress("analyzed", -1);
+                      }}
+                      style={styles.btnPlus}
+                    >
+                      -
+                    </ButtonKvStd>
+                    <ButtonKvStd
+                      onPress={() => {
+                        props.handleSetScorePress("opponent", -1);
+                      }}
+                      style={styles.btnPlus}
+                    >
+                      -
+                    </ButtonKvStd>
                   </View>
                 </View>
-
-                <SvbVolleyballCourt />
+                <View style={styles.vwGroupSetSuper}>
+                  <View style={styles.vwGroupSet}>
+                    {/* <Text>vwGroupSet</Text> */}
+                    {/* <View style={styles.vwSetCircles}> */}
+                    {Array.from({ length: 3 }).map((_, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() =>
+                          props.handleSetCirclePress("opponent", index + 1)
+                        }
+                        style={[
+                          styles.touchOpSetsCircle,
+                          props.matchSetsWon.teamOpponent > index &&
+                            styles.touchOpSetsCircleFilled,
+                        ]}
+                      />
+                    ))}
+                  </View>
+                </View>
               </View>
             </View>
-          </GestureDetector>
-        </GestureHandlerRootView>
+            <GestureHandlerRootView>
+              <GestureDetector gesture={props.combinedGestures}>
+                <View style={styles.containerMiddleBottom}>
+                  <View style={styles.vwPlayer}>
+                    <View style={styles.vwPlayerLeft}>
+                      <Text style={styles.txtShirtNumber}>
+                        {/* {props.lastActionPlayer.shirtNumber} */}
+                        {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerRight}>
+                      <Text style={styles.txtPlayerName}>
+                        {scriptReducer.scriptingForPlayerObject?.firstName}
+                      </Text>
+                      <Text style={styles.txtPlayerName}>
+                        {scriptReducer.scriptingForPlayerObject?.lastName}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <SvbVolleyballCourt />
+                </View>
+              </GestureDetector>
+            </GestureHandlerRootView>
+          </View>
+        </View>
         {/* 
         
         RIGHT COLUMN: W / L buttons
