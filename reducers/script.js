@@ -86,6 +86,12 @@ const initialState = {
     width: null,
     height: null,
   },
+  coordsScriptLiveLandscapeContainerMiddleBottom: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
 };
 // *** Important Type Inforamtion ***
 
@@ -256,6 +262,9 @@ export const scriptSlice = createSlice({
     updateCoordsScriptLiveLandscapeContainerMiddleTop: (state, action) => {
       state.coordsScriptLiveLandscapeContainerMiddleTop = action.payload;
     },
+    updateCoordsScriptLiveLandscapeContainerMiddleBottom: (state, action) => {
+      state.coordsScriptLiveLandscapeContainerMiddleBottom = action.payload;
+    },
   },
 });
 
@@ -283,5 +292,6 @@ export const {
   // NEW for Version 18
   updateCoordsScriptLiveLandscapeContainerLeft,
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
+  updateCoordsScriptLiveLandscapeContainerMiddleBottom,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

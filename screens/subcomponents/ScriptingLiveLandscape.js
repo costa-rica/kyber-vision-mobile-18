@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import {
   updateCoordsScriptLiveLandscapeContainerLeft,
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
+  updateCoordsScriptLiveLandscapeContainerMiddleBottom,
 } from "../../reducers/script";
 
 export default function ScriptingLiveLandscape(props) {
@@ -159,13 +160,47 @@ export default function ScriptingLiveLandscape(props) {
     );
   };
 
+  const handleOnLayoutContainerMiddleBottomLayout = (event) => {
+    const { width, height, x, y } = event.nativeEvent.layout;
+    console.log(
+      "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleBottomLayout"
+    );
+    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+
+    dispatch(
+      updateCoordsScriptLiveLandscapeContainerMiddleBottom({
+        x,
+        y,
+        width,
+        height,
+      })
+    );
+  };
+
   const stylesGesterPositionTopLeft = {
     position: "absolute",
     top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
     left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
-    width: 100,
-    height: 100,
-    backgroundColor: "red",
+    width: 2,
+    height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
+    // backgroundColor: "gray",
+    borderWidth: 4,
+    borderColor: "gray",
+    borderStyle: "dashed",
+    zIndex: 1,
+  };
+  const stylesGesterPositionTopMiddle = {
+    position: "absolute",
+    top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
+    left:
+      scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width / 2 -
+      1,
+    width: 0,
+    height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
+    borderWidth: 2,
+    borderColor: "gray",
+    borderStyle: "dashed",
     zIndex: 1,
   };
 
@@ -179,6 +214,7 @@ export default function ScriptingLiveLandscape(props) {
       {props.renderSwipePad()}
       <View style={styles.container}>
         <View style={stylesGesterPositionTopLeft} />
+        <View style={stylesGesterPositionTopMiddle} />
         {/* 
 
 LEFT 
@@ -348,7 +384,12 @@ LEFT
             </View>
             <GestureHandlerRootView>
               <GestureDetector gesture={props.combinedGestures}>
-                <View style={styles.containerMiddleBottom}>
+                <View
+                  style={styles.containerMiddleBottom}
+                  onLayout={(event) =>
+                    handleOnLayoutContainerMiddleBottomLayout(event)
+                  }
+                >
                   <View style={styles.vwPlayer}>
                     <View style={styles.vwPlayerLeft}>
                       <Text style={styles.txtShirtNumber}>
