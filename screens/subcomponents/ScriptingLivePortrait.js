@@ -31,7 +31,8 @@ import BtnLose from "../../assets/images/buttons/btnLose.svg";
 import Lightning from "../../assets/images/lightning.svg";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  updateScriptLivePortraitVwVolleyballCourtCoords,
+  // updateScriptLivePortraitVwVolleyballCourtCoords,
+  updateCoordsScriptLivePortraitContainerMiddle,
   updateScriptSessionActionsArray,
 } from "../../reducers/script";
 
@@ -41,13 +42,14 @@ export default function ScriptingLivePortrait(props) {
   const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
 
-  const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
+  // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
+  const handleOnLayoutGesterPositionCoords = (event) => {
     // console.log("handleVwVolleyballCourtAndGestSuperLayout");
     // console.log(event.nativeEvent.layout);
     const { width, height, x, y } = event.nativeEvent.layout;
 
     dispatch(
-      updateScriptLivePortraitVwVolleyballCourtCoords({ x, y, width, height })
+      updateCoordsScriptLivePortraitContainerMiddle({ x, y, width, height })
     );
   };
 
@@ -138,10 +140,6 @@ export default function ScriptingLivePortrait(props) {
     left: Dimensions.get("window").width * 0.6 + 5,
     width: Dimensions.get("window").width * 0.2 - 5,
   };
-
-  // Safe 4-char truncation: returns "" if not a string/nullish
-  // const truncate4 = (v) => (typeof v === "string" ? v.slice(0, 4) : "");
-  // const truncate4 = (v) => "return string";
 
   return (
     <View style={styles.container}>
@@ -500,7 +498,8 @@ export default function ScriptingLivePortrait(props) {
       {/* ------------ MIDDLE Container ------------ */}
       <View
         style={styles.containerMiddle}
-        onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
+        // onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
+        onLayout={(event) => handleOnLayoutGesterPositionCoords(event)}
       >
         <GestureHandlerRootView
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>

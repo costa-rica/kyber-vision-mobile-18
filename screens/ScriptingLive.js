@@ -168,13 +168,13 @@ export default function ScriptingLive({ navigation }) {
           x: x - userReducer.circleRadiusOuter,
           y:
             y +
-            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
             userReducer.circleRadiusOuter,
         });
         console.log(
           `TapBegin - X: ${x - userReducer.circleRadiusOuter} - Y: ${
             y +
-            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
             userReducer.circleRadiusOuter
           }`
         );
@@ -182,14 +182,14 @@ export default function ScriptingLive({ navigation }) {
         setPadPositionCenter({
           x:
             x +
-            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width -
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.width -
             userReducer.circleRadiusOuter,
           y: y - userReducer.circleRadiusOuter,
         });
         console.log(
           `TapBegin - X: ${x} - Y: ${
             y +
-            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
             userReducer.circleRadiusOuter
           }`
         );
@@ -203,7 +203,7 @@ export default function ScriptingLive({ navigation }) {
         padPosCenterX: x - userReducer.circleRadiusOuter,
         padPosCenterY:
           y +
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
           userReducer.circleRadiusOuter,
       });
 
@@ -225,7 +225,7 @@ export default function ScriptingLive({ navigation }) {
       const swipePosX = x - userReducer.circleRadiusOuter;
       const swipePosY =
         y +
-        scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+        scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
         userReducer.circleRadiusOuter;
 
       const distanceFromCenter = Math.sqrt(
@@ -249,7 +249,7 @@ export default function ScriptingLive({ navigation }) {
     const swipePosX = x - userReducer.circleRadiusOuter;
     const swipePosY =
       y +
-      scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+      scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
       userReducer.circleRadiusOuter;
 
     const distanceFromCenter = Math.sqrt(
@@ -282,7 +282,7 @@ export default function ScriptingLive({ navigation }) {
     const swipePosX = x - userReducer.circleRadiusOuter;
     const swipePosY =
       y +
-      scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y -
+      scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
       userReducer.circleRadiusOuter;
     // const swipePosX = calculatePadPositionCenter(x, y).x;
     // const swipePosY = calculatePadPositionCenter(x, y).y;
@@ -311,28 +311,28 @@ export default function ScriptingLive({ navigation }) {
 
       // console.log(
       //   `half court line: ${
-      //     scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
-      //     scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
+      //     scriptReducer.coordsScriptLivePortraitContainerMiddle.y +
+      //     scriptReducer.coordsScriptLivePortraitContainerMiddle.height * 0.5
       //   }`
       // );
 
       // Determine posistion
       if (
         tapYAdjusted >
-        scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.y +
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.height * 0.5
+        scriptReducer.coordsScriptLivePortraitContainerMiddle.y +
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.height * 0.5
       ) {
         // console.log("back row");
         if (
           tapXAdjusted >
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
         ) {
           // console.log("right");
           lastActionPositionIndexRef.current = 1;
           // setLastActionPosition(1);
         } else if (
           tapXAdjusted >
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
         ) {
           // console.log("middle");
           lastActionPositionIndexRef.current = 6;
@@ -346,14 +346,14 @@ export default function ScriptingLive({ navigation }) {
         // console.log("front row");
         if (
           tapXAdjusted >
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.66
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.66
         ) {
           // console.log("right");
           lastActionPositionIndexRef.current = 2;
           // setLastActionPosition(2);
         } else if (
           tapXAdjusted >
-          scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width * 0.33
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.width * 0.33
         ) {
           // console.log("middle");
           lastActionPositionIndexRef.current = 3;

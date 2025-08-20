@@ -67,7 +67,8 @@ const initialState = {
   playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
   pointsArray: Array.from({ length: 50 }, (_, i) => i),
   setOptionsArray: Array.from({ length: 4 }, (_, i) => i),
-  scriptLivePortraitVwVolleyballCourtCoords: {
+  // scriptLivePortraitVwVolleyballCourtCoords: {
+  coordsScriptLivePortraitContainerMiddle: {
     x: null,
     y: null,
     width: null,
@@ -225,18 +226,18 @@ export const scriptSlice = createSlice({
     },
 
     // NEW for Version 15
-    updateScriptLivePortraitVwVolleyballCourtCoords: (state, action) => {
-      state.scriptLivePortraitVwVolleyballCourtCoords = action.payload;
+    // updateScriptLivePortraitVwVolleyballCourtCoords: (state, action) => {
+    updateCoordsScriptLivePortraitContainerMiddle: (state, action) => {
+      state.coordsScriptLivePortraitContainerMiddle = action.payload;
     },
     updatePlayersArray: (state, action) => {
       state.playersArray = action.payload;
     },
-    // updateScriptId: (state, action) => {
-    //   state.scriptId = action.payload;
-    // },
     updateSessionsArray: (state, action) => {
       state.sessionsArray = action.payload;
     },
+
+    // NEW for Version 18
   },
 });
 
@@ -256,7 +257,7 @@ export const {
   setScriptingTeamObject,
 
   // NEW for Version 15
-  updateScriptLivePortraitVwVolleyballCourtCoords,
+  updateCoordsScriptLivePortraitContainerMiddle,
   updatePlayersArray,
   // updateScriptId,
   updateSessionsArray,
