@@ -74,6 +74,18 @@ const initialState = {
     width: null,
     height: null,
   },
+  coordsScriptLiveLandscapeContainerLeft: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
+  coordsScriptLiveLandscapeContainerMiddleTop: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
 };
 // *** Important Type Inforamtion ***
 
@@ -238,6 +250,12 @@ export const scriptSlice = createSlice({
     },
 
     // NEW for Version 18
+    updateCoordsScriptLiveLandscapeContainerLeft: (state, action) => {
+      state.coordsScriptLiveLandscapeContainerLeft = action.payload;
+    },
+    updateCoordsScriptLiveLandscapeContainerMiddleTop: (state, action) => {
+      state.coordsScriptLiveLandscapeContainerMiddleTop = action.payload;
+    },
   },
 });
 
@@ -261,5 +279,9 @@ export const {
   updatePlayersArray,
   // updateScriptId,
   updateSessionsArray,
+
+  // NEW for Version 18
+  updateCoordsScriptLiveLandscapeContainerLeft,
+  updateCoordsScriptLiveLandscapeContainerMiddleTop,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

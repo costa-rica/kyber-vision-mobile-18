@@ -182,14 +182,14 @@ export default function ScriptingLive({ navigation }) {
         setPadPositionCenter({
           x:
             x +
-            scriptReducer.coordsScriptLivePortraitContainerMiddle.width -
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
             userReducer.circleRadiusOuter,
           y: y - userReducer.circleRadiusOuter,
         });
         console.log(
           `TapBegin - X: ${x} - Y: ${
             y +
-            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+            scriptReducer.coordsScriptLiveLandscapeContainerLeft.y -
             userReducer.circleRadiusOuter
           }`
         );

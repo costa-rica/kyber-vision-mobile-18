@@ -22,7 +22,10 @@ import ButtonKvStd from "./buttons/ButtonKvStd";
 import BtnWin from "../../assets/images/buttons/btnWin.svg";
 import BtnLose from "../../assets/images/buttons/btnLose.svg";
 import { useDispatch } from "react-redux";
-import { updateScriptLivePortraitVwVolleyballCourtCoords } from "../../reducers/script";
+import {
+  updateCoordsScriptLiveLandscapeContainerLeft,
+  updateCoordsScriptLiveLandscapeContainerMiddleTop,
+} from "../../reducers/script";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
@@ -96,20 +99,6 @@ export default function ScriptingLiveLandscape(props) {
     backgroundColor: "#806181",
     opacity: 0.25,
   };
-  // const stylesVwGroupButtonsDiagonalLine = {
-  //   // position: "absolute",
-  //   width: Dimensions.get("window").width * 0.21, // roughly 0.15 * √2 for diagonal spacing
-  //   height: 8,
-  //   backgroundColor: "#806181",
-  //   // top: "50%",
-  //   // left: "50%",
-  //   transform: [
-  //     { translateX: -0.5 * Dimensions.get("window").width * 0.21 },
-  //     { translateY: -5 },
-  //     { rotate: "-45deg" },
-  //   ],
-  //   // zIndex: 0,
-  // };
 
   const stylesVwGroupButtonsDiagonalLine = {
     width: DIAGONAL_LEN, // long enough to cross the circle’s corners
@@ -148,16 +137,36 @@ export default function ScriptingLiveLandscape(props) {
     gap: CIRCLE_SIZE / 4,
   };
 
-  const handleContainerLeftLayout = (event) => {
-    // console.log("handleVwVolleyballCourtAndGestSuperLayout");
-    // console.log(event.nativeEvent.layout);
+  // const handleContainerLeftLayout = (event) => {
+  const handleOnLayoutContainerLeftLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
     console.log("---> [ScriptingLiveLandscape] in handleContainerLeftLayout");
     console.log("event.nativeEvent.layout", event.nativeEvent.layout);
 
     dispatch(
-      updateScriptLivePortraitVwVolleyballCourtCoords({ x, y, width, height })
+      updateCoordsScriptLiveLandscapeContainerLeft({ x, y, width, height })
     );
+  };
+  const handleOnLayoutContainerMiddleTopLayout = (event) => {
+    const { width, height, x, y } = event.nativeEvent.layout;
+    console.log(
+      "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleTopLayout"
+    );
+    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+
+    dispatch(
+      updateCoordsScriptLiveLandscapeContainerMiddleTop({ x, y, width, height })
+    );
+  };
+
+  const stylesGesterPositionTopLeft = {
+    position: "absolute",
+    top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
+    left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
+    width: 100,
+    height: 100,
+    backgroundColor: "red",
+    zIndex: 1,
   };
 
   return (
@@ -169,6 +178,7 @@ export default function ScriptingLiveLandscape(props) {
     >
       {props.renderSwipePad()}
       <View style={styles.container}>
+        <View style={stylesGesterPositionTopLeft} />
         {/* 
 
 LEFT 
@@ -176,7 +186,7 @@ LEFT
 */}
         <View
           style={styles.containerLeft}
-          onLayout={(event) => handleContainerLeftLayout(event)}
+          onLayout={(event) => handleOnLayoutContainerLeftLayout(event)}
         >
           {/* <View style={styles.vwContainerLeftTop}> */}
           <View style={styles.vwContainerOfButtons}>
@@ -242,7 +252,12 @@ LEFT
               <Text>{props.orientation}</Text>
             </View> */}
             <View style={styles.containerMiddle}>
-              <View style={styles.containerMiddleTop}>
+              <View
+                style={styles.containerMiddleTop}
+                onLayout={(event) =>
+                  handleOnLayoutContainerMiddleTopLayout(event)
+                }
+              >
                 <View style={styles.vwGroupScoreAndSets}>
                   <View style={styles.vwGroupSetSuper}>
                     <View style={styles.vwGroupSet}>
