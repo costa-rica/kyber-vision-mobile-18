@@ -138,6 +138,18 @@ export default function ScriptingLiveLandscape(props) {
     gap: CIRCLE_SIZE / 4,
   };
 
+  const stylesVwPlayer = {
+    borderWidth: 1,
+    borderColor: "#6E4C84",
+    borderRadius: 30,
+    backgroundColor: "white",
+    flexDirection: "row",
+    gap: 10,
+    padding: 5,
+    // width: Dimensions.get("window").width * 0.3,
+    width: CIRCLE_SIZE * 2,
+  };
+
   // const handleContainerLeftLayout = (event) => {
   const handleOnLayoutContainerLeftLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
@@ -194,7 +206,7 @@ export default function ScriptingLiveLandscape(props) {
     top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
     left:
       scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
-      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width / 2 -
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width / 3 -
       1,
     width: 0,
     height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
@@ -390,7 +402,8 @@ LEFT
                     handleOnLayoutContainerMiddleBottomLayout(event)
                   }
                 >
-                  <View style={styles.vwPlayer}>
+                  {/* <View style={styles.vwPlayer}> */}
+                  <View style={stylesVwPlayer}>
                     <View style={styles.vwPlayerLeft}>
                       <Text style={styles.txtShirtNumber}>
                         {/* {props.lastActionPlayer.shirtNumber} */}
@@ -677,16 +690,16 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     borderStyle: "dashed",
   },
-  vwPlayer: {
-    borderWidth: 1,
-    borderColor: "#6E4C84",
-    borderRadius: 30,
-    backgroundColor: "white",
-    flexDirection: "row",
-    gap: 10,
-    padding: 5,
-    width: Dimensions.get("window").width * 0.3,
-  },
+  // vwPlayer: {
+  //   borderWidth: 1,
+  //   borderColor: "#6E4C84",
+  //   borderRadius: 30,
+  //   backgroundColor: "white",
+  //   flexDirection: "row",
+  //   gap: 10,
+  //   padding: 5,
+  //   width: Dimensions.get("window").width * 0.3,
+  // },
   vwPlayerLeft: {
     justifyContent: "center",
     backgroundColor: "#806181",

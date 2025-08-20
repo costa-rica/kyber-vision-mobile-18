@@ -222,20 +222,20 @@ export default function ScriptingLive({ navigation }) {
       // setTapIsActive(true);
       // addNewActionToScriptReducersActionsArrayNoWheel();
       // setCirclePosition({ x: 0, y: 0 });
-      const { x, y, absoluteX, absoluteY } = event;
+      // const { x, y, absoluteX, absoluteY } = event;
 
       // const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
       // const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
-      const swipePosX = x - userReducer.circleRadiusOuter;
-      const swipePosY =
-        y +
-        scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-        userReducer.circleRadiusOuter;
+      // const swipePosX = x - userReducer.circleRadiusOuter;
+      // const swipePosY =
+      //   y +
+      //   scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+      //   userReducer.circleRadiusOuter;
 
-      const distanceFromCenter = Math.sqrt(
-        Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-          Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-      );
+      // const distanceFromCenter = Math.sqrt(
+      //   Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
+      //     Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
+      // );
       // console.log(`TapEnd - X: ${swipePosX} - Y: ${swipePosY}`);
 
       setPadVisible(false);
