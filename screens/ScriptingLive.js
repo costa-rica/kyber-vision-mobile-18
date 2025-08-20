@@ -180,8 +180,11 @@ export default function ScriptingLive({ navigation }) {
         );
       } else {
         setPadPositionCenter({
-          x: x,
-          y: y,
+          x:
+            x +
+            scriptReducer.scriptLivePortraitVwVolleyballCourtCoords.width -
+            userReducer.circleRadiusOuter,
+          y: y - userReducer.circleRadiusOuter,
         });
         console.log(
           `TapBegin - X: ${x} - Y: ${
@@ -373,15 +376,15 @@ export default function ScriptingLive({ navigation }) {
     }
   });
 
-  const stylesCircle = {
-    top: circlePosition.y,
-    left: circlePosition.x,
-    width: circleSize.width,
-    height: circleSize.height,
-    borderRadius: 25,
-    backgroundColor: "orange",
-    position: "absolute",
-  };
+  // const stylesCircle = {
+  //   top: circlePosition.y,
+  //   left: circlePosition.x,
+  //   width: circleSize.width,
+  //   height: circleSize.height,
+  //   borderRadius: 25,
+  //   backgroundColor: "orange",
+  //   position: "absolute",
+  // };
 
   // const combinedGestures = Gesture.Simultaneous(gestureTapBegin, gestureTapEnd);
   const combinedGestures = Gesture.Simultaneous(
@@ -985,6 +988,7 @@ export default function ScriptingLive({ navigation }) {
     top: padPositionCenter.y, // Center modal vertically
     // left: 100,
     // top: 100,
+    zIndex: 1,
   };
 
   // Determine which component to render
@@ -1074,6 +1078,7 @@ export default function ScriptingLive({ navigation }) {
     <View style={{ flex: 1 }}>
       {/* <Text>Scripting - Live - Landscape</Text> */}
       <ScriptingLiveLandscape
+        renderSwipePad={renderSwipePad}
         navigation={navigation}
         combinedGestures={combinedGestures}
         orientation={orientation}

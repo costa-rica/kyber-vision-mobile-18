@@ -21,10 +21,13 @@ import SvbVolleyballCourt from "../../assets/images/volleyballCourt.svg";
 import ButtonKvStd from "./buttons/ButtonKvStd";
 import BtnWin from "../../assets/images/buttons/btnWin.svg";
 import BtnLose from "../../assets/images/buttons/btnLose.svg";
+import { useDispatch } from "react-redux";
+import { updateScriptLivePortraitVwVolleyballCourtCoords } from "../../reducers/script";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
   const scriptReducer = useSelector((state) => state.script);
+  const dispatch = useDispatch();
 
   const topChildren = (
     <View style={styles.vwTopChildren}>
@@ -125,6 +128,38 @@ export default function ScriptingLiveLandscape(props) {
     marginBottom: -CIRCLE_SIZE / 2,
     marginRight: CIRCLE_SIZE / 2,
   };
+
+  // -------- Styles MIDDLE --------
+  const stylesVwRowButtonsAdjustScore = {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    // gap: "10%",
+    gap: CIRCLE_SIZE / 2.5,
+  };
+  const stylesVwRowScore = {
+    backgroundColor: "#806181",
+    // backgroundColor: "green",
+    borderRadius: 20,
+    flexDirection: "row",
+    width: CIRCLE_SIZE * 1.5,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: CIRCLE_SIZE / 4,
+  };
+
+  const handleContainerLeftLayout = (event) => {
+    // console.log("handleVwVolleyballCourtAndGestSuperLayout");
+    // console.log(event.nativeEvent.layout);
+    const { width, height, x, y } = event.nativeEvent.layout;
+    console.log("---> [ScriptingLiveLandscape] in handleContainerLeftLayout");
+    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+
+    dispatch(
+      updateScriptLivePortraitVwVolleyballCourtCoords({ x, y, width, height })
+    );
+  };
+
   return (
     <TemplateViewWithTopChildrenSmallLandscape
       navigation={props.navigation}
@@ -132,13 +167,17 @@ export default function ScriptingLiveLandscape(props) {
       topHeight={50}
       onBackPress={handleBackPress}
     >
+      {props.renderSwipePad()}
       <View style={styles.container}>
         {/* 
 
 LEFT 
 
 */}
-        <View style={styles.containerLeft}>
+        <View
+          style={styles.containerLeft}
+          onLayout={(event) => handleContainerLeftLayout(event)}
+        >
           {/* <View style={styles.vwContainerLeftTop}> */}
           <View style={styles.vwContainerOfButtons}>
             {/* <View style={styles.vwGroupButtons}> */}
@@ -223,7 +262,8 @@ LEFT
                     </View>
                   </View>
                   <View style={styles.vwGroupScore}>
-                    <View style={styles.vwRowButtonsAdjustScore}>
+                    {/* <View style={styles.vwRowButtonsAdjustScore}> */}
+                    <View style={stylesVwRowButtonsAdjustScore}>
                       <ButtonKvStd
                         onPress={() => {
                           props.handleSetScorePress("analyzed", 1);
@@ -241,7 +281,8 @@ LEFT
                         +
                       </ButtonKvStd>
                     </View>
-                    <View style={styles.vwRowScore}>
+                    {/* <View style={styles.vwRowScore}> */}
+                    <View style={stylesVwRowScore}>
                       <Text style={styles.txtRowScore}>
                         {props.setScores.teamAnalyzed}
                       </Text>
@@ -250,7 +291,8 @@ LEFT
                         {props.setScores.teamOpponent}
                       </Text>
                     </View>
-                    <View style={styles.vwRowButtonsAdjustScore}>
+                    {/* <View style={styles.vwRowButtonsAdjustScore}> */}
+                    <View style={stylesVwRowButtonsAdjustScore}>
                       <ButtonKvStd
                         onPress={() => {
                           props.handleSetScorePress("analyzed", -1);
@@ -473,6 +515,7 @@ const styles = StyleSheet.create({
   containerMiddle: {
     // backgroundColor: "yellow",
     flex: 1,
+    zIndex: 0,
   },
 
   containerMiddleTop: {
@@ -527,12 +570,12 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderStyle: "dashed",
   },
-  vwRowButtonsAdjustScore: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "20%",
-  },
+  // vwRowButtonsAdjustScore: {
+  //   flexDirection: "row",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   gap: "10%",
+  // },
   btnPlus: {
     padding: 0,
     margin: 0,
@@ -547,15 +590,16 @@ const styles = StyleSheet.create({
     fontSize: null,
     opacity: 0.5,
   },
-  vwRowScore: {
-    backgroundColor: "#806181",
-    borderRadius: 20,
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: "15%",
-  },
+  // vwRowScore: {
+  //   backgroundColor: "#806181",
+  //   // backgroundColor: "green",
+  //   borderRadius: 20,
+  //   flexDirection: "row",
+  //   width: "100%",
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  //   gap: "5%",
+  // },
   txtRowScore: {
     color: "white",
     fontSize: 20,
