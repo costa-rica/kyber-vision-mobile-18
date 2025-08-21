@@ -570,6 +570,7 @@ export default function ScriptingLivePortrait(props) {
             <ButtonKvImage
               onPress={() => {
                 console.log("pressed favorite");
+                props.handleModifyFavorite();
               }}
               style={{ margin: 0, padding: 0 }}
             >

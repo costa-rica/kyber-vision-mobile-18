@@ -1004,6 +1004,26 @@ export default function ScriptingLive({ navigation }) {
     dispatch(updateScriptSessionActionsArray(updatedArray));
   };
 
+  const handleModifyFavorite = () => {
+    console.log(`- Made fav -`);
+    // setLastActionSubtype(subtype);
+
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+
+    if (!lastRecordedAction) return;
+
+    const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
+      action.timestamp === lastRecordedAction.timestamp
+        ? { ...action, favorite: true }
+        : action
+    );
+
+    dispatch(updateScriptSessionActionsArray(updatedArray));
+  };
+
   // -----------------
   //  Score
   // -----------------
@@ -1139,6 +1159,7 @@ export default function ScriptingLive({ navigation }) {
         handleModifyLastActionPlayer={handleModifyLastActionPlayer}
         handleModifyType={handleModifyType}
         handleModifySubtype={handleModifySubtype}
+        handleModifyFavorite={handleModifyFavorite}
         // --------- Dropdowns Toggles -----------
         // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
@@ -1193,6 +1214,7 @@ export default function ScriptingLive({ navigation }) {
         handleModifyLastActionPlayer={handleModifyLastActionPlayer}
         handleModifyType={handleModifyType}
         handleModifySubtype={handleModifySubtype}
+        handleModifyFavorite={handleModifyFavorite}
         // --------- Dropdowns Toggles -----------
         // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
