@@ -25,19 +25,8 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState(
     process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : ""
   );
-  // const [credentials, setCredentials] = useState({
-  //   email:
-  //     process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation"
-  //       ? "nrodrig1@gmail.com"
-  //       : "",
-  //   password:
-  //     process.env.EXPO_PUBLIC_ENVIRONMENT_01 == "workstation" ? "test" : "",
-  // });
-  const [showPassword, setShowPassword] = useState(false);
 
-  // useEffect(() => {
-  //   console.log("-- In LoginScreen useEffect --");
-  // }, []);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClickLogin = async () => {
     console.log(

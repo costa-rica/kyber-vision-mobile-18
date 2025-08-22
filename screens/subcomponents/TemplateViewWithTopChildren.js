@@ -20,14 +20,16 @@ export default function TemplateViewWithTopChildren({
   setDisplayModal = () => {},
   modalComponent = null,
   // isVisibleModalLoading = false,
+  onBackPress = () => {
+    return true;
+  },
 }) {
   const uploadReducer = useSelector((state) => state.upload);
   const handleBackPress = async () => {
-    // await ScreenOrientation.lockAsync(
-    //   ScreenOrientation.OrientationLock.PORTRAIT_UP
-    // ); // Force back to portrait
-    // setOrientation("portrait");
-    navigation.goBack();
+    const goBack = onBackPress();
+    if (goBack) {
+      navigation.goBack();
+    }
   };
 
   return (

@@ -161,6 +161,10 @@ export default function SelectTeamScreen({ navigation }) {
       navigation={navigation}
       topChildren={topChildren}
       screenName={"SelectTeamScreen"}
+      onBackPress={() => {
+        navigation.navigate("LogoutScreen");
+        return false;
+      }}
     >
       <View style={styles.container}>
         <View style={styles.containerTop}>

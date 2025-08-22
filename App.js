@@ -19,6 +19,7 @@ import AdminSettings from "./screens/AdminSettings";
 import AdminSettingsPlayerCard from "./screens/AdminSettingsPlayerCard";
 import AdminSettingsUserCard from "./screens/AdminSettingsUserCard";
 import RegisterScreen from "./screens/RegisterScreen";
+import LogoutScreen from "./screens/LogoutScreen";
 
 import { Provider } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -151,6 +152,7 @@ export default function App() {
               component={AdminSettingsUserCard}
             />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+            <Stack.Screen name="LogoutScreen" component={LogoutScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
