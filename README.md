@@ -1,6 +1,6 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.18.0
+#### v 0.18.1
 
 ## .env
 
@@ -42,26 +42,3 @@ EXPO_PUBLIC_ENVIRONMENT_01=workstation
 
 - duration is in milliseconds (10227 ms = 10.227 seconds)
 - fileSize is in bytes (2097244 bytes = 2 MB)
-
-## tsconfig.json
-
-- this file made "Problems" in the node_modules folder go away. but requries adding another pacakge.
-
-```json
-{
-  "compilerOptions": {
-    "target": "ES2021",
-    "module": "ESNext",
-    "jsx": "react-native",
-    "allowJs": true,
-    "strict": false,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "types": ["react", "react-native", "expo"]
-  },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
-  "exclude": ["node_modules", "**/node_modules/*"]
-}
-```
