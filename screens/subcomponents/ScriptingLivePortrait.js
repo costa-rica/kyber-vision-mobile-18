@@ -34,6 +34,7 @@ import {
   // updateScriptLivePortraitVwVolleyballCourtCoords,
   updateCoordsScriptLivePortraitContainerMiddle,
   updateScriptSessionActionsArray,
+  updateCoordsScriptLivePortraitVwPlayerSuper,
 } from "../../reducers/script";
 
 export default function ScriptingLivePortrait(props) {
@@ -43,13 +44,22 @@ export default function ScriptingLivePortrait(props) {
   const dispatch = useDispatch();
 
   // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
-  const handleOnLayoutGesterPositionCoords = (event) => {
-    // console.log("handleVwVolleyballCourtAndGestSuperLayout");
-    // console.log(event.nativeEvent.layout);
+  const handleOnLayoutContainerMiddle = (event) => {
+    console.log("-- handleOnLayoutContainerMiddle --");
+    console.log(event.nativeEvent.layout);
     const { width, height, x, y } = event.nativeEvent.layout;
 
     dispatch(
       updateCoordsScriptLivePortraitContainerMiddle({ x, y, width, height })
+    );
+  };
+
+  const handleOnLayoutPlayerSuper = (event) => {
+    console.log("--- handleOnLayoutPlayerSuper ---");
+    console.log(event.nativeEvent.layout);
+    const { width, height, x, y } = event.nativeEvent.layout;
+    dispatch(
+      updateCoordsScriptLivePortraitVwPlayerSuper({ x, y, width, height })
     );
   };
 
@@ -505,30 +515,34 @@ export default function ScriptingLivePortrait(props) {
       <View
         style={styles.containerMiddle}
         // onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
-        onLayout={(event) => handleOnLayoutGesterPositionCoords(event)}
+        onLayout={(event) => handleOnLayoutContainerMiddle(event)}
       >
         <GestureHandlerRootView
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
           <GestureDetector gesture={props.combinedGestures}>
             <View style={styles.containerMiddleSub}>
-              <View style={styles.vwPlayer}>
-                <View style={styles.vwPlayerLeft}>
-                  <Text style={styles.txtShirtNumber}>
-                    {/* {props.lastActionPlayer.shirtNumber} */}
-                    {scriptReducer.scriptingForPlayerObject?.shirtNumber}
-                  </Text>
-                </View>
-                <View style={styles.vwPlayerRight}>
-                  <Text style={styles.txtPlayerName}>
-                    {scriptReducer.scriptingForPlayerObject?.firstName}
-                  </Text>
-                  <Text style={styles.txtPlayerName}>
-                    {scriptReducer.scriptingForPlayerObject?.lastName}
-                  </Text>
+              <View
+                style={styles.vwPlayerSuper}
+                onLayout={handleOnLayoutPlayerSuper}
+              >
+                <View style={styles.vwPlayer}>
+                  <View style={styles.vwPlayerLeft}>
+                    <Text style={styles.txtShirtNumber}>
+                      {/* {props.lastActionPlayer.shirtNumber} */}
+                      {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.vwPlayerRight}>
+                    <Text style={styles.txtPlayerName}>
+                      {scriptReducer.scriptingForPlayerObject?.firstName}
+                    </Text>
+                    <Text style={styles.txtPlayerName}>
+                      {scriptReducer.scriptingForPlayerObject?.lastName}
+                    </Text>
+                  </View>
                 </View>
               </View>
-
               <SvbVolleyballCourt />
             </View>
           </GestureDetector>
@@ -873,8 +887,17 @@ const styles = StyleSheet.create({
   containerMiddleSub: {
     backgroundColor: "#F0EAF9",
     alignItems: "center",
-    padding: 15,
-    gap: 20,
+    // padding: 15,
+    // gap: 20,
+    paddingBottom: 20,
+  },
+  vwPlayerSuper: {
+    // borderWidth: 1,
+    // borderColor: "#6E4C84",
+    // borderStyle: "dashed",
+    width: "100%",
+    alignItems: "center",
+    paddingVertical: 20,
   },
   vwPlayer: {
     borderWidth: 1,

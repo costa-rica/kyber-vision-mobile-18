@@ -74,6 +74,12 @@ const initialState = {
     width: null,
     height: null,
   },
+  coordsScriptLivePortraitVwPlayerSuper: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
   coordsScriptLiveLandscapeContainerLeft: {
     x: null,
     y: null,
@@ -265,6 +271,10 @@ export const scriptSlice = createSlice({
     updateCoordsScriptLiveLandscapeContainerMiddleBottom: (state, action) => {
       state.coordsScriptLiveLandscapeContainerMiddleBottom = action.payload;
     },
+
+    updateCoordsScriptLivePortraitVwPlayerSuper: (state, action) => {
+      state.coordsScriptLivePortraitVwPlayerSuper = action.payload;
+    },
   },
 });
 
@@ -293,5 +303,6 @@ export const {
   updateCoordsScriptLiveLandscapeContainerLeft,
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
+  updateCoordsScriptLivePortraitVwPlayerSuper,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

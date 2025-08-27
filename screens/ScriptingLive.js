@@ -213,28 +213,38 @@ export default function ScriptingLive({ navigation }) {
       const timestamp = new Date().toISOString();
       const { x, y, absoluteX, absoluteY } = event;
       if (orientation == "portrait") {
-        setPadPositionCenter({
-          x: x - userReducer.circleRadiusOuter,
-          y:
-            y +
-            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-            userReducer.circleRadiusOuter,
-        });
+        const xPosPortait = x - userReducer.circleRadiusOuter;
+        const yPosPortait =
+          y +
+          scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+          userReducer.circleRadiusOuter;
+
+        console.log(`y: ${y}`);
         console.log(
-          `TapBegin - X: ${x - userReducer.circleRadiusOuter} - Y: ${
-            y +
-            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-            userReducer.circleRadiusOuter
-          }`
+          `scriptReducer.coordsScriptLivePortraitContainerMiddle.y: ${scriptReducer.coordsScriptLivePortraitContainerMiddle.y}`
         );
+
+        setPadPositionCenter({
+          // x: x - userReducer.circleRadiusOuter,
+          x: xPosPortait,
+          // y:
+          //   y +
+          //   scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
+          //   userReducer.circleRadiusOuter,
+          y: yPosPortait,
+        });
+        console.log(`TapBegin - X: ${xPosPortait} - Y: ${yPosPortait}`);
         setTapDetails({
           timestamp,
-          padPosCenterX: x - userReducer.circleRadiusOuter,
-          padPosCenterY:
-            y +
-            scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-            userReducer.circleRadiusOuter,
+          padPosCenterX: xPosPortait,
+          padPosCenterY: yPosPortait,
         });
+        // Note: y in this case, starts at 0, so
+        //   scriptReducer.coordsScriptLivePortraitVwPlayerSuper.height is a good top reference compared to y
+        if (y > scriptReducer.coordsScriptLivePortraitVwPlayerSuper.height) {
+          setPadVisible(true);
+          setTapIsActive(false);
+        }
       } else {
         // Landscape
         setPadPositionCenter({
@@ -266,19 +276,13 @@ export default function ScriptingLive({ navigation }) {
             scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
             userReducer.circleRadiusOuter,
         });
+
+        setPadVisible(true);
+        setTapIsActive(false);
       }
 
-      setPadVisible(true);
-      // setTapDetails({
-      //   timestamp,
-      //   padPosCenterX: x - userReducer.circleRadiusOuter,
-      //   padPosCenterY:
-      //     y +
-      //     scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-      //     userReducer.circleRadiusOuter,
-      // });
-
-      setTapIsActive(false);
+      // setPadVisible(true);
+      // setTapIsActive(false);
     }
   });
 
@@ -1140,6 +1144,7 @@ export default function ScriptingLive({ navigation }) {
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
+      topHeight="10%"
     >
       <ScriptingPortrait
         combinedGestures={combinedGestures}
