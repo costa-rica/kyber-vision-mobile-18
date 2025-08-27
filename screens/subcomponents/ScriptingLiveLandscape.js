@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import BtnService from "../../assets/images/buttons/btnService.svg";
 import BtnReception from "../../assets/images/buttons/btnReception.svg";
-import SvbVolleyballCourt from "../../assets/images/volleyballCourt.svg";
+import SvgVolleyballCourt from "../../assets/images/volleyballCourt.svg";
 import ButtonKvStd from "./buttons/ButtonKvStd";
 import BtnWin from "../../assets/images/buttons/btnWin.svg";
 import BtnLose from "../../assets/images/buttons/btnLose.svg";
@@ -26,7 +26,10 @@ import {
   updateCoordsScriptLiveLandscapeContainerLeft,
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
+  updateCoordsScriptLiveLandscapeVwPlayerSuper,
+  updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
 } from "../../reducers/script";
+import BtnFavorite from "../../assets/images/buttons/btnFavorite.svg";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
@@ -150,6 +153,25 @@ export default function ScriptingLiveLandscape(props) {
     width: CIRCLE_SIZE * 2,
   };
 
+  const stylesVwButtonFavorite = {
+    // position: "absolute",
+    borderRadius: CIRCLE_SIZE / 2,
+    backgroundColor: "white",
+    marginTop:
+      -35 -
+      scriptReducer.coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt.height,
+    // paddingTop: 5,
+    width: CIRCLE_SIZE,
+    height: CIRCLE_SIZE,
+    // alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1,
+  };
+  const stylesBtnFavorite = {
+    width: CIRCLE_SIZE * 0.75,
+    height: CIRCLE_SIZE * 0.75,
+  };
+
   // const handleContainerLeftLayout = (event) => {
   const handleOnLayoutContainerLeftLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
@@ -174,13 +196,41 @@ export default function ScriptingLiveLandscape(props) {
 
   const handleOnLayoutContainerMiddleBottomLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
+    console.log(
+      "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleBottomLayout"
+    );
+    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+
+    dispatch(
+      updateCoordsScriptLiveLandscapeContainerMiddleBottom({
+        x,
+        y,
+        width,
+        height,
+      })
+    );
+  };
+  const handleOnLayoutVwPlayerSuper = (event) => {
+    const { width, height, x, y } = event.nativeEvent.layout;
     // console.log(
-    //   "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleBottomLayout"
+    //   "---> [ScriptingLiveLandscape] in handleOnLayoutVwPlayerSuper"
     // );
     // console.log("event.nativeEvent.layout", event.nativeEvent.layout);
 
     dispatch(
-      updateCoordsScriptLiveLandscapeContainerMiddleBottom({
+      updateCoordsScriptLiveLandscapeVwPlayerSuper({ x, y, width, height })
+    );
+  };
+
+  const handleOnLayoutVwBelowSvgVolleyballCourt = (event) => {
+    const { width, height, x, y } = event.nativeEvent.layout;
+    // console.log(
+    //   "---> [ScriptingLiveLandscape] in handleOnLayoutVwBelowSvgVolleyballCourt"
+    // );
+    // console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+
+    dispatch(
+      updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt({
         x,
         y,
         width,
@@ -316,12 +366,6 @@ export default function ScriptingLiveLandscape(props) {
 
         {/* <GestureHandlerRootView style={[styles.column]}> */}
         <View style={[styles.column]}>
-          {/* <GestureHandlerRootView> */}
-          {/* <GestureDetector gesture={props.combinedGestures}> */}
-          {/* <View style={styles.vwMain}>
-              <Text>Scripting - Live - Landscape</Text>
-              <Text>{props.orientation}</Text>
-            </View> */}
           <View style={styles.containerMiddle}>
             <View
               style={styles.containerMiddleTop}
@@ -432,7 +476,10 @@ export default function ScriptingLiveLandscape(props) {
                   }
                 >
                   {/* <View style={styles.vwPlayer}> */}
-                  <View style={styles.vwPlayerSuper}>
+                  <View
+                    style={styles.vwPlayerSuper}
+                    onLayout={(event) => handleOnLayoutVwPlayerSuper(event)}
+                  >
                     <View style={stylesVwPlayer}>
                       <View style={styles.vwPlayerLeft}>
                         <Text style={styles.txtShirtNumber}>
@@ -450,11 +497,39 @@ export default function ScriptingLiveLandscape(props) {
                       </View>
                     </View>
                   </View>
+                  <View style={styles.vwSvgVolleyballCourt}>
+                    <SvgVolleyballCourt />
+                  </View>
+                  <View
+                    style={styles.vwBelowSvgVolleyballCourt}
+                    onLayout={(event) =>
+                      handleOnLayoutVwBelowSvgVolleyballCourt(event)
+                    }
+                  >
+                    {/* <View style={stylesVwButtonFavorite}>
 
-                  <SvbVolleyballCourt />
+                    </View> */}
+                  </View>
                 </View>
               </GestureDetector>
             </GestureHandlerRootView>
+          </View>
+          <View style={styles.vwFavoriteParent}>
+            <View style={stylesVwButtonFavorite}>
+              <ButtonKvImage
+                onPress={() => {
+                  console.log("pressed favorite");
+                  props.handleModifyFavorite();
+                }}
+                style={{
+                  margin: 0,
+                  padding: 0,
+                  // backgroundColor: "green",
+                }}
+              >
+                <BtnFavorite style={stylesBtnFavorite} />
+              </ButtonKvImage>
+            </View>
           </View>
         </View>
         {/* 
@@ -536,7 +611,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     flex: 1,
-    // backgroundColor: "red",
+    backgroundColor: "white",
   },
   column: {
     flex: 1,
@@ -562,7 +637,7 @@ const styles = StyleSheet.create({
   vwButtonKvImageBottomAndLeft: {
     width: "50%",
   },
-  btnKvImageTopRight: {},
+  // btnKvImageTopRight: {},
   // -----
   // Top Children
   // -----
@@ -715,13 +790,28 @@ const styles = StyleSheet.create({
   // -----
   containerMiddleBottom: {
     flex: 1,
-    backgroundColor: "#F0EAF9",
+    // backgroundColor: "#F0EAF9",
     alignItems: "center",
     // padding: 15,
-    gap: 20,
+    // gap: 20,
     // borderWidth: 1,
     // borderColor: "gray",
     // borderStyle: "dashed",
+  },
+  vwPlayerSuper: {
+    backgroundColor: "#F0EAF9",
+    width: "100%",
+    alignItems: "center",
+    // paddingVertical: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  vwSvgVolleyballCourt: {
+    backgroundColor: "#F0EAF9",
+    width: "100%",
+    alignItems: "center",
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   // vwPlayer: {
   //   borderWidth: 1,
@@ -755,6 +845,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#6E4C84",
     fontSize: 11,
+  },
+
+  vwBelowSvgVolleyballCourt: {
+    // backgroundColor: "green",
+    width: "100%",
+    flex: 1,
+    alignItems: "center",
+  },
+  vwFavoriteParent: {
+    // backgroundColor: "red",
+    height: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   // -----

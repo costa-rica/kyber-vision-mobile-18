@@ -25,8 +25,8 @@ import SwipePad from "./subcomponents/swipePads/SwipePad";
 import { useMemo } from "react";
 export default function ScriptingLive({ navigation }) {
   // const [tapIsActive, setTapIsActive] = useState(true);
-  const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
-  const [circleSize, setCircleSize] = useState({ width: 50, height: 50 });
+  // const [circlePosition, setCirclePosition] = useState({ x: 0, y: 0 });
+  // const [circleSize, setCircleSize] = useState({ width: 50, height: 50 });
   const topChildren = (
     <View>
       <Text style={styles.txtTopChildren}>Live Scripting </Text>
@@ -177,6 +177,7 @@ export default function ScriptingLive({ navigation }) {
   );
   const stdSwipePadDefaultTextColor = "black";
   const stdSwipePadDefaultTextFontSize = 10;
+  // const stdSwipePadDefaultTextFontSize = 5;
   const defaultTextStyles = Object.fromEntries(
     Array.from({ length: 16 }, (_, i) => [
       i + 1, // Key: 1 to 16
@@ -266,9 +267,12 @@ export default function ScriptingLive({ navigation }) {
           padPosCenterY: yPosLandscape,
         });
         if (
-          y >
-          scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height *
-            0.2
+          y > scriptReducer.coordsScriptLiveLandscapeVwPlayerSuper.height &&
+          y <
+            scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom
+              .height -
+              scriptReducer.coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt
+                .height
         ) {
           setPadVisible(true);
           setTapIsActive(false);
@@ -1099,9 +1103,7 @@ export default function ScriptingLive({ navigation }) {
     position: "absolute",
     left: padPositionCenter.x, // Center modal horizontally
     top: padPositionCenter.y, // Center modal vertically
-    // left: 100,
-    // top: 100,
-    zIndex: 1,
+    zIndex: 2,
   };
 
   // Determine which component to render

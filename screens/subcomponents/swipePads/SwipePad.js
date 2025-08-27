@@ -12,8 +12,8 @@ export default function SwipePad(props) {
   // const tableTypeDummyData = scriptReducer.typesArray;
   // const tableSubtypeDummyData = scriptReducer.subtypesArray;
 
-  const cx = userReducer.circleRadiusMiddle; // Center x-coordinate
-  const cy = userReducer.circleRadiusMiddle; // Center y-coordinate
+  // const cx = userReducer.circleRadiusMiddle; // Center x-coordinate
+  // const cy = userReducer.circleRadiusMiddle; // Center y-coordinate
   const numTrianglesOuter = props.numTrianglesOuter;
   const extensionFactor = 1.5; // Extend triangle base 10% beyond the circle
   // Generate triangle points for each triangle
@@ -21,6 +21,7 @@ export default function SwipePad(props) {
     (_, index) => {
       const cx = userReducer.circleRadiusMiddle; // Center x-coordinate
       const cy = userReducer.circleRadiusMiddle; // Center y-coordinate
+
       const angle = (index * 360) / props.numTrianglesMiddle; // Divide circle into 8 parts
       const rad = (Math.PI / 180) * angle; // Convert to radians
 

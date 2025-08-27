@@ -98,6 +98,18 @@ const initialState = {
     width: null,
     height: null,
   },
+  coordsScriptLiveLandscapeVwPlayerSuper: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
+  coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt: {
+    x: null,
+    y: null,
+    width: null,
+    height: null,
+  },
 };
 // *** Important Type Inforamtion ***
 
@@ -275,6 +287,15 @@ export const scriptSlice = createSlice({
     updateCoordsScriptLivePortraitVwPlayerSuper: (state, action) => {
       state.coordsScriptLivePortraitVwPlayerSuper = action.payload;
     },
+    updateCoordsScriptLiveLandscapeVwPlayerSuper: (state, action) => {
+      state.coordsScriptLiveLandscapeVwPlayerSuper = action.payload;
+    },
+    updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt: (
+      state,
+      action
+    ) => {
+      state.coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt = action.payload;
+    },
   },
 });
 
@@ -304,5 +325,7 @@ export const {
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
   updateCoordsScriptLivePortraitVwPlayerSuper,
+  updateCoordsScriptLiveLandscapeVwPlayerSuper,
+  updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

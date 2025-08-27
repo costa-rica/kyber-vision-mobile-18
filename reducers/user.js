@@ -9,9 +9,12 @@ const initialState = {
   contractTeamUserArray: [],
   portraitHeight: null,
   portraitWidth: null,
-  circleRadiusOuter: 70,
-  circleRadiusMiddle: 50,
-  circleRadiusInner: 20,
+  // circleRadiusOuter: 70,
+  // circleRadiusMiddle: 50,
+  // circleRadiusInner: 20,
+  circleRadiusOuter: 0,
+  circleRadiusMiddle: 0,
+  circleRadiusInner: 0,
   scriptPositionGuides: false,
   defaultWheelColors: {
     1: "rgba(230, 144, 64, 1)", // right
@@ -134,44 +137,3 @@ export const {
   updateContractTeamUserArray,
 } = userSlice.actions;
 export default userSlice.reducer;
-
-// --- OBE  colors -----
-// defaultWheelColors: {
-//   1: "rgba(255, 143, 143, 1)", // right
-//   2: "rgba(255, 143, 143, 1)", // bottom
-//   3: "rgba(255, 143, 143, 1)", // bottombottomleft
-//   4: "rgba(255, 143, 143, 1)",
-//   5: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   6: "rgba(247, 255, 162, 0.5)",
-//   7: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   8: "rgba(247, 255, 162, 0.5)",
-//   9: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   10: "rgba(247, 255, 162, 0.5)",
-//   11: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   12: "rgba(247, 255, 162, 0.5)",
-//   13: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   14: "rgba(247, 255, 162, 0.5)",
-//   15: "rgba(247, 255, 162, 0.5)", // bottombottomleft
-//   16: "rgba(247, 255, 162, 0.5)",
-//   center: "gray",
-// },
-// selectedWheelColors: {
-//   1: "rgba(255, 255, 143, 1)", // right
-//   // 2: "brown", // right
-//   2: "rgba(255, 255, 143, 1)", // bottom
-//   3: "rgba(255, 255, 143, 1)", // left
-//   4: "rgba(255, 255, 143, 1)", // top
-//   5: "rgba(255, 143, 143, 1)",
-//   6: "rgba(255, 143, 143, 1)",
-//   7: "rgba(255, 143, 143, 1)",
-//   8: "rgba(255, 143, 143, 1)",
-//   9: "rgba(255, 143, 143, 1)",
-//   10: "rgba(255, 143, 143, 1)",
-//   11: "rgba(255, 143, 143, 1)",
-//   12: "rgba(255, 143, 143, 1)",
-//   13: "rgba(255, 143, 143, 1)",
-//   14: "rgba(255, 143, 143, 1)",
-//   15: "rgba(255, 143, 143, 1)",
-//   16: "rgba(255, 143, 143, 1)",
-//   center: "white",
-// },
