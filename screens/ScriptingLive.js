@@ -63,6 +63,55 @@ export default function ScriptingLive({ navigation }) {
     lastActionDropDownIsVisibleSubtype,
     setLastActionDropDownIsVisibleSubtype,
   ] = useState(false);
+
+  // set only one to true all others to false
+  const setDropdownVisibility = (dropdownName) => {
+    console.log(`setDropdownVisibility: ${dropdownName}`);
+    // setLastActionDropDownIsVisibleQuality((prev) => !prev);
+    // setLastActionDropDownIsVisiblePosition((prev) => !prev);
+    console.log("There was no error");
+    switch (dropdownName) {
+      case "quality":
+        // setLastActionDropDownIsVisibleQuality(true);
+        setLastActionDropDownIsVisibleQuality((prev) => !prev);
+        setLastActionDropDownIsVisiblePosition(false);
+        setLastActionDropDownIsVisiblePlayer(false);
+        setLastActionDropDownIsVisibleType(false);
+        setLastActionDropDownIsVisibleSubtype(false);
+        break;
+      case "position":
+        console.log("setDropdownVisibility: position");
+        setLastActionDropDownIsVisibleQuality(false);
+        setLastActionDropDownIsVisiblePosition((prev) => !prev);
+        setLastActionDropDownIsVisiblePlayer(false);
+        setLastActionDropDownIsVisibleType(false);
+        setLastActionDropDownIsVisibleSubtype(false);
+        break;
+      case "player":
+        setLastActionDropDownIsVisibleQuality(false);
+        setLastActionDropDownIsVisiblePosition(false);
+        setLastActionDropDownIsVisiblePlayer((prev) => !prev);
+        setLastActionDropDownIsVisibleType(false);
+        setLastActionDropDownIsVisibleSubtype(false);
+        break;
+      case "type":
+        setLastActionDropDownIsVisibleQuality(false);
+        setLastActionDropDownIsVisiblePosition(false);
+        setLastActionDropDownIsVisiblePlayer(false);
+        setLastActionDropDownIsVisibleType((prev) => !prev);
+        setLastActionDropDownIsVisibleSubtype(false);
+        break;
+      case "subtype":
+        setLastActionDropDownIsVisibleQuality(false);
+        setLastActionDropDownIsVisiblePosition(false);
+        setLastActionDropDownIsVisiblePlayer(false);
+        setLastActionDropDownIsVisibleType(false);
+        setLastActionDropDownIsVisibleSubtype((prev) => !prev);
+        break;
+      default:
+        break;
+    }
+  };
   // -------------
   // Orientation Stuff
   // -------------
@@ -475,16 +524,6 @@ export default function ScriptingLive({ navigation }) {
       console.log(" no action registered on this swipe ");
     }
   });
-
-  // const stylesCircle = {
-  //   top: circlePosition.y,
-  //   left: circlePosition.x,
-  //   width: circleSize.width,
-  //   height: circleSize.height,
-  //   borderRadius: 25,
-  //   backgroundColor: "orange",
-  //   position: "absolute",
-  // };
 
   // const combinedGestures = Gesture.Simultaneous(gestureTapBegin, gestureTapEnd);
   const combinedGestures = Gesture.Simultaneous(
@@ -1025,54 +1064,10 @@ export default function ScriptingLive({ navigation }) {
   };
 
   // -----------------
-  //  Score
-  // -----------------
-  // const handleSetScorePress = (team, scoreAdjust) => {
-  //   let teamAnalyzedScore = setScores.teamAnalyzed;
-  //   let teamOpponentScore = setScores.teamOpponent;
-  //   // scores can never go below 0
-  //   if (team === "analyzed") {
-  //     if (setScores.teamAnalyzed + scoreAdjust < 0) {
-  //       return;
-  //     }
-  //     setSetScores({
-  //       teamAnalyzed: setScores.teamAnalyzed + scoreAdjust,
-  //       teamOpponent: setScores.teamOpponent,
-  //     });
-  //     teamAnalyzedScore = setScores.teamAnalyzed + scoreAdjust;
-  //   } else {
-  //     if (setScores.teamOpponent + scoreAdjust < 0) {
-  //       return;
-  //     }
-  //     setSetScores({
-  //       teamAnalyzed: setScores.teamAnalyzed,
-  //       teamOpponent: setScores.teamOpponent + scoreAdjust,
-  //     });
-  //     teamOpponentScore = setScores.teamOpponent + scoreAdjust;
-  //   }
-  //   // Modify score in scriptReducer.sessionActionsArray
-  //   const lastRecordedAction =
-  //     scriptReducer.sessionActionsArray[
-  //       scriptReducer.sessionActionsArray.length - 1
-  //     ];
-  //   if (!lastRecordedAction) return;
-
-  //   const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
-  //     action.timestamp === lastRecordedAction.timestamp
-  //       ? {
-  //           ...action,
-  //           scoreTeamAnalyzed: teamAnalyzedScore,
-  //           scoreTeamOther: teamOpponentScore,
-  //         }
-  //       : action
-  //   );
-
-  //   dispatch(updateScriptSessionActionsArray(updatedArray));
-  // };
-
-  // -----------------
   //  Set Circle (score)
   // -----------------
+  // Description: These are the circles that indicate sets won by each team
+  // -> There are three of these
   // Expects team: "analyzed" | "opponent"
   const handleSetCirclePress = (team, setIndex) => {
     if (team === "analyzed") {
@@ -1170,22 +1165,23 @@ export default function ScriptingLive({ navigation }) {
         lastActionDropDownIsVisiblePosition={
           lastActionDropDownIsVisiblePosition
         }
-        setLastActionDropDownIsVisiblePosition={
-          setLastActionDropDownIsVisiblePosition
-        }
-        // Player
+        // setLastActionDropDownIsVisiblePosition={
+        //   setLastActionDropDownIsVisiblePosition
+        // }
+        // // Player
         lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
-        setLastActionDropDownIsVisiblePlayer={
-          setLastActionDropDownIsVisiblePlayer
-        }
-        // Type
+        // setLastActionDropDownIsVisiblePlayer={
+        //   setLastActionDropDownIsVisiblePlayer
+        // }
+        // // Type
         lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
-        setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
-        // Subtype
+        // setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
+        // // Subtype
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
-        setLastActionDropDownIsVisibleSubtype={
-          setLastActionDropDownIsVisibleSubtype
-        }
+        // setLastActionDropDownIsVisibleSubtype={
+        //   setLastActionDropDownIsVisibleSubtype
+        // }
+        setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
         getSubtypeForLastAction={getSubtypeForLastAction}
         sendScriptReducerSessionActionsArrayToServer={
@@ -1216,31 +1212,32 @@ export default function ScriptingLive({ navigation }) {
         handleModifySubtype={handleModifySubtype}
         handleModifyFavorite={handleModifyFavorite}
         // --------- Dropdowns Toggles -----------
-        // Quality
+        // // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
-        setLastActionDropDownIsVisibleQuality={
-          setLastActionDropDownIsVisibleQuality
-        }
-        // Position
+        // setLastActionDropDownIsVisibleQuality={
+        //   setLastActionDropDownIsVisibleQuality
+        // }
+        // // Position
         lastActionDropDownIsVisiblePosition={
           lastActionDropDownIsVisiblePosition
         }
-        setLastActionDropDownIsVisiblePosition={
-          setLastActionDropDownIsVisiblePosition
-        }
-        // Player
+        // setLastActionDropDownIsVisiblePosition={
+        //   setLastActionDropDownIsVisiblePosition
+        // }
+        // // Player
         lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
-        setLastActionDropDownIsVisiblePlayer={
-          setLastActionDropDownIsVisiblePlayer
-        }
-        // Type
+        // setLastActionDropDownIsVisiblePlayer={
+        //   setLastActionDropDownIsVisiblePlayer
+        // }
+        // // Type
         lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
-        setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
-        // Subtype
+        // setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
+        // // Subtype
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
-        setLastActionDropDownIsVisibleSubtype={
-          setLastActionDropDownIsVisibleSubtype
-        }
+        // setLastActionDropDownIsVisibleSubtype={
+        //   setLastActionDropDownIsVisibleSubtype
+        // }
+        setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
         getSubtypeForLastAction={getSubtypeForLastAction}
         sendScriptReducerSessionActionsArrayToServer={

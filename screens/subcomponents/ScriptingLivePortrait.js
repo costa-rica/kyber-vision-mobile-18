@@ -280,9 +280,10 @@ export default function ScriptingLivePortrait(props) {
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   if (scriptReducer.sessionActionsArray.length > 0) {
-                    props.setLastActionDropDownIsVisibleQuality(
-                      (prev) => !prev
-                    );
+                    // props.setLastActionDropDownIsVisibleQuality(
+                    //   (prev) => !prev
+                    // );
+                    props.setDropdownVisibility("quality");
                   }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
@@ -296,9 +297,10 @@ export default function ScriptingLivePortrait(props) {
               <ButtonKvNoDefaultTextOnly
                 onPress={() => {
                   if (scriptReducer.sessionActionsArray.length > 0) {
-                    props.setLastActionDropDownIsVisiblePosition(
-                      (prev) => !prev
-                    );
+                    // props.setLastActionDropDownIsVisiblePosition(
+                    //   (prev) => !prev
+                    // );
+                    props.setDropdownVisibility("position");
                   }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionSmall]}
@@ -313,7 +315,8 @@ export default function ScriptingLivePortrait(props) {
                 onPress={() => {
                   console.log("pressed Player");
                   if (scriptReducer.sessionActionsArray.length > 0) {
-                    props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
+                    // props.setLastActionDropDownIsVisiblePlayer((prev) => !prev);
+                    props.setDropdownVisibility("player");
                   }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
@@ -328,7 +331,8 @@ export default function ScriptingLivePortrait(props) {
                 onPress={() => {
                   console.log("pressed Type");
                   if (scriptReducer.sessionActionsArray.length > 0) {
-                    props.setLastActionDropDownIsVisibleType((prev) => !prev);
+                    // props.setLastActionDropDownIsVisibleType((prev) => !prev);
+                    props.setDropdownVisibility("type");
                   }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
@@ -342,9 +346,10 @@ export default function ScriptingLivePortrait(props) {
                 onPress={() => {
                   console.log("pressed Subtype");
                   if (scriptReducer.sessionActionsArray.length > 0) {
-                    props.setLastActionDropDownIsVisibleSubtype(
-                      (prev) => !prev
-                    );
+                    // props.setLastActionDropDownIsVisibleSubtype(
+                    //   (prev) => !prev
+                    // );
+                    props.setDropdownVisibility("subtype");
                   }
                 }}
                 styleView={[styles.btnLastAction, styles.btnLastActionBig]}
