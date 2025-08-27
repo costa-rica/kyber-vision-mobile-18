@@ -100,8 +100,10 @@ export default function RegisterScreen({ navigation }) {
       navigation.navigate("SelectTeamScreen");
     } else if (resJson?.error) {
       setMessage(resJson.error);
+      Alert.alert(resJson.error);
     } else {
       setMessage(`There was a server error: ${response.status}`);
+      Alert.alert(`There was a server error: ${response.status}`);
     }
   };
 
