@@ -48,25 +48,25 @@ export default function AdminSettings({ navigation }) {
   const [isVisibleInviteToSquadModal, setIsVisibleInviteToSquadModal] =
     useState(false);
 
-  const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
-    (team) =>
-      team.teamId ===
-      teamReducer.teamsArray.filter((team) => team.selected)[0].id
-  )[0].isAdmin;
-
-  const topChildren = (
-    <Text>
-      {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
-      Settings
-    </Text>
-  );
-
   // Triggers whenever the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchPlayers();
       fetchSquadMembers();
     }, [])
+  );
+
+  const isAdminOfThisTeam = userReducer.contractTeamUserArray.filter(
+    (team) =>
+      team.teamId ===
+      teamReducer.teamsArray.filter((team) => team.selected)[0].id
+  )[0]?.isAdmin;
+
+  const topChildren = (
+    <Text>
+      {teamReducer.teamsArray.filter((team) => team.selected)[0].teamName}{" "}
+      Settings
+    </Text>
   );
 
   const fetchPlayers = async () => {
@@ -322,7 +322,12 @@ export default function AdminSettings({ navigation }) {
     if (response.ok && resJson) {
       // fetchPlayers();
       fetchSquadMembers();
-      Alert.alert("Squad member added successfully");
+
+      if (response.status === 201) {
+        Alert.alert("Squad member added successfully");
+      } else {
+        Alert.alert("Sent invitation email to non-registered user");
+      }
     } else {
       const errorMessage =
         resJson?.error ||

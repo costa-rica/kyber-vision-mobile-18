@@ -97,7 +97,7 @@ export default function LoginScreen({ navigation }) {
                 placeholderTextColor="gray"
                 value={email}
                 onChangeText={(text) => {
-                  console.log("text:", text);
+                  // console.log("text:", text);
                   setEmail(text);
                 }}
                 style={styles.txtInputWithIcon}
