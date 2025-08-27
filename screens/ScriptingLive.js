@@ -247,38 +247,32 @@ export default function ScriptingLive({ navigation }) {
         }
       } else {
         // Landscape
+        const xPosLandscape =
+          x +
+          scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
+          userReducer.circleRadiusOuter;
+        const yPosLandscape =
+          y +
+          scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
+          userReducer.circleRadiusOuter;
         setPadPositionCenter({
-          x:
-            x +
-            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
-            userReducer.circleRadiusOuter,
-          // y: y - userReducer.circleRadiusOuter,
-          y:
-            y +
-            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
-            userReducer.circleRadiusOuter,
+          x: xPosLandscape,
+          y: yPosLandscape,
         });
-        console.log(
-          `TapBegin - X: ${x} - Y: ${
-            y +
-            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
-            userReducer.circleRadiusOuter
-          }`
-        );
+        console.log(`TapBegin - X: ${xPosLandscape} - Y: ${yPosLandscape}`);
         setTapDetails({
           timestamp,
-          padPosCenterX:
-            x +
-            scriptReducer.coordsScriptLiveLandscapeContainerLeft.width -
-            userReducer.circleRadiusOuter,
-          padPosCenterY:
-            y +
-            scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height -
-            userReducer.circleRadiusOuter,
+          padPosCenterX: xPosLandscape,
+          padPosCenterY: yPosLandscape,
         });
-
-        setPadVisible(true);
-        setTapIsActive(false);
+        if (
+          y >
+          scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height *
+            0.2
+        ) {
+          setPadVisible(true);
+          setTapIsActive(false);
+        }
       }
 
       // setPadVisible(true);

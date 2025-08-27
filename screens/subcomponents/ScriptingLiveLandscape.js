@@ -153,8 +153,8 @@ export default function ScriptingLiveLandscape(props) {
   // const handleContainerLeftLayout = (event) => {
   const handleOnLayoutContainerLeftLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
-    console.log("---> [ScriptingLiveLandscape] in handleContainerLeftLayout");
-    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+    // console.log("---> [ScriptingLiveLandscape] in handleContainerLeftLayout");
+    // console.log("event.nativeEvent.layout", event.nativeEvent.layout);
 
     dispatch(
       updateCoordsScriptLiveLandscapeContainerLeft({ x, y, width, height })
@@ -162,10 +162,10 @@ export default function ScriptingLiveLandscape(props) {
   };
   const handleOnLayoutContainerMiddleTopLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
-    console.log(
-      "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleTopLayout"
-    );
-    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+    // console.log(
+    //   "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleTopLayout"
+    // );
+    // console.log("event.nativeEvent.layout", event.nativeEvent.layout);
 
     dispatch(
       updateCoordsScriptLiveLandscapeContainerMiddleTop({ x, y, width, height })
@@ -174,10 +174,10 @@ export default function ScriptingLiveLandscape(props) {
 
   const handleOnLayoutContainerMiddleBottomLayout = (event) => {
     const { width, height, x, y } = event.nativeEvent.layout;
-    console.log(
-      "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleBottomLayout"
-    );
-    console.log("event.nativeEvent.layout", event.nativeEvent.layout);
+    // console.log(
+    //   "---> [ScriptingLiveLandscape] in handleOnLayoutContainerMiddleBottomLayout"
+    // );
+    // console.log("event.nativeEvent.layout", event.nativeEvent.layout);
 
     dispatch(
       updateCoordsScriptLiveLandscapeContainerMiddleBottom({
@@ -432,20 +432,22 @@ export default function ScriptingLiveLandscape(props) {
                   }
                 >
                   {/* <View style={styles.vwPlayer}> */}
-                  <View style={stylesVwPlayer}>
-                    <View style={styles.vwPlayerLeft}>
-                      <Text style={styles.txtShirtNumber}>
-                        {/* {props.lastActionPlayer.shirtNumber} */}
-                        {scriptReducer.scriptingForPlayerObject?.shirtNumber}
-                      </Text>
-                    </View>
-                    <View style={styles.vwPlayerRight}>
-                      <Text style={styles.txtPlayerName}>
-                        {scriptReducer.scriptingForPlayerObject?.firstName}
-                      </Text>
-                      <Text style={styles.txtPlayerName}>
-                        {scriptReducer.scriptingForPlayerObject?.lastName}
-                      </Text>
+                  <View style={styles.vwPlayerSuper}>
+                    <View style={stylesVwPlayer}>
+                      <View style={styles.vwPlayerLeft}>
+                        <Text style={styles.txtShirtNumber}>
+                          {/* {props.lastActionPlayer.shirtNumber} */}
+                          {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                        </Text>
+                      </View>
+                      <View style={styles.vwPlayerRight}>
+                        <Text style={styles.txtPlayerName}>
+                          {scriptReducer.scriptingForPlayerObject?.firstName}
+                        </Text>
+                        <Text style={styles.txtPlayerName}>
+                          {scriptReducer.scriptingForPlayerObject?.lastName}
+                        </Text>
+                      </View>
                     </View>
                   </View>
 
@@ -624,9 +626,9 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     // padding: 15,
     // gap: 20,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderStyle: "dashed",
+    // borderWidth: 1,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
   },
 
   vwGroupScoreAndSets: {
@@ -717,9 +719,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // padding: 15,
     gap: 20,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderStyle: "dashed",
+    // borderWidth: 1,
+    // borderColor: "gray",
+    // borderStyle: "dashed",
   },
   // vwPlayer: {
   //   borderWidth: 1,
