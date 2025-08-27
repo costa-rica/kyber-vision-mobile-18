@@ -189,45 +189,45 @@ export default function ScriptingLiveLandscape(props) {
     );
   };
 
-  const stylesGesterPositionTopLeft = {
-    position: "absolute",
-    top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
-    left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
-    width: 2,
-    height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
-    // backgroundColor: "gray",
-    borderWidth: 4,
-    borderColor: "gray",
-    borderStyle: "dashed",
-    zIndex: 1,
-  };
-  const stylesGesterPositionHalfCourtFrontBack = {
-    position: "absolute",
-    top:
-      scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height +
-      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height / 2,
-    left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
-    width: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width,
-    height: 0,
-    borderWidth: 2,
-    borderColor: "gray",
-    borderStyle: "dashed",
-    zIndex: 1,
-  };
-  const stylesGesterPositionTopMiddle = {
-    position: "absolute",
-    top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
-    left:
-      scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
-      scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width / 3 -
-      1,
-    width: 0,
-    height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
-    borderWidth: 2,
-    borderColor: "gray",
-    borderStyle: "dashed",
-    zIndex: 1,
-  };
+  // const stylesGesterPositionTopLeft = {
+  //   position: "absolute",
+  //   top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
+  //   left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
+  //   width: 2,
+  //   height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
+  //   // backgroundColor: "gray",
+  //   borderWidth: 4,
+  //   borderColor: "gray",
+  //   borderStyle: "dashed",
+  //   zIndex: 1,
+  // };
+  // const stylesGesterPositionHalfCourtFrontBack = {
+  //   position: "absolute",
+  //   top:
+  //     scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height +
+  //     scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height / 2,
+  //   left: scriptReducer.coordsScriptLiveLandscapeContainerLeft.width,
+  //   width: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width,
+  //   height: 0,
+  //   borderWidth: 2,
+  //   borderColor: "gray",
+  //   borderStyle: "dashed",
+  //   zIndex: 1,
+  // };
+  // const stylesGesterPositionTopMiddle = {
+  //   position: "absolute",
+  //   top: scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height,
+  //   left:
+  //     scriptReducer.coordsScriptLiveLandscapeContainerLeft.width +
+  //     scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.width / 3 -
+  //     1,
+  //   width: 0,
+  //   height: scriptReducer.coordsScriptLiveLandscapeContainerMiddleBottom.height,
+  //   borderWidth: 2,
+  //   borderColor: "gray",
+  //   borderStyle: "dashed",
+  //   zIndex: 1,
+  // };
 
   return (
     <TemplateViewWithTopChildrenSmallLandscape
@@ -243,9 +243,9 @@ export default function ScriptingLiveLandscape(props) {
         <View style={stylesGesterPositionHalfCourtFrontBack} /> */}
         {/* 
 
-LEFT 
+      LEFT 
 
-*/}
+      */}
         <View
           style={styles.containerLeft}
           onLayout={(event) => handleOnLayoutContainerLeftLayout(event)}
@@ -331,7 +331,12 @@ LEFT
             >
               <View style={styles.vwGroupScoreAndSets}>
                 <View style={styles.vwGroupSetSuper}>
-                  <View style={styles.vwGroupSet}>
+                  <View
+                    style={[
+                      styles.vwGroupSet,
+                      { flexDirection: "row-reverse" },
+                    ]}
+                  >
                     {Array.from({ length: 3 }).map((_, index) => (
                       <TouchableOpacity
                         key={index}
@@ -651,10 +656,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
     marginHorizontal: 1,
-    backgroundColor: "white",
+    // backgroundColor: "white",
+    backgroundColor: "#806181",
   },
   touchOpSetsCircleFilled: {
-    backgroundColor: "#806181",
+    // backgroundColor: "#806181",
+    backgroundColor: "white",
   },
   vwGroupScore: {
     // width: Dimensions.get("window").width * 0.4,

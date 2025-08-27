@@ -161,7 +161,7 @@ export default function ScriptingLivePortrait(props) {
 
         <View style={styles.vwGroupScoreAndSets}>
           <View style={styles.vwGroupSetSuper}>
-            <View style={styles.vwGroupSet}>
+            <View style={[styles.vwGroupSet, { flexDirection: "row-reverse" }]}>
               {Array.from({ length: 3 }).map((_, index) => (
                 <TouchableOpacity
                   key={index}
@@ -171,6 +171,7 @@ export default function ScriptingLivePortrait(props) {
                   style={[
                     styles.touchOpSetsCircle,
                     props.matchSetsWon.teamAnalyzed > index &&
+                      // styles.touchOpSetsCircleFilled,
                       styles.touchOpSetsCircleFilled,
                   ]}
                 />
@@ -724,10 +725,12 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
     marginHorizontal: 1,
-    backgroundColor: "white",
+    // backgroundColor: "white",
+    backgroundColor: "#806181",
   },
   touchOpSetsCircleFilled: {
-    backgroundColor: "#806181",
+    // backgroundColor: "#806181",
+    backgroundColor: "white",
   },
   vwGroupScore: {
     width: Dimensions.get("window").width * 0.4,
