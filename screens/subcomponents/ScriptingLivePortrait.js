@@ -16,6 +16,7 @@ import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import ButtonKvStd from "./buttons/ButtonKvStd";
 import ButtonKvNoDefaultTextOnly from "./buttons/ButtonKvNoDefaultTextOnly";
+import ButtonKvNoDefault from "./buttons/ButtonKvNoDefault";
 import { loginUser } from "../../reducers/user";
 import {
   GestureHandlerRootView,
@@ -35,6 +36,8 @@ import {
   updateCoordsScriptLivePortraitContainerMiddle,
   updateScriptSessionActionsArray,
   updateCoordsScriptLivePortraitVwPlayerSuperSpacer,
+  setScriptingForPlayerObject,
+  updatePlayersArray,
 } from "../../reducers/script";
 
 export default function ScriptingLivePortrait(props) {
@@ -167,9 +170,14 @@ export default function ScriptingLivePortrait(props) {
     // alignItems: "center",
     // paddingVertical: 0,
   };
-  const stylesVwPlayer = {
+  const stylesVwPlayerAbsolutePosition = {
     position: "absolute",
     top: btnDiameter / 4,
+    zIndex: 1,
+  };
+  const stylesVwPlayer = {
+    // position: "absolute",
+    // top: btnDiameter / 4,
     borderWidth: 1,
     borderColor: "#6E4C84",
     borderRadius: 30,
@@ -179,6 +187,17 @@ export default function ScriptingLivePortrait(props) {
     padding: 5,
     width: Dimensions.get("window").width * 0.3,
     zIndex: 1,
+  };
+
+  const stylesDropDownScriptingPlayer = {
+    // backgroundColor: "red",
+    position: "absolute",
+    // width: "100%",
+    top: btnDiameter,
+    // left: Dimensions.get("window").width * 0.5,
+    zIndex: 1,
+    // top: btnDiameter / 4,
+    // zIndex: 1,
   };
 
   return (
@@ -549,22 +568,69 @@ export default function ScriptingLivePortrait(props) {
       >
         <View style={stylesVwPlayerSuperNoHeight}>
           {/* <View style={styles.vwPlayer}> */}
-          <View style={stylesVwPlayer}>
-            <View style={styles.vwPlayerLeft}>
-              <Text style={styles.txtShirtNumber}>
-                {scriptReducer.scriptingForPlayerObject?.shirtNumber}
-              </Text>
-            </View>
-            <View style={styles.vwPlayerRight}>
-              <Text style={styles.txtPlayerName}>
-                {scriptReducer.scriptingForPlayerObject?.firstName}
-              </Text>
-              <Text style={styles.txtPlayerName}>
-                {scriptReducer.scriptingForPlayerObject?.lastName}
-              </Text>
-            </View>
+          <View style={stylesVwPlayerAbsolutePosition}>
+            <ButtonKvNoDefault
+              onPress={() => {
+                console.log("pressed");
+                props.setDropdownVisibility("scriptingPlayer");
+              }}
+              styleView={stylesVwPlayer}
+              // styleView={styles.vwPlayer}
+            >
+              <View style={styles.vwPlayerLeft}>
+                <Text style={styles.txtShirtNumber}>
+                  {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                </Text>
+              </View>
+              <View style={styles.vwPlayerRight}>
+                <Text style={styles.txtPlayerName}>
+                  {scriptReducer.scriptingForPlayerObject?.firstName}
+                </Text>
+                <Text style={styles.txtPlayerName}>
+                  {scriptReducer.scriptingForPlayerObject?.lastName}
+                </Text>
+              </View>
+            </ButtonKvNoDefault>
           </View>
         </View>
+        {props.scriptingPlayerDropdownIsVisible && (
+          <View style={stylesDropDownScriptingPlayer}>
+            {scriptReducer.playersArray.map((player, index) => (
+              // <Text key={index}>{player.firstName}</Text>
+
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  const tempArray = scriptReducer.playersArray.map((item) => {
+                    if (item.id === player.id) {
+                      // setDisplayWarning(false);
+                      return {
+                        ...item,
+                        selected: !item.selected,
+                      };
+                    }
+                    return { ...item, selected: false };
+                  });
+                  dispatch(updatePlayersArray(tempArray));
+                  dispatch(setScriptingForPlayerObject(player));
+                  props.setDropdownVisibility("scriptingPlayer");
+                }}
+                // style={styles.btnDropDown}
+                style={stylesVwPlayer}
+              >
+                <View style={styles.vwPlayerLeft}>
+                  <Text style={styles.txtShirtNumber}>
+                    {player.shirtNumber}
+                  </Text>
+                </View>
+                <View style={styles.vwPlayerRight}>
+                  <Text style={styles.txtPlayerName}>{player.firstName}</Text>
+                  <Text style={styles.txtPlayerName}>{player.lastName}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
         <GestureHandlerRootView
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
@@ -915,7 +981,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#806181",
     borderRadius: 10,
     padding: 5,
-    zIndex: 1,
+    zIndex: 2,
     gap: 5,
   },
   btnDropDown: {
@@ -931,10 +997,14 @@ const styles = StyleSheet.create({
   // ------------
   // MIDDLE Container
   // ------------
-  containerMiddle: {},
+  containerMiddle: {
+    alignItems: "center",
+    // width: Dimensions.get("window").width,
+  },
   containerMiddleSub: {
     backgroundColor: "#F0EAF9",
     alignItems: "center",
+    width: Dimensions.get("window").width,
     // padding: 15,
     // gap: 20,
     paddingBottom: 20,

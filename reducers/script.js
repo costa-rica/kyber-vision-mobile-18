@@ -325,7 +325,7 @@ export const {
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
   updateCoordsScriptLivePortraitVwPlayerSuperSpacer,
-  updateCoordsScriptLiveLandscapeVwPlayerSuperSpacer,
+  updateCoordsScriptLiveLandscapeVwPlayerSuper,
   updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;
