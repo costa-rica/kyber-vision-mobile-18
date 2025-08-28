@@ -74,7 +74,7 @@ const initialState = {
     width: null,
     height: null,
   },
-  coordsScriptLivePortraitVwPlayerSuper: {
+  coordsScriptLivePortraitVwPlayerSuperSpacer: {
     x: null,
     y: null,
     width: null,
@@ -284,8 +284,8 @@ export const scriptSlice = createSlice({
       state.coordsScriptLiveLandscapeContainerMiddleBottom = action.payload;
     },
 
-    updateCoordsScriptLivePortraitVwPlayerSuper: (state, action) => {
-      state.coordsScriptLivePortraitVwPlayerSuper = action.payload;
+    updateCoordsScriptLivePortraitVwPlayerSuperSpacer: (state, action) => {
+      state.coordsScriptLivePortraitVwPlayerSuperSpacer = action.payload;
     },
     updateCoordsScriptLiveLandscapeVwPlayerSuper: (state, action) => {
       state.coordsScriptLiveLandscapeVwPlayerSuper = action.payload;
@@ -324,8 +324,8 @@ export const {
   updateCoordsScriptLiveLandscapeContainerLeft,
   updateCoordsScriptLiveLandscapeContainerMiddleTop,
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
-  updateCoordsScriptLivePortraitVwPlayerSuper,
-  updateCoordsScriptLiveLandscapeVwPlayerSuper,
+  updateCoordsScriptLivePortraitVwPlayerSuperSpacer,
+  updateCoordsScriptLiveLandscapeVwPlayerSuperSpacer,
   updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

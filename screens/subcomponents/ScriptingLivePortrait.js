@@ -34,7 +34,7 @@ import {
   // updateScriptLivePortraitVwVolleyballCourtCoords,
   updateCoordsScriptLivePortraitContainerMiddle,
   updateScriptSessionActionsArray,
-  updateCoordsScriptLivePortraitVwPlayerSuper,
+  updateCoordsScriptLivePortraitVwPlayerSuperSpacer,
 } from "../../reducers/script";
 
 export default function ScriptingLivePortrait(props) {
@@ -54,12 +54,12 @@ export default function ScriptingLivePortrait(props) {
     );
   };
 
-  const handleOnLayoutPlayerSuper = (event) => {
-    console.log("--- handleOnLayoutPlayerSuper ---");
+  const handleOnLayoutPlayerSuperSpacer = (event) => {
+    console.log("--- handleOnLayoutPlayerSuperSpacer ---");
     console.log(event.nativeEvent.layout);
     const { width, height, x, y } = event.nativeEvent.layout;
     dispatch(
-      updateCoordsScriptLivePortraitVwPlayerSuper({ x, y, width, height })
+      updateCoordsScriptLivePortraitVwPlayerSuperSpacer({ x, y, width, height })
     );
   };
 
@@ -87,24 +87,25 @@ export default function ScriptingLivePortrait(props) {
   //  Styles
   // -----------------
 
+  const btnDiameter = Dimensions.get("window").width * 0.15;
   const stylesBtnTop = {
-    width: Dimensions.get("window").width * 0.15,
-    height: Dimensions.get("window").width * 0.15,
+    width: btnDiameter,
+    height: btnDiameter,
     zIndex: 2,
   };
   const stylesBtnBottom = {
-    width: Dimensions.get("window").width * 0.15,
-    height: Dimensions.get("window").width * 0.15,
+    width: btnDiameter,
+    height: btnDiameter,
     zIndex: 2,
     // backgroundColor: "white",
   };
   const stylesBtnFavorite = {
-    width: Dimensions.get("window").width * 0.15,
-    height: Dimensions.get("window").width * 0.15,
+    width: btnDiameter,
+    height: btnDiameter,
   };
   const stylesVwGroupButtonsDiagonalLine = {
     position: "absolute",
-    width: Dimensions.get("window").width * 0.21, // roughly 0.15 * √2 for diagonal spacing
+    width: btnDiameter * Math.sqrt(2), // roughly 0.15 * √2 for diagonal spacing
     height: 8,
     backgroundColor: "#806181",
     top: "50%",
@@ -149,6 +150,35 @@ export default function ScriptingLivePortrait(props) {
   const stylesDropDownPositionSubtype = {
     left: Dimensions.get("window").width * 0.6 + 5,
     width: Dimensions.get("window").width * 0.2 - 5,
+  };
+
+  // Note: NoHeight contains the vwPlayer
+  const stylesVwPlayerSuperNoHeight = {
+    width: "100%",
+    alignItems: "center",
+  };
+  // Note: Spacer contains nothing
+  const stylesVwPlayerSuperSpacer = {
+    // borderWidth: 1,
+    // borderColor: "#6E4C84",
+    // borderStyle: "dashed",
+    width: "100%",
+    height: btnDiameter,
+    // alignItems: "center",
+    // paddingVertical: 0,
+  };
+  const stylesVwPlayer = {
+    position: "absolute",
+    top: btnDiameter / 4,
+    borderWidth: 1,
+    borderColor: "#6E4C84",
+    borderRadius: 30,
+    backgroundColor: "white",
+    flexDirection: "row",
+    gap: 10,
+    padding: 5,
+    width: Dimensions.get("window").width * 0.3,
+    zIndex: 1,
   };
 
   return (
@@ -517,19 +547,37 @@ export default function ScriptingLivePortrait(props) {
         // onLayout={(event) => handleVwVolleyballCourtAndGestSuperLayout(event)}
         onLayout={(event) => handleOnLayoutContainerMiddle(event)}
       >
+        <View style={stylesVwPlayerSuperNoHeight}>
+          {/* <View style={styles.vwPlayer}> */}
+          <View style={stylesVwPlayer}>
+            <View style={styles.vwPlayerLeft}>
+              <Text style={styles.txtShirtNumber}>
+                {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+              </Text>
+            </View>
+            <View style={styles.vwPlayerRight}>
+              <Text style={styles.txtPlayerName}>
+                {scriptReducer.scriptingForPlayerObject?.firstName}
+              </Text>
+              <Text style={styles.txtPlayerName}>
+                {scriptReducer.scriptingForPlayerObject?.lastName}
+              </Text>
+            </View>
+          </View>
+        </View>
         <GestureHandlerRootView
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
           <GestureDetector gesture={props.combinedGestures}>
             <View style={styles.containerMiddleSub}>
               <View
-                style={styles.vwPlayerSuper}
-                onLayout={handleOnLayoutPlayerSuper}
+                // style={styles.vwPlayerSuperSpacer}
+                style={stylesVwPlayerSuperSpacer}
+                onLayout={handleOnLayoutPlayerSuperSpacer}
               >
-                <View style={styles.vwPlayer}>
+                {/* <View style={styles.vwPlayer}>
                   <View style={styles.vwPlayerLeft}>
                     <Text style={styles.txtShirtNumber}>
-                      {/* {props.lastActionPlayer.shirtNumber} */}
                       {scriptReducer.scriptingForPlayerObject?.shirtNumber}
                     </Text>
                   </View>
@@ -541,7 +589,7 @@ export default function ScriptingLivePortrait(props) {
                       {scriptReducer.scriptingForPlayerObject?.lastName}
                     </Text>
                   </View>
-                </View>
+                </View> */}
               </View>
               <SvbVolleyballCourt />
             </View>
@@ -891,24 +939,27 @@ const styles = StyleSheet.create({
     // gap: 20,
     paddingBottom: 20,
   },
-  vwPlayerSuper: {
-    // borderWidth: 1,
-    // borderColor: "#6E4C84",
-    // borderStyle: "dashed",
-    width: "100%",
-    alignItems: "center",
-    paddingVertical: 20,
-  },
-  vwPlayer: {
-    borderWidth: 1,
-    borderColor: "#6E4C84",
-    borderRadius: 30,
-    backgroundColor: "white",
-    flexDirection: "row",
-    gap: 10,
-    padding: 5,
-    width: Dimensions.get("window").width * 0.3,
-  },
+  // vwPlayerSuperSpacer: {
+  //   borderWidth: 1,
+  //   borderColor: "#6E4C84",
+  //   borderStyle: "dashed",
+  //   width: "100%",
+  //   // alignItems: "center",
+  //   paddingVertical: 0,
+  // },
+  // vwPlayer: {
+  //   position: "absolute",
+
+  //   borderWidth: 1,
+  //   borderColor: "#6E4C84",
+  //   borderRadius: 30,
+  //   backgroundColor: "white",
+  //   flexDirection: "row",
+  //   gap: 10,
+  //   padding: 5,
+  //   width: Dimensions.get("window").width * 0.3,
+  //   zIndex: 1,
+  // },
   vwPlayerLeft: {
     justifyContent: "center",
     backgroundColor: "#806181",

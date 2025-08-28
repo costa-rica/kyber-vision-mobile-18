@@ -64,6 +64,11 @@ export default function ScriptingLive({ navigation }) {
     setLastActionDropDownIsVisibleSubtype,
   ] = useState(false);
 
+  const [
+    scriptingPlayerDropdownIsVisible,
+    setScriptingPlayerDropdownIsVisible,
+  ] = useState(false);
+
   // set only one to true all others to false
   const setDropdownVisibility = (dropdownName) => {
     console.log(`setDropdownVisibility: ${dropdownName}`);
@@ -78,6 +83,7 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisiblePlayer(false);
         setLastActionDropDownIsVisibleType(false);
         setLastActionDropDownIsVisibleSubtype(false);
+        setScriptingPlayerDropdownIsVisible(false);
         break;
       case "position":
         console.log("setDropdownVisibility: position");
@@ -86,6 +92,7 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisiblePlayer(false);
         setLastActionDropDownIsVisibleType(false);
         setLastActionDropDownIsVisibleSubtype(false);
+        setScriptingPlayerDropdownIsVisible(false);
         break;
       case "player":
         setLastActionDropDownIsVisibleQuality(false);
@@ -93,6 +100,7 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisiblePlayer((prev) => !prev);
         setLastActionDropDownIsVisibleType(false);
         setLastActionDropDownIsVisibleSubtype(false);
+        setScriptingPlayerDropdownIsVisible(false);
         break;
       case "type":
         setLastActionDropDownIsVisibleQuality(false);
@@ -100,6 +108,7 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisiblePlayer(false);
         setLastActionDropDownIsVisibleType((prev) => !prev);
         setLastActionDropDownIsVisibleSubtype(false);
+        setScriptingPlayerDropdownIsVisible(false);
         break;
       case "subtype":
         setLastActionDropDownIsVisibleQuality(false);
@@ -107,6 +116,15 @@ export default function ScriptingLive({ navigation }) {
         setLastActionDropDownIsVisiblePlayer(false);
         setLastActionDropDownIsVisibleType(false);
         setLastActionDropDownIsVisibleSubtype((prev) => !prev);
+        setScriptingPlayerDropdownIsVisible(false);
+        break;
+      case "scriptingPlayer":
+        setLastActionDropDownIsVisibleQuality(false);
+        setLastActionDropDownIsVisiblePosition(false);
+        setLastActionDropDownIsVisiblePlayer(false);
+        setLastActionDropDownIsVisibleType(false);
+        setLastActionDropDownIsVisibleSubtype(false);
+        setScriptingPlayerDropdownIsVisible((prev) => !prev);
         break;
       default:
         break;
@@ -177,7 +195,6 @@ export default function ScriptingLive({ navigation }) {
   );
   const stdSwipePadDefaultTextColor = "black";
   const stdSwipePadDefaultTextFontSize = 10;
-  // const stdSwipePadDefaultTextFontSize = 5;
   const defaultTextStyles = Object.fromEntries(
     Array.from({ length: 16 }, (_, i) => [
       i + 1, // Key: 1 to 16
@@ -193,8 +210,6 @@ export default function ScriptingLive({ navigation }) {
 
   const [numTrianglesMiddle, setNumTrianglesMiddle] = useState(4); // 2, 4, or 5
   const [numTrianglesOuter, setNumTrianglesOuter] = useState(12); // 8, 10 or 12
-  // const [currentActionType, setCurrentActionType] = useState(null);
-  // const [currentActionSubtype, setCurrentActionSubtype] = useState(null);
 
   // -------------
   // Gesture Stuff
@@ -235,14 +250,19 @@ export default function ScriptingLive({ navigation }) {
           y: yPosPortait,
         });
         console.log(`TapBegin - X: ${xPosPortait} - Y: ${yPosPortait}`);
+        console.log(
+          `scriptReducer.coordsScriptLivePortraitVwPlayerSuperSpacer.height: ${scriptReducer.coordsScriptLivePortraitVwPlayerSuperSpacer.height}`
+        );
         setTapDetails({
           timestamp,
           padPosCenterX: xPosPortait,
           padPosCenterY: yPosPortait,
         });
         // Note: y in this case, starts at 0, so
-        //   scriptReducer.coordsScriptLivePortraitVwPlayerSuper.height is a good top reference compared to y
-        if (y > scriptReducer.coordsScriptLivePortraitVwPlayerSuper.height) {
+        //   scriptReducer.coordsScriptLivePortraitVwPlayerSuperSpacer.height is a good top reference compared to y
+        if (
+          y > scriptReducer.coordsScriptLivePortraitVwPlayerSuperSpacer.height
+        ) {
           setPadVisible(true);
           setTapIsActive(false);
         }
@@ -1046,9 +1066,6 @@ export default function ScriptingLive({ navigation }) {
   };
 
   const handleModifyFavorite = () => {
-    console.log(`- Made fav -`);
-    // setLastActionSubtype(subtype);
-
     const lastRecordedAction =
       scriptReducer.sessionActionsArray[
         scriptReducer.sessionActionsArray.length - 1
@@ -1166,22 +1183,16 @@ export default function ScriptingLive({ navigation }) {
         lastActionDropDownIsVisiblePosition={
           lastActionDropDownIsVisiblePosition
         }
-        // setLastActionDropDownIsVisiblePosition={
-        //   setLastActionDropDownIsVisiblePosition
-        // }
-        // // Player
+        // Player
         lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
-        // setLastActionDropDownIsVisiblePlayer={
-        //   setLastActionDropDownIsVisiblePlayer
-        // }
-        // // Type
+        // Type
         lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
-        // setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
-        // // Subtype
+        // Subtype
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
-        // setLastActionDropDownIsVisibleSubtype={
-        //   setLastActionDropDownIsVisibleSubtype
-        // }
+        // Player (Scripting)
+        scriptingPlayerDropdownIsVisible={scriptingPlayerDropdownIsVisible}
+        // setScriptingPlayerDropdownIsVisible={setScriptingPlayerDropdownIsVisible}
+
         setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
         getSubtypeForLastAction={getSubtypeForLastAction}
