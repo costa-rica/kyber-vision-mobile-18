@@ -1208,12 +1208,22 @@ export default function ScriptingLive({ navigation }) {
         lastActionDropDownIsVisiblePosition={
           lastActionDropDownIsVisiblePosition
         }
+        setLastActionDropDownIsVisiblePosition={
+          setLastActionDropDownIsVisiblePosition
+        }
         // Player
         lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
+        setLastActionDropDownIsVisiblePlayer={
+          setLastActionDropDownIsVisiblePlayer
+        }
         // Type
         lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
+        setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
         // Subtype
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
+        setLastActionDropDownIsVisibleSubtype={
+          setLastActionDropDownIsVisibleSubtype
+        }
         // Player (Scripting)
         scriptingPlayerDropdownIsVisible={scriptingPlayerDropdownIsVisible}
         setDropdownVisibility={setDropdownVisibility}

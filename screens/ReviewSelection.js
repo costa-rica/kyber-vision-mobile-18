@@ -19,7 +19,7 @@ import {
   createReviewActionsArrayUniquePlayersNamesAndObjects,
 } from "../reducers/review";
 let reviewReducerOffline;
-import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
+// import ReviewVideoLandscape from "./subcomponents/ReviewVideoLandscape";
 
 export default function ReviewSelectionScreen({ navigation }) {
   const userReducer = useSelector((state) => state.user);
@@ -217,7 +217,7 @@ export default function ReviewSelectionScreen({ navigation }) {
         subtype: elem.subtype,
         quality: elem.quality,
         isDisplayed: true,
-        isFavorite: false,
+        isFavorite: elem.favorite,
         isPlaying: false,
       });
     }
