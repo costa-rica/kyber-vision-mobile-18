@@ -4,6 +4,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import {
   GestureHandlerRootView,
@@ -222,9 +223,14 @@ export default function ScriptingLiveLandscape(props) {
     left:
       scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.width / 2 -
       CIRCLE_SIZE,
-    width: 100,
+    // width: 100,
     zIndex: 1,
-    height: 100,
+    // height: 100,
+  };
+
+  const stylesDropDownScriptingPlayerScrollView = {
+    height: CIRCLE_SIZE * 1.2,
+    width: 200,
   };
 
   // const handleContainerLeftLayout = (event) => {
@@ -550,46 +556,50 @@ export default function ScriptingLiveLandscape(props) {
             </View>
             {props.scriptingPlayerDropdownIsVisible && (
               <View style={stylesDropDownScriptingPlayer}>
-                {scriptReducer.playersArray.map((player, index) => (
-                  // <Text key={index}>{player.firstName}</Text>
-
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      const tempArray = scriptReducer.playersArray.map(
-                        (item) => {
-                          if (item.id === player.id) {
-                            // setDisplayWarning(false);
-                            return {
-                              ...item,
-                              selected: !item.selected,
-                            };
-                          }
-                          return { ...item, selected: false };
-                        }
-                      );
-                      dispatch(updatePlayersArray(tempArray));
-                      dispatch(setScriptingForPlayerObject(player));
-                      props.setDropdownVisibility("scriptingPlayer");
-                    }}
-                    // style={styles.btnDropDown}
-                    style={stylesVwPlayer}
-                  >
-                    <View style={styles.vwPlayerLeft}>
-                      <Text style={styles.txtShirtNumber}>
-                        {player.shirtNumber}
-                      </Text>
-                    </View>
-                    <View style={styles.vwPlayerRight}>
-                      <Text style={styles.txtPlayerName}>
-                        {player.firstName}
-                      </Text>
-                      <Text style={styles.txtPlayerName}>
-                        {player.lastName}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                <ScrollView style={stylesDropDownScriptingPlayerScrollView}>
+                  {scriptReducer.playersArray.map(
+                    (player, index) =>
+                      // add logic to remove selected player
+                      !player.selected && (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            const tempArray = scriptReducer.playersArray.map(
+                              (item) => {
+                                if (item.id === player.id) {
+                                  // setDisplayWarning(false);
+                                  return {
+                                    ...item,
+                                    selected: !item.selected,
+                                  };
+                                }
+                                return { ...item, selected: false };
+                              }
+                            );
+                            dispatch(updatePlayersArray(tempArray));
+                            dispatch(setScriptingForPlayerObject(player));
+                            props.setDropdownVisibility("scriptingPlayer");
+                          }}
+                          // style={styles.btnDropDown}
+                          style={stylesVwPlayer}
+                        >
+                          <View style={styles.vwPlayerLeft}>
+                            <Text style={styles.txtShirtNumber}>
+                              {player.shirtNumber}
+                            </Text>
+                          </View>
+                          <View style={styles.vwPlayerRight}>
+                            <Text style={styles.txtPlayerName}>
+                              {player.firstName}
+                            </Text>
+                            <Text style={styles.txtPlayerName}>
+                              {player.lastName}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      )
+                  )}
+                </ScrollView>
               </View>
             )}
             <GestureHandlerRootView>
