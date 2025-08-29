@@ -1138,6 +1138,13 @@ export default function ScriptingLive({ navigation }) {
     if (confirmed) {
       // clear any local state you want before leaving
       dispatch(updateScriptSessionActionsArray([]));
+
+      if (orientation == "landscape") {
+        await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP
+        ); // Force back to portrait
+        setOrientation("portrait");
+      }
     }
     return confirmed; // <-- TemplateViewWithTopChildrenSmall awaits this
   };
@@ -1228,6 +1235,7 @@ export default function ScriptingLive({ navigation }) {
         combinedGestures={combinedGestures}
         orientation={orientation}
         setOrientation={setOrientation}
+        handleExitScriptingLive={handleExitScriptingLive}
         setScores={setScores}
         matchSetsWon={matchSetsWon}
         handleSetCirclePress={handleSetCirclePress}

@@ -29,10 +29,16 @@ export default function TemplateViewWithTopChildrenSmallLandscape({
   },
   onBackPress = () => {},
 }) {
-  const uploadReducer = useSelector((state) => state.upload);
+  // const uploadReducer = useSelector((state) => state.upload);
+  // const handleBackPress = async () => {
+  //   onBackPress();
+  //   navigation.goBack();
+  // };
   const handleBackPress = async () => {
-    onBackPress();
-    navigation.goBack();
+    const goBack = await onBackPress();
+    if (goBack) {
+      navigation.goBack();
+    }
   };
 
   // styles

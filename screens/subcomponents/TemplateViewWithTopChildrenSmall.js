@@ -39,7 +39,6 @@ export default function TemplateViewWithTopChildrenSmall({
     if (goBack) {
       navigation.goBack();
     }
-    console.log("-- finished handleBackPress --");
   };
 
   return (

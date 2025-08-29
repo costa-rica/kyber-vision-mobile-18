@@ -53,15 +53,18 @@ export default function ScriptingLiveLandscape(props) {
     </View>
   );
 
-  const handleBackPress = async () => {
-    console.log("---> [ScriptingLiveLandscape] in handleBackPress");
-    await ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.PORTRAIT_UP
-    ); // Force back to portrait
-    props.setOrientation("portrait");
-    // props.navigation.goBack();
-    console.log("<--- [ScriptingLiveLandscape] in handleBackPress");
-  };
+  // const handleBackPress = async () => {
+
+  //   handleExitScriptingLive
+
+  //   console.log("---> [ScriptingLiveLandscape] in handleBackPress");
+  //   await ScreenOrientation.lockAsync(
+  //     ScreenOrientation.OrientationLock.PORTRAIT_UP
+  //   ); // Force back to portrait
+  //   props.setOrientation("portrait");
+  //   // props.navigation.goBack();
+  //   console.log("<--- [ScriptingLiveLandscape] in handleBackPress");
+  // };
 
   // -----------------
   //  Styles
@@ -338,7 +341,8 @@ export default function ScriptingLiveLandscape(props) {
       navigation={props.navigation}
       topChildren={topChildren}
       topHeight={50}
-      onBackPress={handleBackPress}
+      // onBackPress={handleBackPress}
+      onBackPress={props.handleExitScriptingLive}
     >
       {props.renderSwipePad()}
       <View style={styles.container}>
