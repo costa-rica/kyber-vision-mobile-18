@@ -235,18 +235,13 @@ export default function ScriptingLive({ navigation }) {
           scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
           userReducer.circleRadiusOuter;
 
-        console.log(`y: ${y}`);
-        console.log(
-          `scriptReducer.coordsScriptLivePortraitContainerMiddle.y: ${scriptReducer.coordsScriptLivePortraitContainerMiddle.y}`
-        );
+        // console.log(`y: ${y}`);
+        // console.log(
+        //   `scriptReducer.coordsScriptLivePortraitContainerMiddle.y: ${scriptReducer.coordsScriptLivePortraitContainerMiddle.y}`
+        // );
 
         setPadPositionCenter({
-          // x: x - userReducer.circleRadiusOuter,
           x: xPosPortait,
-          // y:
-          //   y +
-          //   scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-          //   userReducer.circleRadiusOuter,
           y: yPosPortait,
         });
         console.log(`TapBegin - X: ${xPosPortait} - Y: ${yPosPortait}`);
@@ -298,9 +293,6 @@ export default function ScriptingLive({ navigation }) {
           setTapIsActive(false);
         }
       }
-
-      // setPadVisible(true);
-      // setTapIsActive(false);
     }
   });
 
@@ -308,25 +300,6 @@ export default function ScriptingLive({ navigation }) {
     .maxDuration(10000) // <-- basically if user keeps hold for more than 10 seconds the wheel will just stay there.
     .onEnd((event) => {
       console.log("gestureTapEnd");
-      // setTapIsActive(true);
-      // addNewActionToScriptReducersActionsArrayNoWheel();
-      // setCirclePosition({ x: 0, y: 0 });
-      // const { x, y, absoluteX, absoluteY } = event;
-
-      // const swipePosX = calculatePadPositionCenter(absoluteX, absoluteY).x;
-      // const swipePosY = calculatePadPositionCenter(absoluteX, absoluteY).y;
-      // const swipePosX = x - userReducer.circleRadiusOuter;
-      // const swipePosY =
-      //   y +
-      //   scriptReducer.coordsScriptLivePortraitContainerMiddle.y -
-      //   userReducer.circleRadiusOuter;
-
-      // const distanceFromCenter = Math.sqrt(
-      //   Math.pow(swipePosX - tapDetails.padPosCenterX, 2) +
-      //     Math.pow(swipePosY - tapDetails.padPosCenterY, 2)
-      // );
-      // console.log(`TapEnd - X: ${swipePosX} - Y: ${swipePosY}`);
-
       setPadVisible(false);
       setTapIsActive(true);
     });
@@ -657,27 +630,18 @@ export default function ScriptingLive({ navigation }) {
       if (!inMiddleCircle) {
         wheelPositionOuter = 7;
         if (relativeToPadCenterX > boundary75X) {
-          // console.log("--- Bottom Right ---");
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
+          // Def Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else if (Math.abs(relativeToPadCenterX) < boundary75X) {
-          // console.log("--- Bottom Middle ---");
           wheelPositionOuter = 8;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
+          // Def Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else {
-          // console.log("--- Bottom Left ---");
           wheelPositionOuter = 9;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // );
+          // Def Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         }
       }
@@ -686,29 +650,22 @@ export default function ScriptingLive({ navigation }) {
       wheelPositionMiddle = 3;
       lastActionQualityIndexRef.current = 0;
       handleSwipeColorChange(wheelPositionMiddle);
-      // setLastActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]);
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
       if (!inMiddleCircle) {
         wheelPositionOuter = 10;
         if (relativeToPadCenterY > Math.abs(boundary15Y)) {
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Set
+          // Set Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else if (relativeToPadCenterY > boundary15Y) {
           wheelPositionOuter = 11;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Set
+          // Set Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else {
           wheelPositionOuter = 12;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Set
+          // Set Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         }
       }
@@ -717,29 +674,22 @@ export default function ScriptingLive({ navigation }) {
       wheelPositionMiddle = 4;
       lastActionQualityIndexRef.current = 0;
       handleSwipeColorChange(wheelPositionMiddle);
-      // setLastActionType(scriptReducer.typesArray[wheelPositionMiddle - 1]);
       lastActionTypeIndexRef.current = wheelPositionMiddle - 1;
       if (!inMiddleCircle) {
         wheelPositionOuter = 13;
         if (relativeToPadCenterX < boundary75X) {
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Att
+          // Att Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else if (relativeToPadCenterX < Math.abs(boundary75X)) {
           wheelPositionOuter = 14;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Att
+          // Att Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         } else {
           wheelPositionOuter = 15;
           handleSwipeColorChange(wheelPositionMiddle, wheelPositionOuter);
-          // setLastActionQuality(
-          //   scriptReducer.qualityArrayOuterCircle[wheelPositionOuter - 5]
-          // ); // Att
+          // Att Quality
           lastActionQualityIndexRef.current = wheelPositionOuter - 5;
         }
       }
@@ -1145,10 +1095,8 @@ export default function ScriptingLive({ navigation }) {
         />
       );
     }
-    // return null; // Nothing renders if all are false
   };
 
-  // ...
   const subtypesArrayForLastAction = useMemo(() => {
     const lastActionType = scriptReducer.sessionActionsArray.at(-1)?.type;
     if (!lastActionType) return [];
@@ -1162,11 +1110,72 @@ export default function ScriptingLive({ navigation }) {
     return typeof v === "string" && v.length > 0 ? v.slice(0, 4) : "?";
   }, [scriptReducer.sessionActionsArray]);
 
+  // Put this helper near your other functions in ScriptingLive.js
+  const confirmAsync = (title, message) =>
+    new Promise((resolve) => {
+      Alert.alert(
+        title,
+        message,
+        [
+          { text: "Cancel", style: "cancel", onPress: () => resolve(false) },
+          { text: "OK", onPress: () => resolve(true) },
+        ],
+        // onDismiss only fires on Android or when cancelable: true and backdrop/back button is used
+        { cancelable: true, onDismiss: () => resolve(false) }
+      );
+    });
+
+  const handleExitScriptingLive = async () => {
+    const scriptSessionActionsArrayIsEmpty =
+      scriptReducer.sessionActionsArray.length === 0;
+    if (scriptSessionActionsArrayIsEmpty) {
+      return true;
+    }
+    const confirmed = await confirmAsync(
+      "Confirm Exit",
+      "Are you sure you want to exit Scripting Live?"
+    );
+    if (confirmed) {
+      // clear any local state you want before leaving
+      dispatch(updateScriptSessionActionsArray([]));
+    }
+    return confirmed; // <-- TemplateViewWithTopChildrenSmall awaits this
+  };
+
+  // const handleExitScriptingLive = async () => {
+  //   // let goBack = false;
+  //   // create alert to confirm exit
+  //   const goBack = await Alert.alert(
+  //     "Confirm Exit",
+  //     "Are you sure you want to exit Scripting Live?",
+  //     [
+  //       {
+  //         text: "Cancel",
+  //         onPress: () => {
+  //           console.log("Cancel Pressed");
+  //           return false;
+  //         },
+  //         style: "cancel",
+  //       },
+  //       {
+  //         text: "OK",
+  //         onPress: async () => {
+  //           // navigation.goBack();
+  //           dispatch(updateScriptSessionActionsArray([]));
+  //           return true;
+  //         },
+  //       },
+  //     ]
+  //   );
+  //   return goBack;
+  // };
+
   return orientation == "portrait" ? (
     <TemplateViewWithTopChildrenSmall
       navigation={navigation}
       topChildren={topChildren}
       topHeight="10%"
+      onBackPress={handleExitScriptingLive}
     >
       <ScriptingPortrait
         combinedGestures={combinedGestures}
@@ -1200,8 +1209,6 @@ export default function ScriptingLive({ navigation }) {
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
         // Player (Scripting)
         scriptingPlayerDropdownIsVisible={scriptingPlayerDropdownIsVisible}
-        // setScriptingPlayerDropdownIsVisible={setScriptingPlayerDropdownIsVisible}
-
         setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
         getSubtypeForLastAction={getSubtypeForLastAction}
@@ -1210,7 +1217,6 @@ export default function ScriptingLive({ navigation }) {
         }
         lastActionIsFavorite={lastActionIsFavorite()}
       />
-      {/* {circlePosition.y > 0 && <View style={stylesCircle} />} */}
       {renderSwipePad()}
     </TemplateViewWithTopChildrenSmall>
   ) : (
@@ -1236,29 +1242,16 @@ export default function ScriptingLive({ navigation }) {
         // --------- Dropdowns Toggles -----------
         // // Quality
         lastActionDropDownIsVisibleQuality={lastActionDropDownIsVisibleQuality}
-        // setLastActionDropDownIsVisibleQuality={
-        //   setLastActionDropDownIsVisibleQuality
-        // }
         // // Position
         lastActionDropDownIsVisiblePosition={
           lastActionDropDownIsVisiblePosition
         }
-        // setLastActionDropDownIsVisiblePosition={
-        //   setLastActionDropDownIsVisiblePosition
-        // }
         // // Player
         lastActionDropDownIsVisiblePlayer={lastActionDropDownIsVisiblePlayer}
-        // setLastActionDropDownIsVisiblePlayer={
-        //   setLastActionDropDownIsVisiblePlayer
-        // }
         // // Type
         lastActionDropDownIsVisibleType={lastActionDropDownIsVisibleType}
-        // setLastActionDropDownIsVisibleType={setLastActionDropDownIsVisibleType}
         // // Subtype
         lastActionDropDownIsVisibleSubtype={lastActionDropDownIsVisibleSubtype}
-        // setLastActionDropDownIsVisibleSubtype={
-        //   setLastActionDropDownIsVisibleSubtype
-        // }
         scriptingPlayerDropdownIsVisible={scriptingPlayerDropdownIsVisible}
         setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
@@ -1268,8 +1261,6 @@ export default function ScriptingLive({ navigation }) {
         }
         lastActionIsFavorite={lastActionIsFavorite()}
       />
-      {/* {renderSwipePad()} */}
-      {/* <View style={stylesCircle} /> */}
     </View>
   );
 }

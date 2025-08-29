@@ -24,12 +24,22 @@ export default function TemplateViewWithTopChildrenSmall({
     useState: false,
     useStateSetter: () => {},
   },
-  onBackPress = () => {},
+  // onBackPress = () => {},
+  onBackPress = () => {
+    return true;
+  },
 }) {
   const uploadReducer = useSelector((state) => state.upload);
+  // const handleBackPress = async () => {
+  //   onBackPress();
+  //   navigation.goBack();
+  // };
   const handleBackPress = async () => {
-    onBackPress();
-    navigation.goBack();
+    const goBack = await onBackPress();
+    if (goBack) {
+      navigation.goBack();
+    }
+    console.log("-- finished handleBackPress --");
   };
 
   return (
@@ -42,8 +52,8 @@ export default function TemplateViewWithTopChildrenSmall({
         {navigation && (
           <View style={styles.btnBack}>
             <ButtonKvImage
-              onPress={() => {
-                handleBackPress();
+              onPress={async () => {
+                await handleBackPress();
               }}
             >
               <BackArrow style={styles.svgBackArrow} />
