@@ -28,8 +28,11 @@ import {
   updateCoordsScriptLiveLandscapeContainerMiddleBottom,
   updateCoordsScriptLiveLandscapeVwPlayerSuper,
   updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
+  updatePlayersArray,
+  setScriptingForPlayerObject,
 } from "../../reducers/script";
 import BtnFavorite from "../../assets/images/buttons/btnFavorite.svg";
+import ButtonKvNoDefault from "./buttons/ButtonKvNoDefault";
 
 export default function ScriptingLiveLandscape(props) {
   const teamReducer = useSelector((state) => state.team);
@@ -170,6 +173,58 @@ export default function ScriptingLiveLandscape(props) {
   const stylesBtnFavorite = {
     width: CIRCLE_SIZE * 0.75,
     height: CIRCLE_SIZE * 0.75,
+  };
+
+  // -------- Styles Player ----
+  // Note: NoHeight contains the vwPlayer
+  const stylesVwPlayerSuperNoHeight = {
+    width: "100%",
+    alignItems: "center",
+  };
+  // Note: Spacer contains nothing
+  const stylesVwPlayerSuperSpacer = {
+    // borderWidth: 1,
+    // borderColor: "#6E4C84",
+    // borderStyle: "dashed",
+    width: "100%",
+    height: CIRCLE_SIZE / 2,
+    backgroundColor: "#F0EAF9",
+    // alignItems: "center",
+    // paddingVertical: 0,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  };
+  const stylesVwPlayerAbsolutePosition = {
+    position: "absolute",
+    top: CIRCLE_SIZE / 10,
+    zIndex: 1,
+  };
+  // const stylesVwPlayer = {
+  //   // position: "absolute",
+  //   // top: btnDiameter / 4,
+  //   borderWidth: 1,
+  //   borderColor: "#6E4C84",
+  //   borderRadius: 30,
+  //   backgroundColor: "white",
+  //   flexDirection: "row",
+  //   gap: 10,
+  //   padding: 5,
+  //   width: Dimensions.get("window").width * 0.3,
+  //   zIndex: 1,
+  // };
+
+  const stylesDropDownScriptingPlayer = {
+    // backgroundColor: "red",
+    position: "absolute",
+    top:
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.height +
+      scriptReducer.coordsScriptLiveLandscapeVwPlayerSuper.height,
+    left:
+      scriptReducer.coordsScriptLiveLandscapeContainerMiddleTop.width / 2 -
+      CIRCLE_SIZE,
+    width: 100,
+    zIndex: 1,
+    height: 100,
   };
 
   // const handleContainerLeftLayout = (event) => {
@@ -467,6 +522,76 @@ export default function ScriptingLiveLandscape(props) {
                 </View>
               </View>
             </View>
+
+            <View style={stylesVwPlayerSuperNoHeight}>
+              <View style={stylesVwPlayerAbsolutePosition}>
+                <ButtonKvNoDefault
+                  onPress={() => {
+                    console.log("pressed");
+                    props.setDropdownVisibility("scriptingPlayer");
+                  }}
+                  styleView={stylesVwPlayer}
+                >
+                  <View style={styles.vwPlayerLeft}>
+                    <Text style={styles.txtShirtNumber}>
+                      {scriptReducer.scriptingForPlayerObject?.shirtNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.vwPlayerRight}>
+                    <Text style={styles.txtPlayerName}>
+                      {scriptReducer.scriptingForPlayerObject?.firstName}
+                    </Text>
+                    <Text style={styles.txtPlayerName}>
+                      {scriptReducer.scriptingForPlayerObject?.lastName}
+                    </Text>
+                  </View>
+                </ButtonKvNoDefault>
+              </View>
+            </View>
+            {props.scriptingPlayerDropdownIsVisible && (
+              <View style={stylesDropDownScriptingPlayer}>
+                {scriptReducer.playersArray.map((player, index) => (
+                  // <Text key={index}>{player.firstName}</Text>
+
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => {
+                      const tempArray = scriptReducer.playersArray.map(
+                        (item) => {
+                          if (item.id === player.id) {
+                            // setDisplayWarning(false);
+                            return {
+                              ...item,
+                              selected: !item.selected,
+                            };
+                          }
+                          return { ...item, selected: false };
+                        }
+                      );
+                      dispatch(updatePlayersArray(tempArray));
+                      dispatch(setScriptingForPlayerObject(player));
+                      props.setDropdownVisibility("scriptingPlayer");
+                    }}
+                    // style={styles.btnDropDown}
+                    style={stylesVwPlayer}
+                  >
+                    <View style={styles.vwPlayerLeft}>
+                      <Text style={styles.txtShirtNumber}>
+                        {player.shirtNumber}
+                      </Text>
+                    </View>
+                    <View style={styles.vwPlayerRight}>
+                      <Text style={styles.txtPlayerName}>
+                        {player.firstName}
+                      </Text>
+                      <Text style={styles.txtPlayerName}>
+                        {player.lastName}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
             <GestureHandlerRootView>
               <GestureDetector gesture={props.combinedGestures}>
                 <View
@@ -477,13 +602,14 @@ export default function ScriptingLiveLandscape(props) {
                 >
                   {/* <View style={styles.vwPlayer}> */}
                   <View
-                    style={styles.vwPlayerSuper}
+                    // style={styles.vwPlayerSuper}
+                    style={stylesVwPlayerSuperSpacer}
                     onLayout={(event) => handleOnLayoutVwPlayerSuper(event)}
-                  >
-                    <View style={stylesVwPlayer}>
+                  />
+                  {/* <View style={stylesVwPlayer}>
                       <View style={styles.vwPlayerLeft}>
                         <Text style={styles.txtShirtNumber}>
-                          {/* {props.lastActionPlayer.shirtNumber} */}
+                          
                           {scriptReducer.scriptingForPlayerObject?.shirtNumber}
                         </Text>
                       </View>
@@ -495,8 +621,8 @@ export default function ScriptingLiveLandscape(props) {
                           {scriptReducer.scriptingForPlayerObject?.lastName}
                         </Text>
                       </View>
-                    </View>
-                  </View>
+                    </View> */}
+                  {/* </View> */}
                   <View style={styles.vwSvgVolleyballCourt}>
                     <SvgVolleyballCourt />
                   </View>
@@ -693,6 +819,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "yellow",
     flex: 1,
     zIndex: 0,
+    // justifyContent: "center",
+    // alignItems: "center",
+    // backgroundColor: "red",
   },
 
   containerMiddleTop: {
@@ -797,6 +926,7 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: "gray",
     // borderStyle: "dashed",
+    // width: "100%",
   },
   vwPlayerSuper: {
     backgroundColor: "#F0EAF9",

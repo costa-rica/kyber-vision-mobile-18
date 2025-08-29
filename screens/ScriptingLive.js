@@ -1249,6 +1249,7 @@ export default function ScriptingLive({ navigation }) {
         // setLastActionDropDownIsVisibleSubtype={
         //   setLastActionDropDownIsVisibleSubtype
         // }
+        scriptingPlayerDropdownIsVisible={scriptingPlayerDropdownIsVisible}
         setDropdownVisibility={setDropdownVisibility}
         subtypesArrayForLastAction={subtypesArrayForLastAction}
         getSubtypeForLastAction={getSubtypeForLastAction}

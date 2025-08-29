@@ -640,23 +640,7 @@ export default function ScriptingLivePortrait(props) {
                 // style={styles.vwPlayerSuperSpacer}
                 style={stylesVwPlayerSuperSpacer}
                 onLayout={handleOnLayoutPlayerSuperSpacer}
-              >
-                {/* <View style={styles.vwPlayer}>
-                  <View style={styles.vwPlayerLeft}>
-                    <Text style={styles.txtShirtNumber}>
-                      {scriptReducer.scriptingForPlayerObject?.shirtNumber}
-                    </Text>
-                  </View>
-                  <View style={styles.vwPlayerRight}>
-                    <Text style={styles.txtPlayerName}>
-                      {scriptReducer.scriptingForPlayerObject?.firstName}
-                    </Text>
-                    <Text style={styles.txtPlayerName}>
-                      {scriptReducer.scriptingForPlayerObject?.lastName}
-                    </Text>
-                  </View>
-                </View> */}
-              </View>
+              ></View>
               <SvbVolleyballCourt />
             </View>
           </GestureDetector>
