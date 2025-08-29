@@ -1072,14 +1072,23 @@ export default function ScriptingLive({ navigation }) {
       ];
 
     if (!lastRecordedAction) return;
-
+    //toggle favorite
     const updatedArray = scriptReducer.sessionActionsArray.map((action) =>
       action.timestamp === lastRecordedAction.timestamp
-        ? { ...action, favorite: true }
+        ? { ...action, favorite: !action.favorite }
         : action
     );
 
     dispatch(updateScriptSessionActionsArray(updatedArray));
+  };
+
+  const lastActionIsFavorite = () => {
+    if (scriptReducer.sessionActionsArray.length === 0) return false;
+    const lastRecordedAction =
+      scriptReducer.sessionActionsArray[
+        scriptReducer.sessionActionsArray.length - 1
+      ];
+    return lastRecordedAction.favorite;
   };
 
   // -----------------
@@ -1199,6 +1208,7 @@ export default function ScriptingLive({ navigation }) {
         sendScriptReducerSessionActionsArrayToServer={
           sendScriptReducerSessionActionsArrayToServer
         }
+        lastActionIsFavorite={lastActionIsFavorite()}
       />
       {/* {circlePosition.y > 0 && <View style={stylesCircle} />} */}
       {renderSwipePad()}
@@ -1256,6 +1266,7 @@ export default function ScriptingLive({ navigation }) {
         sendScriptReducerSessionActionsArrayToServer={
           sendScriptReducerSessionActionsArrayToServer
         }
+        lastActionIsFavorite={lastActionIsFavorite()}
       />
       {/* {renderSwipePad()} */}
       {/* <View style={stylesCircle} /> */}

@@ -650,7 +650,14 @@ export default function ScriptingLivePortrait(props) {
           style={{}} //This is key to make sure the flex properties will trickle down to <Image>
         >
           <GestureDetector gesture={props.combinedGestures}>
-            <View style={styles.containerMiddleSub}>
+            <View
+              style={[
+                styles.containerMiddleSub,
+                props.lastActionIsFavorite
+                  ? styles.containerMiddleSubFavorited
+                  : null,
+              ]}
+            >
               <View
                 // style={styles.vwPlayerSuperSpacer}
                 style={stylesVwPlayerSuperSpacer}
@@ -1007,6 +1014,13 @@ const styles = StyleSheet.create({
     // padding: 15,
     // gap: 20,
     paddingBottom: 20,
+    borderWidth: 2,
+    borderColor: "#F0EAF9",
+  },
+  containerMiddleSubFavorited: {
+    // borderWidth: 2,
+    borderColor: "#806181",
+    // boxSizing: "border-box",
   },
   // vwPlayerSuperSpacer: {
   //   borderWidth: 1,

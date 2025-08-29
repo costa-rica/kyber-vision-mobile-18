@@ -195,6 +195,12 @@ export default function ScriptingLiveLandscape(props) {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   };
+  const stylesVwPlayerSuperSpacerFavorited = {
+    borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    borderColor: "#806181",
+  };
   const stylesVwPlayerAbsolutePosition = {
     position: "absolute",
     top: CIRCLE_SIZE / 10,
@@ -600,27 +606,23 @@ export default function ScriptingLiveLandscape(props) {
                   {/* <View style={styles.vwPlayer}> */}
                   <View
                     // style={styles.vwPlayerSuper}
-                    style={stylesVwPlayerSuperSpacer}
+                    style={[
+                      stylesVwPlayerSuperSpacer,
+                      props.lastActionIsFavorite
+                        ? stylesVwPlayerSuperSpacerFavorited
+                        : null,
+                    ]}
                     onLayout={(event) => handleOnLayoutVwPlayerSuper(event)}
                   />
-                  {/* <View style={stylesVwPlayer}>
-                      <View style={styles.vwPlayerLeft}>
-                        <Text style={styles.txtShirtNumber}>
-                          
-                          {scriptReducer.scriptingForPlayerObject?.shirtNumber}
-                        </Text>
-                      </View>
-                      <View style={styles.vwPlayerRight}>
-                        <Text style={styles.txtPlayerName}>
-                          {scriptReducer.scriptingForPlayerObject?.firstName}
-                        </Text>
-                        <Text style={styles.txtPlayerName}>
-                          {scriptReducer.scriptingForPlayerObject?.lastName}
-                        </Text>
-                      </View>
-                    </View> */}
-                  {/* </View> */}
-                  <View style={styles.vwSvgVolleyballCourt}>
+
+                  <View
+                    style={[
+                      styles.vwSvgVolleyballCourt,
+                      props.lastActionIsFavorite
+                        ? styles.vwSvgVolleyballCourtFavorited
+                        : null,
+                    ]}
+                  >
                     <SvgVolleyballCourt />
                   </View>
                   <View
@@ -925,20 +927,28 @@ const styles = StyleSheet.create({
     // borderStyle: "dashed",
     // width: "100%",
   },
-  vwPlayerSuper: {
-    backgroundColor: "#F0EAF9",
-    width: "100%",
-    alignItems: "center",
-    // paddingVertical: 20,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
+  // vwPlayerSuper: {
+  //   backgroundColor: "#F0EAF9",
+  //   width: "100%",
+  //   alignItems: "center",
+  //   // paddingVertical: 20,
+  //   borderTopLeftRadius: 20,
+  //   borderTopRightRadius: 20,
+  // },
   vwSvgVolleyballCourt: {
     backgroundColor: "#F0EAF9",
     width: "100%",
     alignItems: "center",
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+  },
+
+  vwSvgVolleyballCourtFavorited: {
+    borderBottomWidth: 2,
+    // borderTopWidth: 2,
+    borderLeftWidth: 2,
+    borderRightWidth: 2,
+    borderColor: "#806181",
   },
   // vwPlayer: {
   //   borderWidth: 1,
