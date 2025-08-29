@@ -193,11 +193,16 @@ export default function ScriptingLivePortrait(props) {
     // backgroundColor: "red",
     position: "absolute",
     // width: "100%",
-    top: btnDiameter,
+    top: btnDiameter * 0.85,
     // left: Dimensions.get("window").width * 0.5,
     zIndex: 1,
     // top: btnDiameter / 4,
     // zIndex: 1,
+  };
+
+  const stylesDropDownScriptingPlayerScrollView = {
+    height: btnDiameter * 1.2,
+    // width: 200,
   };
 
   return (
@@ -595,40 +600,50 @@ export default function ScriptingLivePortrait(props) {
         </View>
         {props.scriptingPlayerDropdownIsVisible && (
           <View style={stylesDropDownScriptingPlayer}>
-            {scriptReducer.playersArray.map((player, index) => (
-              // <Text key={index}>{player.firstName}</Text>
-
-              <TouchableOpacity
-                key={index}
-                onPress={() => {
-                  const tempArray = scriptReducer.playersArray.map((item) => {
-                    if (item.id === player.id) {
-                      // setDisplayWarning(false);
-                      return {
-                        ...item,
-                        selected: !item.selected,
-                      };
-                    }
-                    return { ...item, selected: false };
-                  });
-                  dispatch(updatePlayersArray(tempArray));
-                  dispatch(setScriptingForPlayerObject(player));
-                  props.setDropdownVisibility("scriptingPlayer");
-                }}
-                // style={styles.btnDropDown}
-                style={stylesVwPlayer}
-              >
-                <View style={styles.vwPlayerLeft}>
-                  <Text style={styles.txtShirtNumber}>
-                    {player.shirtNumber}
-                  </Text>
-                </View>
-                <View style={styles.vwPlayerRight}>
-                  <Text style={styles.txtPlayerName}>{player.firstName}</Text>
-                  <Text style={styles.txtPlayerName}>{player.lastName}</Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+            <ScrollView style={stylesDropDownScriptingPlayerScrollView}>
+              {scriptReducer.playersArray.map(
+                (player, index) =>
+                  // <Text key={index}>{player.firstName}</Text>
+                  !player.selected && (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        const tempArray = scriptReducer.playersArray.map(
+                          (item) => {
+                            if (item.id === player.id) {
+                              // setDisplayWarning(false);
+                              return {
+                                ...item,
+                                selected: !item.selected,
+                              };
+                            }
+                            return { ...item, selected: false };
+                          }
+                        );
+                        dispatch(updatePlayersArray(tempArray));
+                        dispatch(setScriptingForPlayerObject(player));
+                        props.setDropdownVisibility("scriptingPlayer");
+                      }}
+                      // style={styles.btnDropDown}
+                      style={stylesVwPlayer}
+                    >
+                      <View style={styles.vwPlayerLeft}>
+                        <Text style={styles.txtShirtNumber}>
+                          {player.shirtNumber}
+                        </Text>
+                      </View>
+                      <View style={styles.vwPlayerRight}>
+                        <Text style={styles.txtPlayerName}>
+                          {player.firstName}
+                        </Text>
+                        <Text style={styles.txtPlayerName}>
+                          {player.lastName}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  )
+              )}
+            </ScrollView>
           </View>
         )}
         <GestureHandlerRootView

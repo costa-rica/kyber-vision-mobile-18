@@ -200,19 +200,6 @@ export default function ScriptingLiveLandscape(props) {
     top: CIRCLE_SIZE / 10,
     zIndex: 1,
   };
-  // const stylesVwPlayer = {
-  //   // position: "absolute",
-  //   // top: btnDiameter / 4,
-  //   borderWidth: 1,
-  //   borderColor: "#6E4C84",
-  //   borderRadius: 30,
-  //   backgroundColor: "white",
-  //   flexDirection: "row",
-  //   gap: 10,
-  //   padding: 5,
-  //   width: Dimensions.get("window").width * 0.3,
-  //   zIndex: 1,
-  // };
 
   const stylesDropDownScriptingPlayer = {
     // backgroundColor: "red",
@@ -230,7 +217,7 @@ export default function ScriptingLiveLandscape(props) {
 
   const stylesDropDownScriptingPlayerScrollView = {
     height: CIRCLE_SIZE * 1.2,
-    width: 200,
+    // width: 200,
   };
 
   // const handleContainerLeftLayout = (event) => {
