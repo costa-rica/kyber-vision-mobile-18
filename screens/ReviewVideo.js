@@ -42,49 +42,8 @@ export default function ReviewVideo({ navigation, route }) {
   // orientation
   const [orientation, setOrientation] = useState("portrait");
 
-  // useEffect(() => {
-  //   // console.log("- Position useEffect");
-  //   ScreenOrientation.unlockAsync();
-  //   checkOrientation();
-  //   const subscriptionScreenOrientation =
-  //     ScreenOrientation.addOrientationChangeListener(handleOrientationChange);
-
-  //   return () => {
-  //     subscriptionScreenOrientation.remove();
-  //     ScreenOrientation.lockAsync();
-  //   };
-  // });
-
-  // const checkOrientation = async () => {
-  //   // console.log("in checkOrientation");
-  //   const orientationObject = await ScreenOrientation.getOrientationAsync();
-  //   // console.log(`orientation is ${orientationObject}`);
-  //   if (
-  //     orientationObject.orientationInfo.orientation == 4 ||
-  //     orientationObject.orientationInfo.orientation == 3
-  //   ) {
-  //     setOrientation("landscape");
-  //   } else {
-  //     setOrientation("portrait");
-  //   }
-  // };
-  // const handleOrientationChange = async (orientationObject) => {
-  //   if (
-  //     orientationObject.orientationInfo.orientation == 4 ||
-  //     orientationObject.orientationInfo.orientation == 3
-  //   ) {
-  //     setOrientation("landscape");
-  //     await ScreenOrientation.lockAsync(
-  //       ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT
-  //     );
-  //   } else {
-  //     setOrientation("portrait");
-  //     await ScreenOrientation.lockAsync(
-  //       ScreenOrientation.OrientationLock.PORTRAIT_UP
-  //     );
-  //   }
-  // };
   const handleBackPress = async () => {
+    await sendReviewReducerActionsArray();
     await ScreenOrientation.lockAsync(
       ScreenOrientation.OrientationLock.PORTRAIT_UP
     ); // Force back to portrait
@@ -261,8 +220,48 @@ export default function ReviewVideo({ navigation, route }) {
     }
   };
 
+  const sendReviewReducerActionsArray = async () => {
+    console.log("in sendReviewReducerActionsArray");
+    let resJson;
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_API_BASE_URL}/contract-user-actions/update-user-favorites`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userReducer.token}`,
+          },
+          body: JSON.stringify({
+            sessionId: reviewReducer.reviewReducerVideoObject.session.id,
+            actionsArray: reviewReducer.reviewReducerActionsArray,
+          }),
+        }
+      );
+      if (response.status !== 200) {
+        alert(`There was a server error: ${response.status}`);
+        return;
+      }
+      const contentType = response.headers.get("Content-Type");
+
+      if (contentType?.includes("application/json")) {
+        resJson = await response.json();
+      }
+
+      console.log(" --- finished getting Actions and other stuff ---");
+    } catch (error) {
+      Alert.alert("Error fetching actions for match", error.message);
+    }
+    // return true;
+  };
+
   return orientation == "portrait" ? (
-    <TemplateViewWithTopChildrenSmall navigation={navigation}>
+    <TemplateViewWithTopChildrenSmall
+      navigation={navigation}
+      // onBackPress={() => {
+      //   sendReviewReducerActionsArray();
+      // }}
+    >
       <ReviewVideoPortrait
         // combinedGestures={combinedGestures}
         orientation={orientation}
