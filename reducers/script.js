@@ -305,24 +305,6 @@ export const scriptSlice = createSlice({
         (player) => player.positionArea !== null
       );
     },
-    // createPlayerArrayPositionProperties: (state) => {
-    //   console.log("📢 createPlayerArrayPositionProperties");
-    //   const tempArray = state.playersArray.map((player, index) => {
-    //     if (index < 6) {
-    //       return {
-    //         ...player,
-    //         positionArea: index - 1,
-    //       };
-    //     } else {
-    //       return {
-    //         ...player,
-    //         positionArea: null,
-    //       };
-    //     }
-    //   });
-    //   state.playersArray = [...tempArray];
-    //   // state.playersArray = action.payload
-    // },
   },
 });
 

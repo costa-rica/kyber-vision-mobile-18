@@ -153,11 +153,6 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
                 keyExtractor={(item) => item.id}
               />
             ) : (
-              // <ScrollView style={styles.scrollViewPlayersTable}>
-              //   {scriptReducer.playersArray.map((player) =>
-              //     playerTableButton({ player })
-              //   )}
-              // </ScrollView>
               <Text>No players found</Text>
             )}
           </View>
