@@ -63,8 +63,9 @@ const initialState = {
   qualityArray: ["=", "-", "0", "+", "#"],
   rotationArray: ["P1", "P2", "P3", "P4", "P5", "P6"],
   positionalAreasArray: Array.from({ length: 6 }, (_, i) => i + 1),
-  playerNamesArray: ["Léa", "Odeyssa", "Yoann", "Johanne", "Ted", "Sarah"],
-  playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
+  // playerNamesArray: ["Léa", "Odeyssa", "Yoann", "Johanne", "Ted", "Sarah"],
+  // playerNamesArrayRotated: [], // Initialized empty, will be set in reducer
+  playerObjectPositionalArray: [],
   pointsArray: Array.from({ length: 50 }, (_, i) => i),
   setOptionsArray: Array.from({ length: 4 }, (_, i) => i),
   // scriptLivePortraitVwVolleyballCourtCoords: {
@@ -236,24 +237,24 @@ export const scriptSlice = createSlice({
     updateSessionPointsTableArray: (state, action) => {
       state.sessionPointsTableArray = action.payload.sessionPointsTableArray;
     },
-    rotatePlayerNamesArray: (state) => {
-      if (state.playerNamesArrayRotated.length === 0) {
-        // Initialize if not already set
-        state.playerNamesArrayRotated = [...state.playerNamesArray];
-      }
-      if (state.playerNamesArrayRotated.length > 1) {
-        // Rotate array elements to the left
-        state.playerNamesArrayRotated = [
-          ...state.playerNamesArrayRotated.slice(1),
-          state.playerNamesArrayRotated[0],
-        ];
-      }
-    },
-    initializePlayerNamesArrayRotated: (state) => {
-      console.log("--- >  initializePlayerNamesArrayRotated");
-      // This action can be dispatched at app startup to ensure correct initialization
-      state.playerNamesArrayRotated = [...state.playerNamesArray];
-    },
+    // rotatePlayerNamesArray: (state) => {
+    //   if (state.playerNamesArrayRotated.length === 0) {
+    //     // Initialize if not already set
+    //     state.playerNamesArrayRotated = [...state.playerNamesArray];
+    //   }
+    //   if (state.playerNamesArrayRotated.length > 1) {
+    //     // Rotate array elements to the left
+    //     state.playerNamesArrayRotated = [
+    //       ...state.playerNamesArrayRotated.slice(1),
+    //       state.playerNamesArrayRotated[0],
+    //     ];
+    //   }
+    // },
+    // initializePlayerNamesArrayRotated: (state) => {
+    //   console.log("--- >  initializePlayerNamesArrayRotated");
+    //   // This action can be dispatched at app startup to ensure correct initialization
+    //   state.playerNamesArrayRotated = [...state.playerNamesArray];
+    // },
     setScriptingForPlayerObject: (state, action) => {
       state.scriptingForPlayerObject = action.payload;
     },
@@ -283,7 +284,6 @@ export const scriptSlice = createSlice({
     updateCoordsScriptLiveLandscapeContainerMiddleBottom: (state, action) => {
       state.coordsScriptLiveLandscapeContainerMiddleBottom = action.payload;
     },
-
     updateCoordsScriptLivePortraitVwPlayerSuperSpacer: (state, action) => {
       state.coordsScriptLivePortraitVwPlayerSuperSpacer = action.payload;
     },
@@ -296,6 +296,33 @@ export const scriptSlice = createSlice({
     ) => {
       state.coordsScriptLiveLandscapeVwBelowSvgVolleyballCourt = action.payload;
     },
+    createPlayerArrayPositionProperties: (state) => {
+      // console.log("📢 createPlayerArrayPositionProperties");
+      state.playersArray.forEach((player, index) => {
+        player.positionArea = index < 6 ? index + 1 : null;
+      });
+      state.playerObjectPositionalArray = state.playersArray.filter(
+        (player) => player.positionArea !== null
+      );
+    },
+    // createPlayerArrayPositionProperties: (state) => {
+    //   console.log("📢 createPlayerArrayPositionProperties");
+    //   const tempArray = state.playersArray.map((player, index) => {
+    //     if (index < 6) {
+    //       return {
+    //         ...player,
+    //         positionArea: index - 1,
+    //       };
+    //     } else {
+    //       return {
+    //         ...player,
+    //         positionArea: null,
+    //       };
+    //     }
+    //   });
+    //   state.playersArray = [...tempArray];
+    //   // state.playersArray = action.payload
+    // },
   },
 });
 
@@ -309,8 +336,8 @@ export const {
   updateTypePropertyInObjectOfSessionActionsArray,
   updateSubtypePropertyInObjectOfSessionActionsArray,
   updateSessionPointsTableArray,
-  rotatePlayerNamesArray,
-  initializePlayerNamesArrayRotated,
+  // rotatePlayerNamesArray,
+  // initializePlayerNamesArrayRotated,
   setScriptingForPlayerObject,
   setScriptingTeamObject,
 
@@ -327,5 +354,6 @@ export const {
   updateCoordsScriptLivePortraitVwPlayerSuperSpacer,
   updateCoordsScriptLiveLandscapeVwPlayerSuper,
   updateCoordsScriptLiveLandscapeVwBelowSvgVolleyballCourt,
+  createPlayerArrayPositionProperties,
 } = scriptSlice.actions;
 export default scriptSlice.reducer;

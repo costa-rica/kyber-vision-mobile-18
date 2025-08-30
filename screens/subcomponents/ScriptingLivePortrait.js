@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import TemplateView from "./TemplateView";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons"; // near top of file
 import ButtonKvImage from "./buttons/ButtonKvImage";
 import ButtonKvStd from "./buttons/ButtonKvStd";
@@ -46,6 +46,10 @@ export default function ScriptingLivePortrait(props) {
   const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // dispatch(createPlayerArrayPositionProperties());
+    console.log(JSON.stringify(scriptReducer.playersArray, null, 2));
+  }, []);
   // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
   const handleOnLayoutContainerMiddle = (event) => {
     console.log("-- handleOnLayoutContainerMiddle --");
@@ -779,23 +783,21 @@ export default function ScriptingLivePortrait(props) {
           </View>
         </View>
       </View>
-      {/* <View>
-        <Text>sub types</Text>
-        <Text>
-          {JSON.stringify(
-            scriptReducer.sessionActionsArray[
-              scriptReducer.sessionActionsArray.length - 1
-            ]?.subtype
-          )}
-        </Text>
-        <Text>
+      <View>
+        <Text>Player positions</Text>
+        <ScrollView style={{ height: 150 }}>
+          <Text>
+            {JSON.stringify(scriptReducer.playerObjectPositionalArray, null, 2)}
+          </Text>
+        </ScrollView>
+        {/* <Text>
           {
             typeof scriptReducer.sessionActionsArray[
               scriptReducer.sessionActionsArray.length - 1
             ]?.subtype
           }
-        </Text>
-      </View> */}
+        </Text> */}
+      </View>
     </View>
   );
 }

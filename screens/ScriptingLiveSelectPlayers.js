@@ -21,6 +21,7 @@ import WarningTriangle from "../assets/images/navigationAndSmall/warningTriangle
 import {
   setScriptingForPlayerObject,
   updatePlayersArray,
+  createPlayerArrayPositionProperties,
 } from "../reducers/script";
 
 export default function ScriptingLiveSelectPlayers({ navigation }) {
@@ -72,6 +73,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
       });
       // console.log(tempArray);
       dispatch(updatePlayersArray(tempArray));
+      dispatch(createPlayerArrayPositionProperties());
     } else {
       const errorMessage =
         resJson?.error ||
@@ -83,6 +85,7 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
     console.log("Fetched players offline");
     const scriptReducerOffline = require("../offlineData/scriptReducer.json");
     dispatch(updatePlayersArray(scriptReducerOffline.playersArray));
+    dispatch(createPlayerArrayPositionProperties());
   };
   useEffect(() => {
     if (userReducer.token === "offline") {
