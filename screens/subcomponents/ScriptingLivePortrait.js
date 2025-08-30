@@ -46,10 +46,10 @@ export default function ScriptingLivePortrait(props) {
   const teamReducer = useSelector((state) => state.team);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // dispatch(createPlayerArrayPositionProperties());
-    console.log(JSON.stringify(scriptReducer.playersArray, null, 2));
-  }, []);
+  // useEffect(() => {
+  //   // dispatch(createPlayerArrayPositionProperties());
+  //   console.log(JSON.stringify(scriptReducer.playersArray, null, 2));
+  // }, []);
   // const handleVwVolleyballCourtAndGestSuperLayout = (event) => {
   const handleOnLayoutContainerMiddle = (event) => {
     console.log("-- handleOnLayoutContainerMiddle --");
@@ -207,6 +207,23 @@ export default function ScriptingLivePortrait(props) {
   const stylesDropDownScriptingPlayerScrollView = {
     height: btnDiameter * 1.2,
     // width: 200,
+  };
+
+  const stylesVwPlayerPositionArea1 = {
+    position: "absolute",
+    top: scriptReducer.coordsScriptLivePortraitContainerMiddle.height - 100,
+    right: 100,
+    zIndex: 1,
+    // left: 0,
+    // width: Dimensions.get("window").width,
+    // backgroundColor: "red",
+  };
+  const stylesVwPlayerPositionArea5 = {
+    position: "absolute",
+    top: scriptReducer.coordsScriptLivePortraitVwPlayerSuperSpacer.height + 20,
+    left: 120,
+    zIndex: 1,
+    // left: 0,
   };
 
   return (
@@ -667,6 +684,26 @@ export default function ScriptingLivePortrait(props) {
                 style={stylesVwPlayerSuperSpacer}
                 onLayout={handleOnLayoutPlayerSuperSpacer}
               ></View>
+              <View style={stylesVwPlayerPositionArea1}>
+                <Text>Area 1</Text>
+                <Text>
+                  {
+                    scriptReducer.playersArray.filter(
+                      (player) => player.positionArea === 1
+                    )[0].firstName
+                  }
+                </Text>
+              </View>
+              <View style={stylesVwPlayerPositionArea5}>
+                <Text>Area 5</Text>
+                <Text>
+                  {
+                    scriptReducer.playersArray.filter(
+                      (player) => player.positionArea === 5
+                    )[0].firstName
+                  }
+                </Text>
+              </View>
               <SvbVolleyballCourt />
             </View>
           </GestureDetector>

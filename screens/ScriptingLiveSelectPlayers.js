@@ -147,12 +147,17 @@ export default function ScriptingLiveSelectPlayers({ navigation }) {
           </View>
           <View style={styles.vwPlayersTable}>
             {scriptReducer.playersArray?.length > 0 ? (
-              <ScrollView style={styles.scrollViewPlayersTable}>
-                {scriptReducer.playersArray.map((player) =>
-                  playerTableButton({ player })
-                )}
-              </ScrollView>
+              <FlatList
+                data={scriptReducer.playersArray}
+                renderItem={({ item }) => playerTableButton({ player: item })}
+                keyExtractor={(item) => item.id}
+              />
             ) : (
+              // <ScrollView style={styles.scrollViewPlayersTable}>
+              //   {scriptReducer.playersArray.map((player) =>
+              //     playerTableButton({ player })
+              //   )}
+              // </ScrollView>
               <Text>No players found</Text>
             )}
           </View>
