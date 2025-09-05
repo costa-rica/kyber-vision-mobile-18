@@ -1,6 +1,26 @@
 ![Kyber Vision Mobile Logo](./assets/images/kyberVisionLogo01.png)
 
-#### v 0.18.1
+#### v 0.18.3
+
+## Descriptions updates
+
+- Scripting Live favorite an action changes border color of volleyball court View
+- Scripting Live screen if user exits (back button) and actions recorded a popup will warn that leaving will delete the actions
+- Scripting Live when action is favorited it gets save to database > saving occurs when actions are sent to server
+- Scripting Live can change scripting player with center button
+- Scripting Live last actions dropdowns only show one at a time, opening an second will close the first.
+- Scripting Live scripting area (wheel displays) is narrowed to closer to the volleyball court image.
+
+### Stopping place
+
+While trying to implement assigning postions in the ScriptingLiveSelectPlayers screen, I tried adding a draggable feature using the react-native-draggable-flatlist (and react-native-reanimated) package but it seems to cause a crash. It seems to now work well with the react-native-gesture-handler package. The drag and drop feature in the ScriptingLiveSelectPlayers screen does work. However, when the user advances the ScriptingLive screens and tries to register an action by clicking on the court image, the app crashes.
+
+- I've posted an issue in the expo github repo, they said their were able to run my app replication without a crash
+  - They also said its not their package
+- The maintainers of these packages are:
+  - react-native-gesture-handler → maintained by Software Mansion.
+  - react-native-reanimated → also maintained by Software Mansion.
+  - react-native-draggable-flatlist → maintained by @computerjazz (individual maintainer, not Expo).
 
 ## .env
 
